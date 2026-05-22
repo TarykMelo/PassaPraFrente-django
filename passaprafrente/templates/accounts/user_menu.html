@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head><title>Menu - PassaPraFrente</title></head>
+<body>
+  <h1>Bem-vindo, {{ request.user.nickname }}!</h1>
+
+  <ul>
+    <li><a href="#">Vender item</a></li>
+    <li><a href="#">Comprar item</a></li>
+    <li><a href="#">Modificar dados</a></li>
+    <li><a href="{% url 'logout' %}">Sair</a></li>
+  </ul>
+</body>
+</html>

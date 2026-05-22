@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'accounts/login.css' %}">
+    <title>Login - PassaPraFrente</title>
+</head>
+<body>
+
+    {% if erro %}
+        <p style="color:red">{{ erro }}</p>
+    {% endif %}
+
+    <div class="container">
+        <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Logo PassaPraFrente"/>
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="box">
+                <h1>LOGIN</h1>
+                <div class="login">
+                    <label>
+                        Email:<br/>
+                        <input type="email" name="email" placeholder="Digite o seu email" required/>
+                    </label>
+                    <label>
+                        Senha:<br/>
+                        <input type="password" name="password" placeholder="Digite uma senha" required/>
+                    </label>
+                    <div class="cadastro">
+                        Não possui uma conta? <a href="{% url 'cadastro' %}">Cadastre-se</a>
+                    </div>
+                    <button type="submit">Fazer login</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

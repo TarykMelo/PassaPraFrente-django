@@ -1,0 +1,52 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'accounts/cadastro.css' %}">
+    <title>Área de cadastro</title>
+</head>
+<body>
+    <div class="container">
+        <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Logo PassaPraFrente"/>
+        <form action="" method="POST">
+            {% csrf_token %}
+
+            {% if form.errors %}
+                <div style="background:red; color:white; padding:10px;">
+                    {{ form.errors }}
+                </div>
+            {% endif %}
+
+            <div class="box">
+                <h1>CADASTRO</h1>
+                <div class="cadastro">
+                    <label>
+                        Email:<br/>
+                        <input type="email" name="email" placeholder="Digite o email" required/>
+                    </label>
+                    <label>
+                        Senha:<br/>
+                        <input type="password" name="password1" placeholder="Senha" required/>
+                    </label>
+                    <label>
+                        Confirme a senha:<br/>
+                        <input type="password" name="password2" placeholder="Confirme a senha" required/>
+                    </label>
+                    <label>
+                        Nickname:<br/>
+                        <input type="text" name="nickname" placeholder="Nickname" required/>
+                    </label>
+                    <label>
+                        Telefone:<br/>
+                        <input type="tel" name="telefone" placeholder="Número de telefone" required/>
+                    </label>
+                    <button type="submit">Fazer cadastro</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
