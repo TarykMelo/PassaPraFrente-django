@@ -1,0 +1,116 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial;
+    --green1: #009b00;
+    --background1: #f5f5f5;
+}
+
+body{
+    background: var(--background1);
+}
+
+.container{
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.card{
+    width: 100%;
+    max-width: 1100px;
+    background: white;
+    border-radius: 20px;
+    display: flex;
+    overflow: hidden;
+    box-shadow: 0px 10px 30px rgba(0,0,0,0.1);
+}
+
+.image_area{
+    width: 50%;
+    background: #ececec;
+}
+
+.image_area img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.info_area{
+    width: 50%;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+}
+
+.info_area h1{
+    margin-bottom: 30px;
+    font-size: 32px;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+}
+
+label{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+input,
+select,
+textarea{
+    margin-bottom: 20px;
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 16px;
+}
+
+/* Remove setinhas */
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    appearance: textfield;
+}
+
+textarea{
+    resize: none;
+    height: 140px;
+}
+
+input[type="file"]{
+    background: white;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+button{
+    padding: 16px;
+    border: none;
+    background: var(--green1);
+    color: white;
+    font-size: 17px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover{
+    opacity: 0.85;
+}

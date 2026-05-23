@@ -33,7 +33,7 @@
                 <div class="menu_title"><h1>Compra e Venda entre estudantes da UFRPE</h1></div>
                 <p>Encontre produtos ou venda seus produtos usados em um lugar mais fácil</p>
                 <div class="menu_buttons">
-                    <button>Anunciar produto</button>
+                    <button onclick="window.location.href='{% url 'registrar_venda' %}'">Anunciar produto</button>
                     <button>Ver categorias</button>
                 </div>
             </div>
@@ -110,14 +110,21 @@
         <div class="container">
             <div class="main_title"><h2>Todos os produtos</h2></div>
             <div class="main_produtos">
-                {%for produto in produtos  %}
+                {% for produto in produtos %}
                     <div class="main_produto">
-                        <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}">
+
+                        {% if produto.imagem %}
+                            <img src="{{ produto.imagem.url }}" alt={{ produto.nome }}>
+                        {% else %}
+                            <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
+                        {% endif %}
+
                         <div class="main_desc">
                             <h3>{{ produto.nome }}</h3>
-                            <p>{{ produto.preco }}</p>
+                            <p>R${{ produto.preco }}</p>
                             <p>{{ produto.vendedor.nickname }}</p>
                         </div>
+
                     </div>
                 {% empty %}
                     <p>Nenhum produto está disponível no momento</p>

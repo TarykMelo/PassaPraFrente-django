@@ -9,16 +9,17 @@ def lista_produtos(request):
     Todos os produtos são mostrados, exceto os do próprio usuário logado
     """
     produtos = Produto.objects.exclude(vendedor=request.user)
-    return render(request, 'produtos/lista_produtos.html', {'produtos': produtos})
+    return render(request, 'produtos/user_menu.html', {'produtos': produtos})
 
+@login_required
 def registrar_venda(request):
     if request.method == 'POST':
-        form = ProdutoForm(request.POST)
+        form = ProdutoForm(request.POST, request.FILES)
         if form.is_valid():
             produto = form.save(commit=False)
             produto.vendedor = request.user
             produto.save()
-            return redirect('lista_produtos')
+            return redirect('user_menu')
     else:
         form = ProdutoForm()
     return render(request, 'produtos/registrar_venda.html', {'form': form})
