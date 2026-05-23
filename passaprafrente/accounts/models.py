@@ -9,4 +9,12 @@ class Usuario(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'nickname', 'telefone']
+
+    def __str__(self):
+        return self.nickname
     
+    def total_produtos(self):
+        return self.produtos.count()
+    
+    def tem_produtos(self):
+        return self.produtos.exists()

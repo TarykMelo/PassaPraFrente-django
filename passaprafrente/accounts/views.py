@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import CadastroForm
+from produtos.models import Produto
 
 
 def cadastro_view(request):
@@ -38,4 +39,7 @@ def logout_view(request):
 def user_menu_view(request):
     return render(request, 'accounts/user_menu.html')
 
-
+@login_required
+def user_menu_view(request):
+    produtos = Produto.objects.exclude(vendedor=request.user)
+    return render(request, 'accounts/user_menu.html', {'produtos': produtos})

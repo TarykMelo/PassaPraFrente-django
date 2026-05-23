@@ -110,48 +110,18 @@
         <div class="container">
             <div class="main_title"><h2>Todos os produtos</h2></div>
             <div class="main_produtos">
-                <div class="main_produto">
-                    <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}">
-                    <div class="main_desc">
-                        <h3>R$ 1000</h3>
-                        <p>Teste de produto firmeza com essas paradas e brincadeiras, fé</p>
+                {%for produto in produtos  %}
+                    <div class="main_produto">
+                        <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}">
+                        <div class="main_desc">
+                            <h3>{{ produto.nome }}</h3>
+                            <p>{{ produto.preco }}</p>
+                            <p>{{ produto.vendedor.nickname }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="main_produto">
-                    <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}">
-                    <div class="main_desc">
-                        <h3>R$ 1000</h3>
-                        <p>Teste de produto firmeza com essas paradas e brincadeiras, fé</p>
-                    </div>
-                </div>
-                <div class="main_produto">
-                    <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}">
-                    <div class="main_desc">
-                        <h3>R$ 1000</h3>
-                        <p>Teste de produto firmeza com essas paradas e brincadeiras, fé</p>
-                    </div>
-                </div>
-                <div class="main_produto">
-                    <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}">
-                    <div class="main_desc">
-                        <h3>R$ 1000</h3>
-                        <p>Teste de produto firmeza com essas paradas e brincadeiras, fé</p>
-                    </div>
-                </div>
-                <div class="main_produto">
-                    <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}">
-                    <div class="main_desc">
-                        <h3>R$ 1000</h3>
-                        <p>Teste de produto firmeza com essas paradas e brincadeiras, fé</p>
-                    </div>
-                </div>
-                <div class="main_produto">
-                    <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}">
-                    <div class="main_desc">
-                        <h3>R$ 1000</h3>
-                        <p>Teste de produto firmeza com essas paradas e brincadeiras, fé</p>
-                    </div>
-                </div>
+                {% empty %}
+                    <p>Nenhum produto está disponível no momento</p>
+                {% endfor %}
             </div>
         </div>
     </main>
