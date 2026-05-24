@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+<title>{% block title %}Confirmar pedido{% endblock %}</title>
+
+{% block content %}
+<div class="container">
+    <h1>Confirmar pedido</h1>
+
+    <div>
+        {% if produto.imagem %}
+            <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
+        {% endif %}
+        <h2>{{ produto.nome }}</h2>
+        <p>R$ {{ produto.preco }}</p>
+        <p>{{ produto.descricao }}</p>
+        <p>Vendedor: {{ produto.vendedor.nickname }}</p>
+        <p>Telefone: {{ produto.vendedor.telefone }}</p>
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit">Confirmar pedido</button>
+        <a href="{% url 'user_menu' %}">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

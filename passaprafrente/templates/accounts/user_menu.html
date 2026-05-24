@@ -17,7 +17,7 @@
                 <div class="header_menus">
                     <nav>
                         <ul>
-                            <li><a href="">Minha conta</a></li>
+                            <li><a href="{% url 'meus_pedidos' %}">Minha conta</a></li>
                             <li><a href="{% url 'meus_produtos' %}">Meus produtos</a></li>
                             <li><a href="">Meus pedidos</a></li>
                         </ul>
@@ -112,7 +112,7 @@
             <div class="main_produtos">
                 {% for produto in produtos %}
 
-                    <a href="">
+                    <a href="{% url 'fazer_pedido' produto.id %}">
                         <div class="main_produto">
 
                             {% if produto.imagem %}
@@ -147,8 +147,8 @@
                 <h3>Acesso rápido</h3>
                 <a href="">Home</a>
                 <a href="">Categorias</a>
-                <a href="">Vender</a>
-                <a href="">Minhas compras</a>
+                <a href="{% url 'registrar_venda' %}">Vender</a>
+                <a href="{% url 'meus_pedidos' %}">Minhas compras</a>
             </div>
             <div class="footer_end_side">
                 <h3>Contato e suporte</h3>

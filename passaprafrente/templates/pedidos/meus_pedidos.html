@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+<title>{% block title %}Meus pedidos{% endblock %}</title>
+
+{% block content %}
+<div class="container">
+    <h1>Meus pedidos</h1>
+
+    {% if pedidos %}
+        {% for pedido in pedidos %}
+            <div>
+                <h2>{{ pedido.produto.nome }}</h2>
+                <p>R$ {{ pedido.produto.preco }}</p>
+                <p>Vendedor: {{ pedido.produto.vendedor.nickname }}</p>
+                <p>Telefone: {{ pedido.produto.vendedor.telefone }}</p>
+                <p>Pedido em: {{ pedido.criado_em|date:"d/m/Y" }}</p>
+
+                <form method="POST" action="{% url 'cancelar_pedido' pedido.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Cancelar pedido</button>
+                </form>
+            </div>
+            <hr>
+        {% endfor %}
+    {% else %}
+        <p>Você ainda não fez nenhum pedido.</p>
+    {% endif %}
+
+    <a href="{% url 'user_menu' %}">Voltar</a>
+</div>
+{% endblock %}
