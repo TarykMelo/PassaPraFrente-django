@@ -3,6 +3,7 @@
     padding: 0px;
     font-family: Arial, sans-serif;
     --green1: #009b00;
+    --green2: #01bb01;
     --white: #ffffff;
     --grey-button: #e2e2e2bb;
     --black: #000000;
@@ -72,6 +73,6 @@ main h1{
 }
 
 .main_produto_desc_buttons button:hover{
-    background-color: #01bb01;
+    background-color: var(--green2);
     opacity: 0.9;
 }

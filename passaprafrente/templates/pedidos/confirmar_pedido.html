@@ -1,26 +1,38 @@
-{% extends 'base.html' %}
+{% load static %}
 
-<title>{% block title %}Confirmar pedido{% endblock %}</title>
-
-{% block content %}
-<div class="container">
-    <h1>Confirmar pedido</h1>
-
-    <div>
-        {% if produto.imagem %}
-            <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
-        {% endif %}
-        <h2>{{ produto.nome }}</h2>
-        <p>R$ {{ produto.preco }}</p>
-        <p>{{ produto.descricao }}</p>
-        <p>Vendedor: {{ produto.vendedor.nickname }}</p>
-        <p>Telefone: {{ produto.vendedor.telefone }}</p>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'pedidos/confirmar_pedido.css' %}">
+    <title>Confirmar pedido</title>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="image_area">
+                {% if produto.imagem %}
+                    <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
+                {% endif %}
+            </div>
+            <div class="info_area">
+                <h1>{{ produto.nome }}</h1>
+                    <h2>R$ {{ produto.preco }}</h2>
+                    <p>{{ produto.descricao }}</p>
+                    <p><b>{{ produto.categoria }}</b></p>
+                    <p><b>Telefone: </b>{{ produto.vendedor.telefone }}</p>
+                    <P><b>Vendedor: </b>{{ produto.vendedor.nickname }}</P>
+                    
+                    <div class="info_area_buttons">
+                        <form method="POST" style="flex: 1">
+                            {% csrf_token %}
+                            <button type="submit" style="width: 100%">Fazer pedido</button>
+                        </form>
+                            <a href="{% url 'user_menu' %}"><button class="cancel" style="width: 100%">Cancelar pedido</button></a>
+                    </div>
+            </div>
+        </div>
     </div>
-
-    <form method="POST">
-        {% csrf_token %}
-        <button type="submit">Confirmar pedido</button>
-        <a href="{% url 'user_menu' %}">Cancelar</a>
-    </form>
-</div>
-{% endblock %}
+</body>
+</html>
