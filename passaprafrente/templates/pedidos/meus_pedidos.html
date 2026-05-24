@@ -1,31 +1,56 @@
 {% extends 'base.html' %}
+{% load static %}
 
-<title>{% block title %}Meus pedidos{% endblock %}</title>
+<head>
+
+    <title>{% block title %} Meus pedidos {% endblock %}</title>
+
+    {% block extra_css %}
+        <link rel="stylesheet" href="{% static 'pedidos/meus_pedidos.css' %}">
+    {% endblock %}
+
+</head>
 
 {% block content %}
-<div class="container">
-    <h1>Meus pedidos</h1>
 
-    {% if pedidos %}
-        {% for pedido in pedidos %}
-            <div>
-                <h2>{{ pedido.produto.nome }}</h2>
-                <p>R$ {{ pedido.produto.preco }}</p>
-                <p>Vendedor: {{ pedido.produto.vendedor.nickname }}</p>
-                <p>Telefone: {{ pedido.produto.vendedor.telefone }}</p>
-                <p>Pedido em: {{ pedido.criado_em|date:"d/m/Y" }}</p>
+    <main>
+        <div class="container">
+            <h1>Meus pedidos</h1>
 
-                <form method="POST" action="{% url 'cancelar_pedido' pedido.id %}">
-                    {% csrf_token %}
-                    <button type="submit">Cancelar pedido</button>
-                </form>
-            </div>
-            <hr>
-        {% endfor %}
-    {% else %}
-        <p>Você ainda não fez nenhum pedido.</p>
-    {% endif %}
+            {% if pedidos %}
+                {% for pedido in pedidos %}
 
-    <a href="{% url 'user_menu' %}">Voltar</a>
-</div>
+                    <div class="main_produto">
+                        <div class="main_produto_img">
+                            {% if pedido.produto.imagem %}
+                                <img src="{{ pedido.produto.imagem.url }}" alt="{{ pedido.nome }} foto">
+                            {% else %}
+                                <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
+                            {% endif %}
+                        </div>
+                        <div class="main_produto_desc">
+                            <h2>{{ pedido.produto.nome }}</h2>
+                            <p><b>Descrição:</b> </br> </br> {{ pedido.produto.descricao }}</p>
+                            <p><b>Preço: </b>R$ {{ pedido.produto.preco }}</p>
+                            <p><b>Categoria: </b> {{ pedido.produto.categoria }}</p>
+                            <p><b>Vendedor: </b>{{ pedido.produto.vendedor.nickname }}</p>
+                            <p><b>Telefone: </b>{{  pedido.produto.vendedor.telefone  }}</p>
+                            <p><b>Pedido em: </b>{{ pedido.criado_em|date:"d/m/Y" }}</p>
+                            <div class="main_produto_desc_buttons">
+                                <form method="POST" action="{% url 'cancelar_pedido' pedido.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit">Cancelar pedido</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                {% endfor %}
+            {% else %}
+                <p>Você ainda não cadastrou nenhum produto.</p>
+            {% endif %}
+        </div>
+
+    </main>
+
 {% endblock %}

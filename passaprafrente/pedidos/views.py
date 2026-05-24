@@ -23,6 +23,7 @@ def fazer_pedido(request, produto_id):
     
     if request.method == 'POST':
         Pedido.objects.create(produto=produto, comprador=request.user)
+        return redirect('user_menu')
 
     return render(request, 'pedidos/confirmar_pedido.html', {'produto': produto})
 
@@ -33,7 +34,7 @@ def meus_pedidos(request):
     """
     pedidos = Pedido.objects.filter(
         comprador=request.user
-    ).selec_related('produto', 'produto__vendedor')
+    ).select_related('produto', 'produto__vendedor')
     return render(request, 'pedidos/meus_pedidos.html', {'pedidos': pedidos})
 
 @login_required
