@@ -38,7 +38,6 @@ def meus_pedidos(request):
     return render(request, 'pedidos/meus_pedidos.html', {'pedidos': pedidos})
 
 @login_required
-
 def cancelar_pedido(request, pedido_id):
     """
     Função para deletar o pedido feito pelo usuário 
