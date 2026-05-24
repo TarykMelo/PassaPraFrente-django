@@ -1,29 +1,57 @@
+{% extends 'base.html' %}
 {% load static %}
 <!DOCTYPE html>
-<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>Meus produtos</title>
+
+    <title>{% block title %} Meus produtos {% endblock %}</title>
+
+    {% block extra_css %}
+        <link rel="stylesheet" href="{% static 'produtos/meus_produtos.css' %}">
+    {% endblock %}
+
 </head>
 <body>
-    <h1>Meus produtos</h1>
-    <a href="{% url 'user_menu' %}">Voltar</a>
 
-    {% if produtos %}
-        {% for produto in produtos %}
-            <div>
-                <h2>{{ produto.nome }}</h2>
-                <p>R$ {{ produto.preco }}</p>
-                <p>{{ produto.descricao }}</p>
-                <form method="POST" action="{% url 'remover_produto' produto.id %}">
-                    {% csrf_token %}
-                    <button type="submit">Remover</button>
-                </form>
-            </div>
-            <hr>
-        {% endfor %}
-    {% else %}
-        <p>Você ainda não cadastrou nenhum produto.</p>
-    {% endif %}
+    {% block content %}
+    <main>
+        <div class="container">
+            <h1>Meus produtos</h1>
+
+            {% if produtos %}
+                {% for produto in produtos %}
+
+                    <div class="main_produto">
+                        <div class="main_produto_img">
+                            {% if produto.imagem %}
+                                <img src="{{ produto.imagem.url }}" alt={{ produto.nome }}>
+                            {% else %}
+                                <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
+                            {% endif %}
+                        </div>
+                        <div class="main_produto_desc">
+                            <h2>{{ produto.nome }}</h2>
+                            <p><b>Descrição:</b> </br> </br> {{ produto.descricao }}</p>
+                            <p><b>Preço: </b>R$ {{ produto.preco }}</p>
+                            <p><b>Categoria:</b> {{ produto.categoria }}</p>
+                            <p><b>Telefone: </b>{{produto.vendedor.telefone}}</p>
+                            <div class="main_produto_desc_buttons">
+                                <a href=""><button>Modificar dados</button></a>
+                                <form method="POST" action="{% url 'remover_produto' produto.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit">Excluir produto</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                {% endfor %}
+            {% else %}
+                <p>Você ainda não cadastrou nenhum produto.</p>
+            {% endif %}
+        </div>
+
+    </main>
+
+    {% endblock %}
 </body>
 </html>
