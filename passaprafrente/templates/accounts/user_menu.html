@@ -18,7 +18,7 @@
                     <nav>
                         <ul>
                             <li><a href="">Minha conta</a></li>
-                            <li><a href="">Minhas vendas</a></li>
+                            <li><a href="{% url 'meus_produtos' %}">Meus produtos</a></li>
                             <li><a href="">Meus pedidos</a></li>
                         </ul>
                     </nav>
@@ -111,21 +111,25 @@
             <div class="main_title"><h2>Todos os produtos</h2></div>
             <div class="main_produtos">
                 {% for produto in produtos %}
-                    <div class="main_produto">
 
-                        {% if produto.imagem %}
-                            <img src="{{ produto.imagem.url }}" alt={{ produto.nome }}>
-                        {% else %}
-                            <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
-                        {% endif %}
+                    <a href="">
+                        <div class="main_produto">
 
-                        <div class="main_desc">
-                            <h3>{{ produto.nome }}</h3>
-                            <p>R${{ produto.preco }}</p>
-                            <p>{{ produto.vendedor.nickname }}</p>
+                            {% if produto.imagem %}
+                                <img src="{{ produto.imagem.url }}" alt={{ produto.nome }}>
+                            {% else %}
+                                <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
+                            {% endif %}
+
+                            <div class="main_desc">
+                                <h3>{{ produto.nome }}</h3>
+                                <p>R${{ produto.preco }}</p>
+                                <p><b>Vendedor: </b>{{ produto.vendedor.nickname }}</p>
+                            </div>
+
                         </div>
+                    </a>
 
-                    </div>
                 {% empty %}
                     <p>Nenhum produto está disponível no momento</p>
                 {% endfor %}

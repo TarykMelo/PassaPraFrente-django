@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Meus produtos</title>
+</head>
+<body>
+    <h1>Meus produtos</h1>
+    <a href="{% url 'user_menu' %}">Voltar</a>
+
+    {% if produtos %}
+        {% for produto in produtos %}
+            <div>
+                <h2>{{ produto.nome }}</h2>
+                <p>R$ {{ produto.preco }}</p>
+                <p>{{ produto.descricao }}</p>
+                <form method="POST" action="{% url 'remover_produto' produto.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Remover</button>
+                </form>
+            </div>
+            <hr>
+        {% endfor %}
+    {% else %}
+        <p>Você ainda não cadastrou nenhum produto.</p>
+    {% endif %}
+</body>
+</html>

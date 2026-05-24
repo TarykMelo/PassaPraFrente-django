@@ -149,6 +149,11 @@ header{
 }
 
 /* main */
+
+main{
+    padding: 30px;
+}
+
 .main_title{
     margin-bottom: 20px;
 }
@@ -159,14 +164,25 @@ header{
     gap: 15px;
 }
 
+.main_produtos a{
+    text-decoration: none;
+    color: var(--black);
+}
+
 .main_produto{
     border-radius: 5px;
     font-size: 20px;
     padding: 10px;
 }
 
+.main_produto h3{
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
 .main_produto p{
-    font-size: 14px;
+    font-size: 20px;
+    margin-bottom: 8px;
 }
 
 .main_produto img{
