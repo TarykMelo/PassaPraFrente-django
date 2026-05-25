@@ -35,3 +35,25 @@ def remover_produto(request, produto_id):
     if request.method =='POST':
         produto.delete()
     return redirect('meus_produtos')
+
+@login_required
+def categoria_view(request, categoria):
+    """
+    Função para filtrar produtos por categoria
+    """
+    produtos = Produto.objects.exclude(vendedor=request.user).filter(categoria=categoria)
+    return render(request, 'produtos/categoria.html', {
+        'produtos': produtos,
+        'categoria_atual': categoria,
+    })
+
+@login_required
+def todas_categorias(request):
+    """
+    Função para que seja possível ver todos os produtos na página 'categoria'
+    """
+    produtos = Produto.objects.exclude(vendedor=request.user)
+    return render(request, 'produtos/categoria.html', {
+        'produtos': produtos,
+        'categoria_atual': None, 
+    })

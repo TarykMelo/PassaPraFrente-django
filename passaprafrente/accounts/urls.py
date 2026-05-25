@@ -6,4 +6,4 @@ urlpatterns = [
     path('cadastro/', views.cadastro_view, name='cadastro'),
     path('sair/', views.logout_view, name='logout'),
     path('menu', views.user_menu_view, name='user_menu'),
-]
+    ]

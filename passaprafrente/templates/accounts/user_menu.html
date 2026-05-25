@@ -12,7 +12,7 @@
         <div class="container">
             <div class="header_menu">
                 <div class="header_logo">
-                    <h1>Passa <span>Pra</span> Frente</h1>
+                    <a href="{% url 'user_menu' %}"><h1>Passa <span>Pra</span> Frente</h1></a>
                 </div>
                 <div class="header_menus">
                     <nav>
@@ -44,59 +44,59 @@
         <div class="container">
             <div class="categorias_header">
                 <h2>Categorias</h2>
-                <a href="">Ver todas</a>
+                <a href="{% url 'todas_categorias' %}">Ver todas</a>
             </div>
             <div class="categorias_box">
-                <a href="">
+                <a href="{% url 'categoria' 'Eletrônicos' %}">
                     <div class="categoria_box">
                         <img src="{% static 'accounts/Images/tela-do-laptop.png' %}" alt="Eletrônicos logo">
                         <p>Eletrônicos</p>
                     </div>
                 </a>
 
-                <a href="">
+                <a href="{% url 'categoria' 'Esportes' %}">
                     <div class="categoria_box">
                         <img src="{% static 'accounts/Images/bola.png' %}" alt="Esportes logo">
                         <p>Esportes</p>
                     </div>
                 </a>
 
-                <a href="">
+                <a href="{% url 'categoria' 'Livros' %}">
                     <div class="categoria_box">
                         <img src="{% static 'accounts/Images/pilha-de-livros.png' %}" alt="Livros logo">
                         <p>Livros</p>
                     </div>
                 </a>
 
-                <a href="">
+                <a href="{% url 'categoria' 'Roupas' %}">
                     <div class="categoria_box">
                             <img src="{% static 'accounts/Images/camiseta.png' %}" alt="Roupas logo">
                             <p>Roupas</p>
                     </div>
                 </a>
 
-                <a href="">
+                <a href="{% url 'categoria' 'Móveis' %}">
                     <div class="categoria_box">
                         <img src="{% static 'accounts/Images/gabinete.png' %}" alt="Móveis logo">
                         <p>Móveis</p>
                     </div>
                 </a>
 
-                <a href="">
+                <a href="{% url 'categoria' 'Comidas' %}">
                     <div class="categoria_box">
                         <img src="{% static 'accounts/Images/brigadeiro.png' %}" alt="Comidas logo">
                         <p>Comidas</p>
                     </div>
                 </a>
 
-                <a href="">
+                <a href="{% url 'categoria' 'Utilidades' %}">
                     <div class="categoria_box">
                         <img src="{% static 'accounts/Images/configuracao.png' %}" alt="Utilidades logo">
                         <p>Utilidades</p>
                     </div>
                 </a>
 
-                <a href="">
+                <a href="{% url 'categoria' 'Acessórios' %}">
                 <div class="categoria_box">
                     <img src="{% static 'accounts/Images/acessorios.png' %}" alt="acessorios logo">
                     <p>Acessórios</p>

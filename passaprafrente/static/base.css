@@ -31,9 +31,15 @@ header{
     align-items: center;
 }
 
+.header_logo a{
+    text-decoration: none;
+    color: var(--black);
+}
+
 .header_logo span{
     color: var(--green1);
 }
+
 
 .header_menus ul{
     display: flex;

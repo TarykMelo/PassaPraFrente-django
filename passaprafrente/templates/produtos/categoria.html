@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<head>
+
+    <title>{% block title %} {% if not categoria_atual %} Todos os produtos {% else %} {{ categoria_atual }} {% endif %} - PassaPraFrente {% endblock %}</title>
+
+    {% block extra_css %}
+        <link rel="stylesheet" href="{% static 'produtos/categoria.css' %}">
+    {% endblock %}
+
+</head>
+
+{% block content %}
+
+<main>
+        <div class="container">
+            <div class="left_side">
+                <div class="left_side_title">
+                    <h2>Categorias</h2>
+                </div>
+                <div class="left_side_contents">
+                    <a href="{% url 'todas_categorias' %}" class="{% if not categoria_atual %}active{% endif %}">
+                        <div class="left_side_content">
+                            <img src="{% static 'accounts/Images/envio-para-todo-o-planeta.png' %}" alt="Todas as categorias img">
+                            <p>Todas as categorias</p>
+                        </div>
+                    </a>
+                    <a href="{% url 'categoria' 'Eletrônicos' %}" class="{% if categoria_atual == 'Eletrônicos' %}active{% endif %}">
+                        <div class="left_side_content">
+                            <img src="{% static 'accounts/Images/tela-do-laptop.png' %}" alt="Eletrônicos logo">
+                            <p>Eletrônicos</p>
+                        </div>
+                    </a>
+                    <a href="{% url 'categoria' 'Esportes' %}" class="{% if categoria_atual == 'Esportes' %}active{% endif %}">
+                        <div class="left_side_content">
+                            <img src="{% static 'accounts/Images/bola.png' %}" alt="Bola img">
+                            <p>Esportes</p>
+                        </div>
+                    </a>
+                    <a href="{% url 'categoria' 'Livros' %}" class="{% if categoria_atual == 'Livros' %}active{% endif %}">
+                        <div class="left_side_content">
+                            <img src="{% static 'accounts/Images/pilha-de-livros.png' %}" alt="Livros img">
+                            <p>Livros</p>
+                        </div>
+                    </a>
+                    <a href="{% url 'categoria' 'Roupas' %}" class="{% if categoria_atual == 'Roupas' %}active{% endif %}">
+                        <div class="left_side_content">
+                            <img src="{% static 'accounts/Images/camiseta.png' %}" alt="Roupa img">
+                            <p>Roupas</p>
+                        </div>
+                    </a>
+                    <a href="{% url 'categoria' 'Móveis' %}" class="{% if categoria_atual == 'Móveis' %}active{% endif %}">
+                        <div class="left_side_content">
+                            <img src="{% static 'accounts/Images/gabinete.png' %}" alt="Móveis img">
+                            <p>Móveis</p>
+                        </div>
+                    </a>
+                    <a href="{% url 'categoria' 'Comidas' %}" class="{% if categoria_atual == 'Comidas' %}active{% endif %}">
+                        <div class="left_side_content">
+                            <img src="{% static 'accounts/Images/brigadeiro.png' %}" alt="Comida img">
+                            <p>Comidas</p>
+                        </div>
+                    </a>
+                    <a href="{% url 'categoria' 'Utilidades' %}" class="{% if categoria_atual == 'Utilidades' %}active{% endif %}">
+                        <div class="left_side_content">
+                            <img src="{% static 'accounts/Images/configuracao.png' %}" alt="Utilidades img">
+                            <p>Utilidades</p>
+                        </div>
+                    </a>
+                    <a href="{% url 'categoria' 'Acessórios' %}" class="{% if categoria_atual == 'Acessórios' %}active{% endif %}">
+                        <div class="left_side_content">
+                            <img src="{% static 'accounts/Images/acessorios.png' %}" alt="Acessórios img">
+                            <p>Acessórios</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="right_side">
+                <div class="main_produtos">
+                {% for produto in produtos %}
+
+                    <a href="{% url 'fazer_pedido' produto.id %}">
+                        <div class="main_produto">
+
+                            {% if produto.imagem %}
+                                <img src="{{ produto.imagem.url }}" alt={{ produto.nome }}>
+                            {% else %}
+                                <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
+                            {% endif %}
+
+                            <div class="main_desc">
+                                <h3>{{ produto.nome }}</h3>
+                                <p>R${{ produto.preco }}</p>
+                                <p><b>Vendedor: </b>{{ produto.vendedor.nickname }}</p>
+                            </div>
+
+                        </div>
+                    </a>
+
+                {% empty %}
+                    <p>Nenhum produto está disponível no momento</p>
+                {% endfor %}
+            </div>
+            </div>
+        </div>
+    </main>
+
+{% endblock %}

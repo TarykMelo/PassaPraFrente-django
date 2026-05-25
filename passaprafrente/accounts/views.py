@@ -39,3 +39,4 @@ def logout_view(request):
 def user_menu_view(request):
     produtos = Produto.objects.exclude(vendedor=request.user)
     return render(request, 'accounts/user_menu.html', {'produtos': produtos})
+
