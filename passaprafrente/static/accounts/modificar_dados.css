@@ -171,4 +171,10 @@ main p{
     border: 1px solid var(--border-grey);
     border-radius: 10px;
     width: 100%;
+    outline: none;
+}
+
+.box_field input:focus{
+    outline: none;
+    border-color: black;
 }

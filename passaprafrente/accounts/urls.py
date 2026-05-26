@@ -7,4 +7,5 @@ urlpatterns = [
     path('sair/', views.logout_view, name='logout'),
     path('menu', views.user_menu_view, name='user_menu'),
     path('conta/', views.modificar_dados, name='modificar_dados'),
+    path('conta/deletar', views.deletar_conta, name='deletar_conta'),
     ]
