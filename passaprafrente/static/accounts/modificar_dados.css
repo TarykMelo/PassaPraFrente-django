@@ -1,0 +1,174 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial;
+    --green1: #009b00;
+    --green2: #01bb01;
+    --background1: #f5f5f5;
+    --background2: #F1F4F1;
+    --border-grey: #D9D9D9;
+    --grey-subtitle: #999;
+    --background-button: #050303;
+    --red1: red;
+    --red-button: #fabbbb;
+}
+
+body{
+    background-color: var(--background2);
+}
+
+.container{
+    max-width: 1000px;
+    margin: auto;
+}
+
+/* Header */
+
+header{
+    padding: 20px;
+    height: 80px;
+    background-color: var(--background1);
+}
+
+.header_menu{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header_logo span{
+    color: var(--green1);
+}
+
+.header_menus ul{
+    display: flex;
+    flex-direction: row-reverse;
+    text-decoration: none;
+    list-style: none;
+    gap: 15px;
+    
+}
+
+.header_menus li a{
+    text-decoration: none;
+    color: black;
+}
+
+.header_menus li a:hover{
+    color: var(--green1);
+}
+
+/* main */
+
+main{
+    padding: 30px;
+}
+
+main h1,
+main p{
+    margin-bottom: 15px;
+}
+
+.box{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+    background-color: white;
+    width: 100%;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+
+.personal_box{
+    border-top: 5px solid var(--green1);
+}
+
+.modify_box{
+    border-top: 5px solid yellow;
+}
+
+.delete_box{
+    border-top: 5px solid var(--red1);
+}
+
+.box_title h2{
+    margin-bottom: 10px;
+}
+
+.box_title p{
+    color: var(--grey-subtitle);
+}
+
+.box_button{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.box_button button{
+    width: 200px;
+    padding: 10px 25px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    background-color: var(--background-button);
+    color: white;
+    transition: 0.3s;
+}
+
+.box_button button:hover{
+    opacity: 0.8;
+}
+
+.box_button .delete{
+    width: 200px;
+    padding: 10px 25px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    background-color: var(--red-button);
+    color: var(--red1);
+    transition: 0.3s;
+}
+
+.box_button .delete:hover{
+    background-color: var(--red1);
+    color: white;
+}
+
+.box_fields{
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+.box_field{
+    flex: 1;
+    margin-bottom: 15px;
+}
+
+.box_field h4{
+    margin-bottom: 10px;
+}
+
+.box_field p{
+    padding: 13px 20px;
+    border: 1px solid var(--border-grey);
+    border-radius: 10px;
+}
+
+.box_desc p{
+    padding: 13px 20px;
+    background-color: var(--background2);
+    border-radius: 10px;
+}
+
+.box_field input{
+    padding: 15px 20px;
+    border: 1px solid var(--border-grey);
+    border-radius: 10px;
+    width: 100%;
+}

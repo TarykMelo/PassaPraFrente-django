@@ -1,92 +1,151 @@
+{% extends 'base.html' %}
 {% load static %}
-
-<!DOCTYPE html>
-<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>Minha conta | Passa Pra Frente</title>
-    <link rel="stylesheet" href="{% static 'css/user_menu.css' %}">
+
+    <title>{% block title %} Modificar dados do usuário {% endblock %}</title>
+
+    {% block extra_css %}
+        <link rel="stylesheet" href="{% static 'accounts/modificar_dados.css' %}">
+    {% endblock %}
+
 </head>
-<body>
+{% block content %}
+<main>
+    <div class="container">
+        <h1>Dados da conta</h1>
+        <p>Veja os dados principais da sua conta ou altere-os</p>
 
-    <header class="navbar">
-        <div class="container nav-content">
-            <a href="/menu" class="logo">Passa Pra Frente</a>
-
-            <nav class="nav-links">
-                <a href="/meus-pedidos">Meus pedidos</a>
-                <a href="/meus-produtos">Meus produtos</a>
-                <a href="/minha-conta" class="active">Minha conta</a>
-            </nav>
-        </div>
-    </header>
-
-    <main class="account-page">
-
-        <section class="account-hero">
-            <div class="container account-hero-content">
-
-                <div class="user-info">
-                    <div class="avatar">
-                        {{ user.first_name|default:user.username|slice:":1"|upper }}
-                    </div>
-
-                    <div>
-                        <h1>Minha conta</h1>
-                        <p>Gerencie seus dados, produtos, pedidos e preferências.</p>
-                    </div>
-                </div>
-
-                <a href="/editar-perfil" class="btn-primary">
-                    Editar perfil
-                </a>
-
+        <div class="box personal_box">
+            <div class="box_border"></div>
+            <div class="box_title">
+                <h2>Informações pessoais</h2>
+                <p>Dados atuais da conta</p>
             </div>
-        </section>
-
-        <section class="container account-layout">
-
-            <aside class="profile-card">
-                <div class="profile-header">
-                    <div class="avatar large">
-                        {{ user.first_name|default:user.username|slice:":1"|upper }}
-                    </div>
-
-                    <h2>{{ user.get_full_name|default:user.username }}</h2>
-                    <p>{{ user.email }}</p>
-
-                    <span class="user-badge">Estudante UFRPE</span>
+            <div class="box_fields">
+                <div class="box_field">
+                    <h4>Nickname:</h4>
+                    <p>{{ request.user.nickname }}</p>
                 </div>
+                <div class="box_field">
+                    <h4>Email:</h4>
+                    <p>{{ request.user.email }}</p>
+                </div>
+            </div>
+            <div class="box_field">
+                <h4>Telefone:</h4>
+                <p>{{ request.user.telefone }}</p>
+            </div>
+        </div>
 
-                <div class="profile-data">
-                    <div>
-                        <span>Produtos anunciados</span>
-                        <strong>{{ total_produtos|default:"0" }}</strong>
+        <div class="box modify_box">
+            <div class="box_title">
+                <h2>Modificar a senha</h2>
+                <p>Altere a senha do usuário</p>
+            </div>
+            <form method="POST">
+                {% csrf_token %}
+                {% for error in senha_form.non_field_errors %}
+                    <p style="color:red">{{ error }}</p>
+                {% endfor %}
+                <div class="box_field">
+                    <h4>Senha atual:</h4>
+                    <input type="password" name="old_password" placeholder="Senha atual">
+                    {% for error in senha_form.old_password.errors %}
+                        <p style="color:red">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                <div class="box_fields">
+                    <div class="box_field">
+                        <h4>Nova senha:</h4>
+                        <input type="password" name="new_password1" placeholder="Nova senha">
+                        {% for error in senha_form.new_password1.errors %}
+                            <p style="color:red">{{ error }}</p>
+                        {% endfor %}
                     </div>
-
-                    <div>
-                        <span>Pedidos realizados</span>
-                        <strong>{{ total_pedidos|default:"0" }}</strong>
-                    </div>
-
-                    <div>
-                        <span>Conta</span>
-                        <strong>Ativa</strong>
+                    <div class="box_field">
+                        <h4>Confirme a nova senha:</h4>
+                        <input type="password" name="new_password2" placeholder="Confirme a senha">
+                        {% for error in senha_form.new_password2.errors %}
+                            <p style="color:red">{{ error }}</p>
+                        {% endfor %}
                     </div>
                 </div>
-            </aside>
-
-            <section class="account-content">
-
-                <div class="section-title">
-                    <h2>Atalhos da conta</h2>
-                    <p>Acesse rapidamente as principais áreas da plataforma.</p>
+                <div class="box_desc">
+                    <p>A senha deve conter pelo menos 8 caracteres, 1 letra maiúscula e um símbolo</p>
                 </div>
+                <div class="box_button">
+                    <button type="submit" name="salvar_senha">Mudar a senha</button>
+                </div>
+            </form>
+        </div>
 
-                <div class="cards-grid">
+        <div class="box modify_box">
+            <div class="box_title">
+                <h2>Modificar o telefone</h2>
+                <p>Altere o telefone do usuário</p>
+            </div>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="box_fields">
+                    <div class="box_field">
+                        <h4>Telefone atual:</h4>
+                        <p>{{ request.user.telefone }}</p>
+                    </div>
+                    <div class="box_field">
+                        <h4>Novo telefone:</h4>
+                        <input type="tel" name="telefone" placeholder="Novo número de telefone">
+                        {% for error in telefone_form.telefone.errors %}
+                            <p style="color:red">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="box_desc">
+                    <p>Exemplo: (81)93475-9384</p>
+                </div>
+                <div class="box_button">
+                    <button type="submit" name="salvar_telefone">Mudar o telefone</button>
+                </div>
+            </form>
+        </div>
 
-                    <a href="/meus-produtos" class="account-card">
-                        <div class="card-icon">📦</div>
-                        <h3>Meus produtos</h3>
-                        <p>Veja, edite ou remova os produtos que você anunciou.</p>
-                    </a>
+        <div class="box modify_box">
+            <div class="box_title">
+                <h2>Modificar o nickname</h2>
+                <p>Altere o nickname do usuário</p>
+            </div>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="box_fields">
+                    <div class="box_field">
+                        <h4>Nickname atual:</h4>
+                        <p>{{ request.user.nickname }}</p>
+                    </div>
+                    <div class="box_field">
+                        <h4>Novo nickname:</h4>
+                        <input type="text" name="nickname" placeholder="Insira o novo nickname">
+                        {% for error in nickname_form.nickname.errors %}
+                            <p style="color:red">{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="box_button">
+                    <button type="submit" name="salvar_nickname">Mudar o nickname</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="box delete_box">
+            <div class="box_title">
+                <h2>Deletar o usuário</h2>
+                <p>Encerre a conta do usuário</p>
+            </div>
+            <div class="box_button">
+                <a href="">
+                    <button type="button" class="delete"><b>Deletar a conta</b></button>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</main>
+{% endblock %}
