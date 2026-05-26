@@ -33,3 +33,21 @@ class Produto(models.Model):
     def info_vendedor(self):
         return f"{self.vendedor.nickname} -- {self.vendedor.telefone}"
     
+
+class Feedback(models.Model):
+    comprador = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE, 
+        related_name='feedbacks_enviados'
+    )
+    vendedor = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE, 
+        related_name='feedbacks_recebidos'
+    )
+
+    nota = models.IntegerField(choices=[(i, i) for i in range (1, 6)])
+    comentario = models.TextField(blank=True, null=True)
+   
+    def __str__(self):
+        return f"Nota {self.nota} para {self.vendedor.username}"

@@ -1,5 +1,5 @@
 from django import forms
-from produtos.models import Produto
+from produtos.models import Produto, Feedback
 
 class ProdutoForm(forms.ModelForm):
 
@@ -25,3 +25,13 @@ class ProdutoForm(forms.ModelForm):
         if not nome:
             raise forms.ValidationError("O nome não pode ser vazio")
         return nome
+    
+
+class FeedbackForm(forms.ModelForm): 
+
+    class Meta: 
+        model = Feedback 
+        fields = ['nota', 'comentario']
+        widgets = {
+            'nota': forms.Select(attrs={'class': 'form-control', 'rows':3, 'placeholder': 'Conte como foi sua experiência...'}),
+        }
