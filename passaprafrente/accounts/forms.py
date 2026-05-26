@@ -1,6 +1,6 @@
 import re
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
 from .models import Usuario
 
 class CadastroForm(UserCreationForm):
@@ -70,3 +70,33 @@ class CadastroForm(UserCreationForm):
         if commit:
             user.save()
         return user
+    
+class NicknameForm(forms.ModelForm):
+    class Meta:
+        model = Usuario
+        fields = ['nickname']
+        labels = {'nickname': 'Novo nickname'}
+
+    def clean_nickname(self):
+        nick = self.cleaned_data.get('nickname')
+        if ' ' in nick:
+            raise forms.ValidationError("Nickname não pode ter espaços, use _")
+        return nick
+    
+class TelefoneForm(forms.ModelForm):
+    class Meta:
+        model = Usuario
+        fields = ['telefone']
+        labels = {'telefone': 'Novo telefone'}
+
+    def clean_telefone(self):
+        tel = self.cleaned_data.get('telefone')
+        if not re.match(r'^\(?81\)?[\s-]?\d{4,5}-?\d{4}$', tel):
+            raise forms.ValidationError("Use o formato (81) XXXXX-XXXX")
+        return tel
+
+class SenhaForm(PasswordChangeForm):
+    error_messages = {
+        'password_incorrect': 'Senha atual incorreta',
+        'password_mismatch': 'As senhas não coincidem',
+    }

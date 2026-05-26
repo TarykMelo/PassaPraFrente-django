@@ -1,0 +1,92 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Minha conta | Passa Pra Frente</title>
+    <link rel="stylesheet" href="{% static 'css/user_menu.css' %}">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="container nav-content">
+            <a href="/menu" class="logo">Passa Pra Frente</a>
+
+            <nav class="nav-links">
+                <a href="/meus-pedidos">Meus pedidos</a>
+                <a href="/meus-produtos">Meus produtos</a>
+                <a href="/minha-conta" class="active">Minha conta</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="account-page">
+
+        <section class="account-hero">
+            <div class="container account-hero-content">
+
+                <div class="user-info">
+                    <div class="avatar">
+                        {{ user.first_name|default:user.username|slice:":1"|upper }}
+                    </div>
+
+                    <div>
+                        <h1>Minha conta</h1>
+                        <p>Gerencie seus dados, produtos, pedidos e preferências.</p>
+                    </div>
+                </div>
+
+                <a href="/editar-perfil" class="btn-primary">
+                    Editar perfil
+                </a>
+
+            </div>
+        </section>
+
+        <section class="container account-layout">
+
+            <aside class="profile-card">
+                <div class="profile-header">
+                    <div class="avatar large">
+                        {{ user.first_name|default:user.username|slice:":1"|upper }}
+                    </div>
+
+                    <h2>{{ user.get_full_name|default:user.username }}</h2>
+                    <p>{{ user.email }}</p>
+
+                    <span class="user-badge">Estudante UFRPE</span>
+                </div>
+
+                <div class="profile-data">
+                    <div>
+                        <span>Produtos anunciados</span>
+                        <strong>{{ total_produtos|default:"0" }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Pedidos realizados</span>
+                        <strong>{{ total_pedidos|default:"0" }}</strong>
+                    </div>
+
+                    <div>
+                        <span>Conta</span>
+                        <strong>Ativa</strong>
+                    </div>
+                </div>
+            </aside>
+
+            <section class="account-content">
+
+                <div class="section-title">
+                    <h2>Atalhos da conta</h2>
+                    <p>Acesse rapidamente as principais áreas da plataforma.</p>
+                </div>
+
+                <div class="cards-grid">
+
+                    <a href="/meus-produtos" class="account-card">
+                        <div class="card-icon">📦</div>
+                        <h3>Meus produtos</h3>
+                        <p>Veja, edite ou remova os produtos que você anunciou.</p>
+                    </a>
