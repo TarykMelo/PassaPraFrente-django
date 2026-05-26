@@ -23,46 +23,11 @@ body{
     margin: auto;
 }
 
-/* Header */
-
-header{
-    padding: 20px;
-    height: 80px;
-    background-color: var(--background1);
-}
-
-.header_menu{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.header_logo span{
-    color: var(--green1);
-}
-
-.header_menus ul{
-    display: flex;
-    flex-direction: row-reverse;
-    text-decoration: none;
-    list-style: none;
-    gap: 15px;
-    
-}
-
-.header_menus li a{
-    text-decoration: none;
-    color: black;
-}
-
-.header_menus li a:hover{
-    color: var(--green1);
-}
 
 /* main */
 
 main{
-    padding: 30px;
+    padding: 50px;
 }
 
 main h1,

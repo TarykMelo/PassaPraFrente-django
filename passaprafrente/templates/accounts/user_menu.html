@@ -1,31 +1,16 @@
+{% extends 'base.html' %}
 {% load static %}
 <!DOCTYPE html>
-<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'accounts/menu.css' %}">
-    <title>Menu inicial</title>
+
+    <title>{% block title %} Menu inicial {% endblock %}</title>
+
+    {% block extra_css %}
+        <link rel="stylesheet" href="{% static 'accounts/menu.css' %}">
+    {% endblock %}
+
 </head>
-<body>
-    <header>
-        <div class="container">
-            <div class="header_menu">
-                <div class="header_logo">
-                    <a href="{% url 'user_menu' %}"><h1>Passa <span>Pra</span> Frente</h1></a>
-                </div>
-                <div class="header_menus">
-                    <nav>
-                        <ul>
-                            <li><a href="{% url 'modificar_dados' %}">Minha conta</a></li>
-                            <li><a href="{% url 'meus_produtos' %}">Meus produtos</a></li>
-                            <li><a href="{% url 'meus_pedidos' %}">Meus pedidos</a></li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-        </div>
-    </header>    
+    {% block content %}   
 
     <section class="menu">
         <div class="container">
@@ -137,30 +122,4 @@
         </div>
     </main>
 
-    <footer>
-        <div class="container">
-            <div class="footer_left_side">
-                <h3>Passa <Span>Pra</Span> Frente</h3>
-                <p>Marketplace universitário da Universidade Federal Rural de Pernambuco(UFRPE), compra e venda de itens de forma facilitada.</p>
-            </div>
-            <div class="footer_right_side">
-                <h3>Acesso rápido</h3>
-                <a href="">Home</a>
-                <a href="">Categorias</a>
-                <a href="{% url 'registrar_venda' %}">Vender</a>
-                <a href="{% url 'meus_pedidos' %}">Minhas compras</a>
-            </div>
-            <div class="footer_end_side">
-                <h3>Contato e suporte</h3>
-                <a href="">Código-fonte</a>
-                <a href="">Email de contato</a>
-                <div class="footer_images">
-                    <a href=""><img src="{% static 'accounts/Images/e-mail.png' %}" alt="email logo"></a>
-                    <a href=""><img src="{% static 'accounts/Images/github.png' %}" alt="Github logo"></a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-</body>
-</html>
+    {% endblock %}

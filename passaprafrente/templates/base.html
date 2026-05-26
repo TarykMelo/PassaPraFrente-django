@@ -14,15 +14,15 @@
         <div class="container">
             <div class="header_menu">
                 <div class="header_logo">
-                    <a href="{% url 'user_menu' %}"><h1>Passa <span>Pra</span> Frente</h1></a>
+                    <a href="{% url 'user_menu' %}"><img src="{% static 'accounts/Images/passaprafrente-logo-nova.png' %}" alt="PassaPraFrente logo"></a>
                 </div>
                 <div class="header_menus">
                     <nav>
                         <ul>
                             <li><a href="{% url 'logout' %}">Sair</a></li>
-                            <li><a href="">Minha conta</a></li>
+                            <li><a href="{% url 'modificar_dados'%}">Minha conta</a></li>
                             <li><a href="{% url 'meus_produtos' %}">Minhas vendas</a></li>
-                            <li><a href="">Meus pedidos</a></li>
+                            <li><a href="{% url 'meus_pedidos' %}">Meus pedidos</a></li>
                         </ul>
                     </nav>
                 </div>
@@ -41,9 +41,9 @@
             <div class="footer_right_side">
                 <h3>Acesso rápido</h3>
                 <a href="{% url 'user_menu' %}">Home</a>
-                <a href="">Categorias</a>
+                <a href="{% url 'todas_categorias' %}">Categorias</a>
                 <a href="{% url 'registrar_venda' %}">Vender</a>
-                <a href="">Minhas compras</a>
+                <a href="{% url 'meus_pedidos' %}">Minhas compras</a>
             </div>
             <div class="footer_end_side">
                 <h3>Contato e suporte</h3>
