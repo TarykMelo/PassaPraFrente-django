@@ -5,6 +5,7 @@
     font-family: Arial;
     --green1: #009b00;
     --green2: #01bb01;
+    --red: #ff0000;
     --background1: #f5f5f5;
 }
 
@@ -88,19 +89,18 @@ button{
 
 button.cancel{
     padding: 16px;
-    background-color: white;
-    color: var(--green1);
+    background-color: var(--red);
+    color: white;
     font-size: 17px;
     border-radius: 12px;
-    border: 2px solid var(--green1);
     cursor: pointer;
     transition: 0.3s;
 }
 
 button.cancel:hover{
-    background-color: var(--green1);
+    background-color: #cc0000;
     color: white;
-    opacity: 0.85;
+    opacity: 0.9;
 }
 
 button:hover{

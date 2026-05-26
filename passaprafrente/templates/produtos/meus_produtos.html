@@ -30,15 +30,15 @@
                         </div>
                         <div class="main_produto_desc">
                             <h2>{{ produto.nome }}</h2>
-                            <p><b>Descrição:</b> </br> </br> {{ produto.descricao }}</p>
                             <p><b>Preço: </b>R$ {{ produto.preco }}</p>
+                            <p><b>Descrição:</b> </br> </br> {{ produto.descricao }}</p>
                             <p><b>Categoria:</b> {{ produto.categoria }}</p>
                             <p><b>Telefone: </b>{{produto.vendedor.telefone}}</p>
                             <div class="main_produto_desc_buttons">
-                                <a href=""><button>Modificar dados</button></a>
+                                <button>Modificar dados</button>
                                 <form method="POST" action="{% url 'remover_produto' produto.id %}">
                                     {% csrf_token %}
-                                    <button type="submit">Excluir produto</button>
+                                    <button type="submit" class="exclude">Excluir produto</button>
                                 </form>
                             </div>
                         </div>
