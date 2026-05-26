@@ -43,7 +43,7 @@ def user_menu_view(request):
 @login_required
 def modificar_dados(request):
     """
-    Função para levar para modificar os dados do usuário
+    Função para modificar os dados do usuário
     """
     nickname_form = NicknameForm(instance=request.user)
     telefone_form = TelefoneForm(instance=request.user)

@@ -30,6 +30,4 @@ class Produto(models.Model):
     def preco_formatado(self):
         return f"R$ {self.preco:.2f}"
 
-    def info_vendedor(self):
-        return f"{self.vendedor.nickname} -- {self.vendedor.telefone}"
     
