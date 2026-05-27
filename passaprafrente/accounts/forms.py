@@ -100,3 +100,28 @@ class SenhaForm(PasswordChangeForm):
         'password_incorrect': 'Senha atual incorreta',
         'password_mismatch': 'As senhas não coincidem',
     }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['new_password1'].validators = []
+        self.fields['new_password1'].help_text = ''
+
+    def clean_new_password1(self):
+        senha = self.cleaned_data.get('new_password1')
+        import re
+        erros = []
+
+        if len(senha) < 8:
+            erros.append("A senha precisa ter pelo menos 8 caracteres")
+        if not re.search(r"[A-Z]", senha):
+            erros.append("A senha precisa ter pelo menos uma letra maiúscula")
+        if not re.search(r"[0-9]", senha):
+            erros.append("A senha precisa ter pelo menos um número")
+        if not re.search(r"[!@#$%^&*()_+\-=\[\]{};':\"\\|,.<>\/?]", senha):
+            erros.append("A senha precisa ter pelo menos um símbolo")
+        if re.search(r"\s", senha):
+            erros.append("A senha não pode ter espaços")
+
+        if erros:
+            raise forms.ValidationError(erros)
+        return senha

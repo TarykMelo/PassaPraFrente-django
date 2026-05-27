@@ -43,64 +43,50 @@ def user_menu_view(request):
 @login_required
 def modificar_dados(request):
     """
-    Função para levar para a aba de modificar os dados
+    Função para modificar os dados do usuário
     """
-    return render(request, 'accounts/modificar_dados.html')
+    nickname_form = NicknameForm(instance=request.user)
+    telefone_form = TelefoneForm(instance=request.user)
+    senha_form = SenhaForm(request.user)
 
-@login_required
-def modificar_nickname(request):
-    """
-    Função para modificar o nickname do usuário
-    """
     if request.method == 'POST':
-        form = NicknameForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect('modificar_dados')
-    else:
-        form = NicknameForm(instance=request.user)
-    return render(request, 'accounts/modificar_nickname.html', {'form': form})
-
-@login_required
-def modificar_telefone(request):
-    """
-    Função para modificar o telefone do usuário
-    """
-    if request.method == 'POST':
-        form = TelefoneForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-            return redirect('modificar_dados')
-    else:
-        form = TelefoneForm(instance=request.user)
-    return render(request, 'accounts/modificar_telefone.html', {'form': form})
-
-@login_required
-def modificar_senha(request):
-    """
-    Função para modificar a senha do usuário
-    """
-    if request.method == 'POST':
-        form = SenhaForm(request.user, request.POST)
-        if form.is_valid():
-            user = form.save()
-            update_session_auth_hash(request, user)
-            return redirect('modificar_dados')
-    else:
-        form = SenhaForm(request.user)
-    return render(request, 'accounts/modificar_senha.html', {'form': form})
-
+        if 'salvar_nickname' in request.POST:
+            nickname_form = NicknameForm(request.POST, instance=request.user)
+            if nickname_form.is_valid():
+                nickname_form.save()
+                return redirect('modificar_dados')
+            
+        elif 'salvar_telefone' in request.POST:
+            telefone_form = TelefoneForm(request.POST, instance=request.user)
+            if telefone_form.is_valid():
+                telefone_form.save()
+                return redirect('modificar_dados')
+        
+        elif 'salvar_senha' in request.POST:
+            senha_form = SenhaForm(request.user, request.POST)
+            if senha_form.is_valid():
+                user = senha_form.save()
+                update_session_auth_hash(request, user)
+                return redirect('modificar_dados')
+    return render(request, 'accounts/modificar_dados.html', {
+        'nickname_form': nickname_form,
+        'telefone_form': telefone_form,
+        'senha_form': senha_form,
+    })
+        
 @login_required
 def deletar_conta(request):
     """
     Função para deletar a conta do usuário
     """
     if request.method == 'POST':
-        form = SenhaForm(request.user, request.POST)
-        if form.is_valid():
+        senha = request.POST.get('password')
+        if request.user.check_password(senha):
             request.user.delete()
             logout(request)
             return redirect('login')
-    else:
-        form = SenhaForm(request.user)
-    return render(request, 'accounts/deletar_conta.html', {'form': form})
+        else:
+            return render(request, 'accounts/deletar_conta.html',{
+                'erro': 'Senha incorreta'
+            })
+    return render(request, 'accounts/deletar_conta.html')
