@@ -43,7 +43,10 @@
                         Telefone:<br/>
                         <input type="tel" name="telefone" placeholder="Número de telefone" required/>
                     </label>
-                    <button type="submit">Fazer cadastro</button>
+                    <div class="cadastro_buttons">
+                        <button type="submit">Fazer cadastro</button>
+                        <button type="button" onclick="window.location.href='{% url 'login' %}'" class="back_login">Voltar</button>
+                    </div>
                 </div>
             </div>
         </form>

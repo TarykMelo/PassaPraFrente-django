@@ -51,7 +51,10 @@
                         Adicionar imagem
                         <input type="file" name="imagem" id="file">
                     </label>
-                    <button type="submit">Anunciar produto</button>
+                    <div class="info_area_buttons">
+                        <button type="submit" class="post_button">Anunciar produto</button>
+                        <button type="button" onclick="window.location.href='{% url 'user_menu' %}'" class="cancel_button">Cancelar anúncio</button>
+                    </div>
                 </form>
             </div>
         </div>

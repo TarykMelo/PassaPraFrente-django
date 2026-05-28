@@ -11,6 +11,17 @@
 
 body{
     box-sizing: border-box;
+    background-color: #ececec;
+}
+
+.page_wrapper{
+    max-width: 1140px;
+    margin: auto;
+    background: white;
+    min-height: 100vh;
+    box-shadow: 0 0 15px rgba(0,0,0,0.05);
+    border-radius: 10px;
+    overflow: hidden;
 }
 
 .container{
@@ -20,8 +31,8 @@ body{
 
 /* Header */
 header{
-    padding: 20px;
     height: 60px;
+    padding: 20px;
     background-color: var(--background1);
 }
 
