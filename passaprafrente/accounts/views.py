@@ -63,11 +63,12 @@ def modificar_dados(request):
                 return redirect('modificar_dados')
         
         elif 'salvar_senha' in request.POST:
-            senha_form = SenhaForm(request.user, request.POST)
+            senha_form = SenhaForm(user==request.user, data=request.POST)
             if senha_form.is_valid():
                 user = senha_form.save()
                 update_session_auth_hash(request, user)
                 return redirect('modificar_dados')
+            
     return render(request, 'accounts/modificar_dados.html', {
         'nickname_form': nickname_form,
         'telefone_form': telefone_form,
