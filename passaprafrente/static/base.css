@@ -31,7 +31,6 @@ body{
 
 /* Header */
 header{
-    height: 60px;
     padding: 20px;
     background-color: var(--background1);
 }

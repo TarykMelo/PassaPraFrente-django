@@ -1,19 +1,48 @@
 {% extends 'base.html' %}
 
+{% load static %}
+<!DOCTYPE html>
+<head>
+
+    <title>{% block title %} Deletar conta {% endblock %}</title>
+
+    {% block extra_css %}
+        <link rel="stylesheet" href="{% static 'accounts/deletar_conta.css' %}">
+    {% endblock %}
+
+</head>
+
 {% block content %}
-<div class="container">
-    <h1>Deletar conta</h1>
-    <p style="color:red">Essa ação é irreversível!</p>
 
-    {% if erro %}
-        <p style="color:red">{{ erro }}</p>
-    {% endif %}
+<main>
+    <div class="delete_account_container">
+    <div class="delete_account_box">
+        <h1>Deletar conta</h1>
+        <p>
+            Para confirmar a exclusão da sua conta, digite sua senha abaixo.
+            Esta ação não poderá ser desfeita.
+        </p>
 
-    <form method="POST">
-        {% csrf_token %}
-        <input type="password" name="password" placeholder="Digite sua senha para confirmar">
-        <button type="submit" class="delete">Confirmar exclusão</button>
-        <a href="{% url 'modificar_dados' %}">Cancelar</a>
-    </form>
-</div>
+        {% if erro %}
+            <p style="color:red">{{ erro }}</p>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="input_group">
+                <label for="password">Senha</label>
+                <input type="password"  name="password"  id="password" placeholder="Digite sua senha para confirmar" required>
+            </div>
+
+            <div class="buttons">
+                <a href="{% url 'modificar_dados' %}" class="cancel_button">Cancelar</a>
+                <button type="submit" class="delete_button">Confirmar exclusão</button>
+            </div>
+        </form>
+    </div>
+    </div>
+</main>
+
+
 {% endblock %}
