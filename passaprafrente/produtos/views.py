@@ -11,10 +11,10 @@ class ListaProdutosView(LoginRequiredMixin, View):
 
     def get(self, request):
         produtos = Produto.objects.exclude(vendedor=request.user)
-        return render(request, 'produtos/user_menu.html', {'produtos': produtos})
+        return render(request, 'accounts/user_menu.html', {'produtos': produtos})
 
 class RegistrarVendaView(LoginRequiredMixin, View):
-    def ger(self, request): 
+    def get(self, request): 
         form = ProdutoForm()
         return render(request, 'produtos/registrar_venda.html', {'form': form})
     
@@ -63,4 +63,3 @@ class TodasCategoriasView(LoginRequiredMixin, View):
             'produtos': produtos,
             'categoria_atual': None, 
         })
-

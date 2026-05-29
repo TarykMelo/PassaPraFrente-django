@@ -10,25 +10,7 @@
     {% endblock %}
 
 </head>
-<body>
-    <header>
-        <div class="container">
-            <div class="header_menu">
-                <div class="header_logo">
-                    <a href="{% url 'user_menu' %}"><h1>Passa <span>Pra</span> Frente</h1></a>
-                </div>
-                <div class="header_menus">
-                    <nav>
-                        <ul>
-                            <li><a href="{% url 'modificar_nickname' %}">Minha conta</a></li>
-                            <li><a href="{% url 'meus_produtos' %}">Meus produtos</a></li>
-                            <li><a href="{% url 'meus_pedidos' %}">Meus pedidos</a></li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-        </div>
-    </header>    
+    {% block content %}   
 
     <section class="menu">
         <div class="container">

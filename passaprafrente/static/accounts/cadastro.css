@@ -79,3 +79,16 @@ button{
 button:hover{
     background-color: #175735;
 }
+
+.back_login{
+    background: white;
+    color: #1f6f43;
+    border: 2px solid #1f6f43;
+    transition: 0.3s;
+}
+
+.back_login:hover{
+    background-color: #175735;
+    border: 2px solid #175735;
+    color: white;
+}

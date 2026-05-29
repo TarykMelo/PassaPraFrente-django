@@ -1,93 +1,104 @@
 from django.shortcuts import render, redirect
+from django.views import View
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import CadastroForm, NicknameForm, TelefoneForm, SenhaForm
 from produtos.models import Produto
 
 
-def cadastro_view(request):
-    if request.method == 'POST':
+class CadastroView(View):
+    def get(self, request):
+        form = CadastroForm()
+        return render(request, 'accounts/cadastro.html', {'form': form})
+
+    def post(self, request):
         form = CadastroForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
             return redirect('user_menu')
-    else:
-        form = CadastroForm()
-    return render(request, 'accounts/cadastro.html', {'form': form})
+        return render(request, 'accounts/cadastro.html', {'form': form})
 
-def login_view(request):
-    erro = None
-    if request.method == 'POST':
+
+class LoginView(View):
+    def get(self, request):
+        return render(request, 'accounts/login.html')
+
+    def post(self, request):
         email = request.POST.get('email')
         senha = request.POST.get('password')
-        user = authenticate(request, username=email, password=senha)
+        user  = authenticate(request, username=email, password=senha)
 
         if user is not None:
             login(request, user)
             return redirect('user_menu')
-        else:
-            erro = "Email ou senha incorretos"
-    
-    return render(request, 'accounts/login.html', {'erro': erro})
 
-def logout_view(request):
-    logout(request)
-    return redirect('login')
+        return render(request, 'accounts/login.html', {
+            'erro': 'Email ou senha incorretos'
+        })
 
-@login_required
-def user_menu_view(request):
-    produtos = Produto.objects.exclude(vendedor=request.user)
-    return render(request, 'accounts/user_menu.html', {'produtos': produtos})
 
-@login_required
-def modificar_dados(request):
-    """
-    Função para modificar os dados do usuário
-    """
-    nickname_form = NicknameForm(instance=request.user)
-    telefone_form = TelefoneForm(instance=request.user)
-    senha_form = SenhaForm(request.user)
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect('login')
 
-    if request.method == 'POST':
+
+class UserMenuView(LoginRequiredMixin, View):
+    def get(self, request):
+        produtos = Produto.objects.exclude(vendedor=request.user)
+        return render(request, 'accounts/user_menu.html', {'produtos': produtos})
+
+
+class ModificarDadosView(LoginRequiredMixin, View):
+    def get(self, request):
+        return render(request, 'accounts/modificar_dados.html', {
+            'nickname_form': NicknameForm(instance=request.user),
+            'telefone_form': TelefoneForm(instance=request.user),
+            'senha_form':    SenhaForm(request.user),
+        })
+
+    def post(self, request):
+        nickname_form = NicknameForm(instance=request.user)
+        telefone_form = TelefoneForm(instance=request.user)
+        senha_form    = SenhaForm(request.user)
+
         if 'salvar_nickname' in request.POST:
             nickname_form = NicknameForm(request.POST, instance=request.user)
             if nickname_form.is_valid():
                 nickname_form.save()
                 return redirect('modificar_dados')
-            
+
         elif 'salvar_telefone' in request.POST:
             telefone_form = TelefoneForm(request.POST, instance=request.user)
             if telefone_form.is_valid():
                 telefone_form.save()
                 return redirect('modificar_dados')
-        
+
         elif 'salvar_senha' in request.POST:
-            senha_form = SenhaForm(user==request.user, data=request.POST)
+            senha_form = SenhaForm(request.user, request.POST)
             if senha_form.is_valid():
                 user = senha_form.save()
                 update_session_auth_hash(request, user)
                 return redirect('modificar_dados')
-            
-    return render(request, 'accounts/modificar_dados.html', {
-        'nickname_form': nickname_form,
-        'telefone_form': telefone_form,
-        'senha_form': senha_form,
-    })
-        
-@login_required
-def deletar_conta(request):
-    """
-    Função para deletar a conta do usuário
-    """
-    if request.method == 'POST':
+
+        return render(request, 'accounts/modificar_dados.html', {
+            'nickname_form': nickname_form,
+            'telefone_form': telefone_form,
+            'senha_form':    senha_form,
+        })
+
+
+class DeletarContaView(LoginRequiredMixin, View):
+    def get(self, request):
+        return render(request, 'accounts/deletar_conta.html')
+
+    def post(self, request):
         senha = request.POST.get('password')
         if request.user.check_password(senha):
             request.user.delete()
             logout(request)
             return redirect('login')
-        else:
-            return render(request, 'accounts/deletar_conta.html',{
-                'erro': 'Senha incorreta'
-            })
-    return render(request, 'accounts/deletar_conta.html')
+        return render(request, 'accounts/deletar_conta.html', {
+            'erro': 'Senha incorreta'
+        })

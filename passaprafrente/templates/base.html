@@ -10,52 +10,55 @@
 </head>
 <body>
 
-    <header>
-        <div class="container">
-            <div class="header_menu">
-                <div class="header_logo">
-                    <a href="{% url 'user_menu' %}"><img src="{% static 'accounts/Images/passaprafrente-logo-nova.png' %}" alt="PassaPraFrente logo"></a>
-                </div>
-                <div class="header_menus">
-                    <nav>
-                        <ul>
-                            <li><a href="{% url 'logout' %}">Sair</a></li>
-                            <li><a href="{% url 'modificar_dados'%}">Minha conta</a></li>
-                            <li><a href="{% url 'meus_produtos' %}">Minhas vendas</a></li>
-                            <li><a href="{% url 'meus_pedidos' %}">Meus pedidos</a></li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-        </div>
-    </header>
+    <div class="page_wrapper">
 
-    {% block content %}{% endblock %}
-
-    <footer>
-        <div class="container">
-            <div class="footer_left_side">
-                <h3>Passa <span>Pra</span> Frente</h3>
-                <p>Marketplace universitário da UFRPE.</p>
-            </div>
-            <div class="footer_right_side">
-                <h3>Acesso rápido</h3>
-                <a href="{% url 'user_menu' %}">Home</a>
-                <a href="{% url 'todas_categorias' %}">Categorias</a>
-                <a href="{% url 'registrar_venda' %}">Vender</a>
-                <a href="{% url 'meus_pedidos' %}">Minhas compras</a>
-            </div>
-            <div class="footer_end_side">
-                <h3>Contato e suporte</h3>
-                <a href="">Código-fonte</a>
-                <a href="">Email de contato</a>
-                <div class="footer_images">
-                    <a href=""><img src="{% static 'accounts/Images/e-mail.png' %}" alt="email"></a>
-                    <a href=""><img src="{% static 'accounts/Images/github.png' %}" alt="Github"></a>
+        <header>
+            <div class="container">
+                <div class="header_menu">
+                    <div class="header_logo">
+                        <a href="{% url 'user_menu' %}"><img src="{% static 'accounts/Images/passaprafrente-logo-nova.png' %}" alt="PassaPraFrente logo"></a>
+                    </div>
+                    <div class="header_menus">
+                        <nav>
+                            <ul>
+                                <li><a href="{% url 'logout' %}">Sair</a></li>
+                                <li><a href="{% url 'modificar_dados'%}">Minha conta</a></li>
+                                <li><a href="{% url 'meus_produtos' %}">Minhas vendas</a></li>
+                                <li><a href="{% url 'meus_pedidos' %}">Meus pedidos</a></li>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
             </div>
-        </div>
-    </footer>
+        </header>
+
+        {% block content %}{% endblock %}
+
+        <footer>
+            <div class="container">
+                <div class="footer_left_side">
+                    <h3>Passa <span>Pra</span> Frente</h3>
+                    <p>Marketplace universitário da UFRPE.</p>
+                </div>
+                <div class="footer_right_side">
+                    <h3>Acesso rápido</h3>
+                    <a href="{% url 'user_menu' %}">Home</a>
+                    <a href="{% url 'todas_categorias' %}">Categorias</a>
+                    <a href="{% url 'registrar_venda' %}">Vender</a>
+                    <a href="{% url 'meus_pedidos' %}">Minhas compras</a>
+                </div>
+                <div class="footer_end_side">
+                    <h3>Contato e suporte</h3>
+                    <a href="">Código-fonte</a>
+                    <a href="">Email de contato</a>
+                    <div class="footer_images">
+                        <a href=""><img src="{% static 'accounts/Images/e-mail.png' %}" alt="email"></a>
+                        <a href=""><img src="{% static 'accounts/Images/github.png' %}" alt="Github"></a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
 
 </body>
 </html>
