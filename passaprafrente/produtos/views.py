@@ -1,59 +1,65 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
 from produtos.models import Produto
 from .forms import ProdutoForm
 
-@login_required
-def lista_produtos(request):
+class ListaProdutosView(LoginRequiredMixin, View):
     """
-    Todos os produtos são mostrados, exceto os do próprio usuário logado
+    Todos os produtos são exibidos, excetoos do próprio usuário
     """
-    produtos = Produto.objects.exclude(vendedor=request.user)
-    return render(request, 'produtos/user_menu.html', {'produtos': produtos})
 
-@login_required
-def registrar_venda(request):
-    if request.method == 'POST':
+    def get(self, request):
+        produtos = Produto.objects.exclude(vendedor=request.user)
+        return render(request, 'accounts/user_menu.html', {'produtos': produtos})
+
+class RegistrarVendaView(LoginRequiredMixin, View):
+    def get(self, request): 
+        form = ProdutoForm()
+        return render(request, 'produtos/registrar_venda.html', {'form': form})
+    
+    def post(self, request):
         form = ProdutoForm(request.POST, request.FILES)
         if form.is_valid():
             produto = form.save(commit=False)
             produto.vendedor = request.user
             produto.save()
             return redirect('user_menu')
-    else:
-        form = ProdutoForm()
-    return render(request, 'produtos/registrar_venda.html', {'form': form})
+        return render(request, 'produtos/registrar_venda.html', {'form': form})
 
-@login_required
-def meus_produtos(request):
-    produtos = Produto.objects.filter(vendedor=request.user)
-    return render(request, 'produtos/meus_produtos.html', {'produtos': produtos})
 
-@login_required
-def remover_produto(request, produto_id):
-    produto = get_object_or_404(Produto, id=produto_id, vendedor=request.user)
-    if request.method =='POST':
+class MeusProdutosView(LoginRequiredMixin, View):
+    def get(self, request):
+        produtos = Produto.objects.filter(vendedor=request.user)
+        return render(request, 'produtos/meus_produtos.html', {'produtos': produtos})
+
+
+class RemoverProdutoView(LoginRequiredMixin, View):
+    def post(self, request, produto_id):
+        produto = get_object_or_404(Produto, id=produto_id, vendedor=request.user)
         produto.delete()
-    return redirect('meus_produtos')
+        return redirect('meus_produtos')
 
-@login_required
-def categoria_view(request, categoria):
-    """
-    Função para filtrar produtos por categoria
-    """
-    produtos = Produto.objects.exclude(vendedor=request.user).filter(categoria=categoria)
-    return render(request, 'produtos/categoria.html', {
-        'produtos': produtos,
-        'categoria_atual': categoria,
-    })
 
-@login_required
-def todas_categorias(request):
+class CategoriaView(LoginRequiredMixin, View):
     """
-    Função para que seja possível ver todos os produtos na página 'categoria'
+    Filtrar produtos por categoria
     """
-    produtos = Produto.objects.exclude(vendedor=request.user)
-    return render(request, 'produtos/categoria.html', {
-        'produtos': produtos,
-        'categoria_atual': None, 
-    })
+    def get(self, request, categoria):
+        produtos = Produto.objects.exclude(vendedor=request.user).filter(categoria=categoria)
+        return render(request, 'produtos/categoria.html', {
+            'produtos': produtos,
+            'categoria_atual': categoria,
+        })
+
+
+class TodasCategoriasView(LoginRequiredMixin, View):
+    """
+    Permite ver todos os produtos na página 'categoria'
+    """
+    def get(self, request):
+        produtos = Produto.objects.exclude(vendedor=request.user)
+        return render(request, 'produtos/categoria.html', {
+            'produtos': produtos,
+            'categoria_atual': None, 
+        })
