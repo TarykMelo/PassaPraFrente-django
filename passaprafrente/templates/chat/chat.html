@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Chat — {{ pedido.produto.nome }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'chat/chat.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Chat — {{ pedido.produto.nome }}</h1>
+    <p>
+        Comprador: {{ pedido.comprador.nickname }} —
+        Vendedor: {{ pedido.produto.vendedor.nickname }}
+    </p>
+    <hr>
+
+    <div class="chat_mensagens" id="chat_box">
+        {% for mensagem in mensagens %}
+            <div class="mensagem {% if mensagem.remetente == request.user %}minha{% else %}outra{% endif %}">
+                <p class="remetente">{{ mensagem.remetente.nickname }}</p>
+                <p class="conteudo">{{ mensagem.conteudo }}</p>
+                <p class="hora">{{ mensagem.enviado_em|date:"d/m/Y H:i" }}</p>
+            </div>
+        {% empty %}
+            <p id="sem_mensagens">Nenhuma mensagem ainda. Inicie a conversa!</p>
+        {% endfor %}
+    </div>
+
+    <div class="chat_form">
+        <input type="text" id="input_mensagem"
+               placeholder="Digite sua mensagem..." autocomplete="off">
+        <button id="btn_enviar">Enviar</button>
+    </div>
+
+    <a href="{% url 'meus_pedidos' %}">Voltar</a>
+</div>
+
+<script>
+    const chatBox    = document.getElementById('chat_box');
+    const input      = document.getElementById('input_mensagem');
+    const btnEnviar  = document.getElementById('btn_enviar');
+    const meuUserId  = {{ request.user.id }};
+    const urlNovas   = "{% url 'mensagens_novas' pedido.id %}";
+    const urlEnviar  = "{% url 'chat_pedido' pedido.id %}";
+    const csrfToken  = "{{ csrf_token }}";
+
+    // guarda o id da última mensagem que o navegador já tem
+    let ultimoId = {{ ultimo_id }};
+
+    function rolarParaBaixo() {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function criarMensagem(dados) {
+        const semMensagens = document.getElementById('sem_mensagens');
+        if (semMensagens) semMensagens.remove();
+
+        const ehMinha = dados.user_id === meuUserId;
+        const div     = document.createElement('div');
+        div.classList.add('mensagem', ehMinha ? 'minha' : 'outra');
+        div.innerHTML = `
+            <p class="remetente">${dados.remetente}</p>
+            <p class="conteudo">${dados.conteudo}</p>
+            <p class="hora">${dados.hora}</p>
+        `;
+        chatBox.appendChild(div);
+        rolarParaBaixo();
+    }
+
+    async function buscarNovas() {
+        try {
+            const resposta = await fetch(`${urlNovas}?ultimo_id=${ultimoId}`);
+            const dados    = await resposta.json();
+
+            if (dados.mensagens.length > 0) {
+                dados.mensagens.forEach(m => {
+                    criarMensagem(m);
+                    ultimoId = m.id;  // atualiza o último id
+                });
+            }
+        } catch (erro) {
+            console.error('Erro ao buscar mensagens:', erro);
+        }
+    }
+
+    async function enviarMensagem() {
+        const conteudo = input.value.trim();
+        if (!conteudo) return;
+
+        await fetch(urlEnviar, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': csrfToken,
+            },
+            body: `conteudo=${encodeURIComponent(conteudo)}`
+        });
+
+        input.value = '';
+        buscarNovas();  // busca imediatamente após enviar
+    }
+
+    btnEnviar.addEventListener('click', enviarMensagem);
+
+    input.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') enviarMensagem();
+    });
+
+    // polling a cada 3 segundos
+    setInterval(buscarNovas, 3000);
+    rolarParaBaixo();
+</script>
+{% endblock %}

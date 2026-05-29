@@ -41,6 +41,7 @@
                                     {% csrf_token %}
                                     <button type="submit">Cancelar pedido</button>
                                 </form>
+                                <button onclick="window.location.href='{% url 'chat_pedido' pedido.id %}'">Abrir chat</button>
                             </div>
                         </div>
                     </div>
