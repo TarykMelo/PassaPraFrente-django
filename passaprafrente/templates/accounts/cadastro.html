@@ -13,41 +13,53 @@
         <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Logo PassaPraFrente"/>
         <form action="" method="POST">
             {% csrf_token %}
-
-            {% if form.errors %}
-                <div style="background:red; color:white; padding:10px;">
-                    {{ form.errors }}
-                </div>
-            {% endif %}
-
-            <div class="box">
-                <h1>CADASTRO</h1>
-                <div class="cadastro">
-                    <label>
-                        Email:<br/>
-                        <input type="email" name="email" placeholder="Digite o email" required/>
-                    </label>
-                    <label>
-                        Senha:<br/>
-                        <input type="password" name="password1" placeholder="Senha" required/>
-                    </label>
-                    <label>
-                        Confirme a senha:<br/>
-                        <input type="password" name="password2" placeholder="Confirme a senha" required/>
-                    </label>
-                    <label>
-                        Nickname:<br/>
-                        <input type="text" name="nickname" placeholder="Nickname" required/>
-                    </label>
-                    <label>
-                        Telefone:<br/>
-                        <input type="tel" name="telefone" placeholder="Número de telefone" required/>
-                    </label>
-                    <div class="cadastro_buttons">
-                        <button type="submit">Fazer cadastro</button>
-                        <button type="button" onclick="window.location.href='{% url 'login' %}'" class="back_login">Voltar</button>
+            <div class="boxes">
+                
+                <div class="box"> 
+                    <h1>CADASTRO</h1>
+                    <div class="cadastro">
+                        <label>
+                            Email:<br/>
+                            <input type="email" name="email" placeholder="Digite o email" required/>
+                            {% for error in form.email.errors %}
+                                <span class="erro">{{ error }}</span>
+                            {% endfor %}
+                        </label>
+                        <label>
+                            Senha:<br/>
+                            <input type="password" name="password1" placeholder="Senha" required/>
+                            {% for error in form.password1.errors %}
+                                <span class="erro">{{ error }}</span>
+                            {% endfor %}
+                        </label>
+                        <label>
+                            Confirme a senha:<br/>
+                            <input type="password" name="password2" placeholder="Confirme a senha" required/>
+                            {% for error in form.password2.errors %}
+                                <span class="erro">{{ error }}</span>
+                            {% endfor %}
+                        </label>
+                        <label>
+                            Nickname:<br/>
+                            <input type="text" name="nickname" placeholder="Nickname" required/>
+                            {% for error in form.nickname.errors %}
+                                <span class="erro">{{ error }}</span>
+                            {% endfor %}
+                        </label>
+                        <label>
+                            Telefone:<br/>
+                            <input type="tel" name="telefone" placeholder="Número de telefone" required/>
+                            {% for error in form.telefone.errors %}
+                                <span class="erro">{{ error }}</span>
+                            {% endfor %}
+                        </label>
+                        <div class="cadastro_buttons">
+                            <button type="submit">Fazer cadastro</button>
+                            <button type="button" onclick="window.location.href='{% url 'login' %}'" class="back_login">Voltar</button>
+                        </div>
                     </div>
                 </div>
+
             </div>
         </form>
     </div>

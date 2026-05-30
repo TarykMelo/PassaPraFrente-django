@@ -9,12 +9,10 @@
 </head>
 <body>
 
-    {% if erro %}
-        <p style="color:red">{{ erro }}</p>
-    {% endif %}
 
     <div class="container">
         <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Logo PassaPraFrente"/>
+
         <form action="" method="POST">
             {% csrf_token %}
             <div class="box">
@@ -31,6 +29,9 @@
                     <div class="cadastro">
                         Não possui uma conta? <a href="{% url 'cadastro' %}">Cadastre-se</a>
                     </div>
+                    {% if erro %}
+                        <p class="error_message">{{ erro }}</p>
+                    {% endif %}
                     <button type="submit">Fazer login</button>
                 </div>
             </div>
