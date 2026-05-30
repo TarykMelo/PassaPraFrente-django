@@ -81,3 +81,16 @@ button{
 button:hover{
     background-color: #175735;
 }
+
+/* django/python */
+
+.error_message {
+    margin-top: 15px;
+    background-color: #ffe5e5;
+    color: #d60000;
+    border: 1px solid #ffb3b3;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    text-align: center;
+}
