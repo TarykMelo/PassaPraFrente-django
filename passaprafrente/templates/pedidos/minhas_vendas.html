@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<main>
+    <div class="container mt-5">
+        <h1>Minhas Vendas (Solicitações recebidas)</h1>
+
+        {% if messages %}
+            <div class="messages mb-4">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if vendas %}
+            {% for venda in vendas %}
+                <div class="card mb-3 shadow-sm">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h3>{{ venda.produto.nome }}</h3>
+                                <p class="mb-1"><b>Comprador:</b> {{ venda.comprador.nickname }}</p>
+                                <p class="mb-1"><b>Telefone do Comprador:</b> {{ venda.comprador.telefone }}</p>
+                                <p class="mb-1"><b>Data do Pedido:</b> {{ venda.criado_em|date:"d/m/Y" }}</p>
+                                <p class="mb-1"><b>Status Atual:</b> 
+                                    <span class="badge bg-secondary">{{ venda.get_status_display }}</span>
+                                </p>
+                            </div>
+                            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                                
+                                {% if venda.status == 'pendente' %}
+                                    <form method="POST" action="{% url 'mudar_status_venda' venda.id %}" style="display:inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="acao" value="confirmar">
+                                        <button type="submit" class="btn btn-primary">✓ Confirmar Pedido</button>
+                                    </form>
+                                {% endif %}
+
+                                {% if venda.status == 'compra_confirmada' %}
+                                    <form method="POST" action="{% url 'mudar_status_venda' venda.id %}" style="display:inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="acao" value="finalizar">
+                                        <button type="submit" class="btn btn-success">📦 Marcar como Entregue</button>
+                                    </form>
+                                {% endif %}
+
+                                {% if venda.status == 'finalizado' %}
+                                    <span class="text-success">✓ Venda concluída com sucesso!</span>
+                                {% endif %}
+
+                                {% if venda.status == 'cancelado' %}
+                                    <span class="text-danger">❌ Este pedido foi cancelado.</span>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Você ainda não recebeu nenhuma solicitação de compra para os seus produtos.</p>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

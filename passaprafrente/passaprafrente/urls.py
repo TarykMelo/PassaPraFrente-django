@@ -18,11 +18,11 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
-from django.views.generic import RedirectView 
+from accounts.views import LoginView 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', RedirectView.as_view(url='/login/', permanent=False)),
+    path('', LoginView.as_view(), name='login'),
     path('', include('accounts.urls')),
     path('produtos/', include('produtos.urls')),
     path('pedidos/', include('pedidos.urls')),

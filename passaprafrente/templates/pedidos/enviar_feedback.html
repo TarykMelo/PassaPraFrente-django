@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Avaliar Vendedor</h4>
+                </div>
+                <div class="card-body">
+                    <h5>Sua compra: <strong>{{ pedido.produto.nome }}</strong></h5>
+                    <p class="text-muted">Vendedor: {{ pedido.vendedor.nickname }}</p>
+                    <hr>
+
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label for="id_nota" class="form-label">Sua Nota (de 1 a 5 estrelas):</label>
+                            {{ form.nota }}
+                            {% if form.nota.errors %}
+                                <div class="text-danger small">{{ form.nota.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_comentario" class="form-label">O que você achou do atendimento e do produto?</label>
+                            {{ form.comentario }}
+                            {% if form.comentario.errors %}
+                                <div class="text-danger small">{{ form.comentario.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'meus_pedidos' %}" class="btn btn-light me-md-2">Voltar</a>
+                            <button type="submit" class="btn btn-success">Enviar Avaliação</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

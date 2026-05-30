@@ -1,5 +1,6 @@
 from django import forms
-from produtos.models import Produto, Feedback
+from produtos.models import Produto
+from pedidos.models import Feedback
 
 class ProdutoForm(forms.ModelForm):
 
