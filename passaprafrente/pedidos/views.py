@@ -5,7 +5,7 @@ from django.contrib import messages
 from produtos.models import Produto
 from .models import Pedido, Feedback
 from .forms import FeedbackForm
-from django.db.models import AVG
+
 
 class FazerPedidoView(LoginRequiredMixin, View):
     """
@@ -60,6 +60,8 @@ class MeusPedidosView(LoginRequiredMixin, View):
             comprador=request.user
         ).exclude(
             status='cancelado'
+        ).exclude(
+            feedback_pedido__isnull=False
         ).select_related('produto', 'produto__vendedor')
         return render(request, 'pedidos/meus_pedidos.html', {'pedidos': pedidos})
 
@@ -134,8 +136,8 @@ class EnviarFeedbackView(LoginRequiredMixin, View):
             return redirect('meus_pedidos') 
 
         if hasattr(pedido, 'feedback_pedido'):
-        messages.error(request, "Você já avaliou este pedido.")
-        return redirect('meus_pedidos')
+            messages.error(request, "Você já avaliou este pedido.")
+            return redirect('meus_pedidos')
             
         form = FeedbackForm()
         return render(request, 'pedidos/enviar_feedback.html', {'form': form, 'pedido': pedido})
@@ -148,8 +150,8 @@ class EnviarFeedbackView(LoginRequiredMixin, View):
             return redirect('meus_pedidos')
 
         if hasattr(pedido, 'feedback_pedido'):
-        messages.error(request, "Você já avaliou este pedido.")
-        return redirect('meus_pedidos')
+            messages.error(request, "Você já avaliou este pedido.")
+            return redirect('meus_pedidos')
 
         form = FeedbackForm(request.POST)
         if form.is_valid():
@@ -173,6 +175,7 @@ class MeusFeedbacksView(LoginRequiredMixin, View):
             vendedor=request.user
         ).select_related('avaliador', 'pedido__produto')
 
+        from django.db.models import AVG
         media = feedbacks.aggregate(media=Avg('nota'))['media']
 
         return render(request, 'pedidos/meus_feedbacks.html', { #Adicionar depois essa página no histórico de produtos vendidos
