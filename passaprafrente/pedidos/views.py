@@ -238,3 +238,24 @@ class HistoricoVendasView(LoginRequiredMixin, View):
             'filtro': filtro,
             'total_finalizados': total_finalizados,
         })
+
+class DetalheHistoricoView(LoginRequiredMixin, View):
+    def get(self, request, pedido_id):
+        pedido = get_object_or_404(
+            Pedido,
+            id=pedido_id,
+            status__in=['finalizado', 'cancelado', 'cancelamento_solicitado']
+        )
+
+        if pedido.comprador != request.user and pedido.vendedor != request.user:
+            return redirect('user_menu')
+        
+        feedback = getattr(pedido, 'feedback_pedido', None)
+
+        comprador = pedido.comprador == request.user
+
+        return render(request, 'pedidos/detalhe_historico.html',{
+        'pedido': pedido,
+        'feedback': feedback,
+        'comprador': comprador,
+        })

@@ -3,7 +3,7 @@ from .views import (
     FazerPedidoView, MeusPedidosView, CancelarPedidoView, 
     EnviarFeedbackView, MinhasVendasView, MudarStatusVendaView,
     ConfirmarRecebimentoView, MeusFeedbacksView, HistoricoView,
-    HistoricoComprasView, HistoricoVendasView
+    HistoricoComprasView, HistoricoVendasView, DetalheHistoricoView
 )
 
 urlpatterns = [
@@ -18,4 +18,5 @@ urlpatterns = [
     path('historico/', HistoricoView.as_view(), name='historico'),
     path('historico/compras/', HistoricoComprasView.as_view(), name='historico_compras'),
     path('historico/vendas/', HistoricoVendasView.as_view(), name='historico_vendas'),
+    path('historico/detalhe/<int:pedido_id>/', DetalheHistoricoView.as_view(), name='detalhe_historico')
 ]

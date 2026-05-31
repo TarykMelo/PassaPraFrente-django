@@ -54,7 +54,7 @@
                                 <p><b>Status: </b> {{ pedido.get_status_display }}</p>
                             </div>
                             <div class="produto_buttons">
-                                <button>Ver detalhes</button>
+                                <button onclick="window.location.href='{% url 'detalhe_historico' pedido.id %}'">Ver detalhes</button>
                             </div>
                         </div>
                     {% endfor %}

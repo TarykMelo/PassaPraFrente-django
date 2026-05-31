@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Detalhes do pedido{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'pedidos/detalhe_historico.css' %}">
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container">
+        {% if comprador %}
+            <a href="{% url 'historico_compras' %}" class="back_button">← Voltar</a>
+        {% else %}
+            <a href="{% url 'historico_vendas' %}" class="back_button">← Voltar</a>
+        {% endif %}
+
+        <div class="card">
+            <div class="card_imagem">
+                    {% if pedido.produto.imagem %}
+                        <img src="{{ pedido.produto.imagem.url }}" alt="{{ pedido.produto.nome }}">
+                    {% else %}
+                        <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
+                    {% endif %}
+
+            </div>
+
+            <div class="card_info">
+                <h1>{{ pedido.produto.nome }}</h1>
+                <h2>R$ {{ pedido.produto.preco }}</h2>
+
+                <p>{{ pedido.produto.descricao }}</p>
+                <p><b>Categoria:</b> {{ pedido.produto.categoria }}</p>
+                <p><b>Comprador:</b> {{ pedido.comprador.nickname }}
+                <p><b>Vendedor:</b> {{ pedido.vendedor.nickname }}</p>
+                <p><b>Telefone:</b> {{ pedido.vendedor.telefone }}</p>
+                <p><b>Data da compra:</b> {{ pedido.criado_em|date:"d/m/Y" }}</p>
+                <p><b>Status:</b> {{ pedido.get_status_display }}</p>
+
+                {% if feedback %}
+                    <hr>
+                    <h3>Avaliação</h3>
+                    <p>Nota: {{ feedback.nota }} ⭐</p>
+                    {% if feedback.comentario %}
+                        <p>{{ feedback.comentario }}</p>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
