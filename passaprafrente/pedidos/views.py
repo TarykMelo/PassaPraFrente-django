@@ -5,6 +5,7 @@ from django.contrib import messages
 from produtos.models import Produto
 from .models import Pedido, Feedback
 from .forms import FeedbackForm
+from django.db.models import AVG
 
 class FazerPedidoView(LoginRequiredMixin, View):
     """
@@ -75,43 +76,6 @@ class CancelarPedidoView(LoginRequiredMixin, View):
         return redirect('meus_pedidos')
 
 
-class EnviarFeedbackView(LoginRequiredMixin, View):
-    """
-    View em POO para processar a avaliação que o comprador dá ao vendedor
-    após a conclusão do pedido.
-    """
-    def get(self, request, pedido_id):
-        pedido = get_object_or_404(Pedido, id=pedido_id, comprador=request.user)
-        
-        # Só deixa avaliar se o pedido estiver finalizado
-        if pedido.status != 'finalizado':
-            messages.error(request, "Você só pode dar feedback para um pedido finalizado.")
-            return redirect('meus_pedidos') 
-            
-        form = FeedbackForm()
-        return render(request, 'pedidos/enviar_feedback.html', {'form': form, 'pedido': pedido})
-
-    def post(self, request, pedido_id):
-        pedido = get_object_or_404(Pedido, id=pedido_id, comprador=request.user)
-        
-        if pedido.status != 'finalizado':
-            messages.error(request, "Ação não permitida.")
-            return redirect('meus_pedidos')
-
-        form = FeedbackForm(request.POST)
-        if form.is_valid():
-            feedback = form.save(commit=False)
-            feedback.pedido = pedido
-            feedback.avaliador = request.user
-            feedback.vendedor = pedido.vendedor 
-            feedback.save()
-            
-            messages.success(request, "Obrigado! Seu feedback foi enviado com sucesso.")
-            return redirect('meus_pedidos')
-            
-        return render(request, 'pedidos/enviar_feedback.html', {'form': form, 'pedido': pedido})
-
-
 class MinhasVendasView(LoginRequiredMixin, View):
     """
     View para o vendedor visualizar e gerenciar os pedidos que fizeram de seus produtos
@@ -155,3 +119,63 @@ class ConfirmarRecebimentoView(LoginRequiredMixin, View):
         pedido.finalizar()
         messages.success(request, "Recebimento confirmado! Obrigado pela compra.")
         return redirect('meus_pedidos')
+
+class EnviarFeedbackView(LoginRequiredMixin, View):
+    """
+    View em POO para processar a avaliação que o comprador dá ao vendedor
+    após a conclusão do pedido.
+    """
+    def get(self, request, pedido_id):
+        pedido = get_object_or_404(Pedido, id=pedido_id, comprador=request.user)
+        
+        # Só deixa avaliar se o pedido estiver finalizado
+        if pedido.status != 'finalizado':
+            messages.error(request, "Você só pode dar feedback para um pedido finalizado.")
+            return redirect('meus_pedidos') 
+
+        if hasattr(pedido, 'feedback_pedido'):
+        messages.error(request, "Você já avaliou este pedido.")
+        return redirect('meus_pedidos')
+            
+        form = FeedbackForm()
+        return render(request, 'pedidos/enviar_feedback.html', {'form': form, 'pedido': pedido})
+
+    def post(self, request, pedido_id):
+        pedido = get_object_or_404(Pedido, id=pedido_id, comprador=request.user)
+        
+        if pedido.status != 'finalizado':
+            messages.error(request, "Ação não permitida.")
+            return redirect('meus_pedidos')
+
+        if hasattr(pedido, 'feedback_pedido'):
+        messages.error(request, "Você já avaliou este pedido.")
+        return redirect('meus_pedidos')
+
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+            feedback = form.save(commit=False)
+            feedback.pedido = pedido
+            feedback.avaliador = request.user
+            feedback.vendedor = pedido.vendedor 
+            feedback.save()
+            
+            messages.success(request, "Obrigado! Seu feedback foi enviado com sucesso.")
+            return redirect('meus_pedidos')
+            
+        return render(request, 'pedidos/enviar_feedback.html', {'form': form, 'pedido': pedido})
+
+class MeusFeedbacksView(LoginRequiredMixin, View):
+    """
+    Vendedor Vê os feedbacks que recebeu
+    """
+    def get(self, request):
+        feedbacks = Feedback.objects.filter(
+            vendedor=request.user
+        ).select_related('avaliador', 'pedido__produto')
+
+        media = feedbacks.aggregate(media=Avg('nota'))['media']
+
+        return render(request, 'pedidos/meus_feedbacks.html', { #Adicionar depois essa página no histórico de produtos vendidos
+            'feedbacks': feedbacks,
+            'media': round(media, 1) if media else None,
+        })

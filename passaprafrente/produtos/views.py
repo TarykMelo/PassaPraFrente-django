@@ -3,6 +3,7 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from produtos.models import Produto
 from .forms import ProdutoForm
+from produtos.utils import ProdutosDisponiveis
 
 class ListaProdutosView(LoginRequiredMixin, View):
     """
@@ -49,7 +50,7 @@ class CategoriaView(LoginRequiredMixin, View):
     Filtrar produtos por categoria
     """
     def get(self, request, categoria):
-        produtos = Produto.objects.exclude(vendedor=request.user).filter(categoria=categoria)
+        produtos = ProdutosDisponiveis.get(request.user, categoria=categoria)
         return render(request, 'produtos/categoria.html', {
             'produtos': produtos,
             'categoria_atual': categoria,
@@ -61,7 +62,7 @@ class TodasCategoriasView(LoginRequiredMixin, View):
     Permite ver todos os produtos na página 'categoria'
     """
     def get(self, request):
-        produtos = Produto.objects.exclude(vendedor=request.user)
+        produtos = ProdutosDisponiveis.get(request.user)
         return render(request, 'produtos/categoria.html', {
             'produtos': produtos,
             'categoria_atual': None, 

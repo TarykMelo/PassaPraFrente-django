@@ -55,7 +55,7 @@ main h1{
     display: flex;
     flex: 1;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
 }
 
 .main_produto_desc h2{

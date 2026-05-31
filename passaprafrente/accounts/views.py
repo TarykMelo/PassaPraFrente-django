@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout, update_session_auth
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import CadastroForm, NicknameForm, TelefoneForm, SenhaForm
 from produtos.models import Produto
+from produtos.utils import ProdutosDisponiveis
 
 
 class CadastroView(View):
@@ -46,7 +47,7 @@ class LogoutView(View):
 
 class UserMenuView(LoginRequiredMixin, View):
     def get(self, request):
-        produtos = Produto.objects.exclude(vendedor=request.user)
+        produtos = ProdutosDisponiveis.get(request.user)
         return render(request, 'accounts/user_menu.html', {'produtos': produtos})
 
 
