@@ -65,7 +65,7 @@
 
                                         {% if pedido.status == 'finalizado' %}
                                             {% if not pedido.feedback_pedido %}
-                                                <a href="{% url 'enviar_feedback' pedido.id %}">
+                                                <a href="{% url 'enviar_feedback' pedido.id %}" class="feedback">
                                                     ⭐ Avaliar Vendedor
                                                 </a>
                                             {% else %}

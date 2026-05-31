@@ -6,9 +6,11 @@
     --green2: #01bb01;
     --white: #ffffff;
     --grey-button: #e2e2e2bb;
+    --grey-color: #222;
     --black: #000000;
     --background1: rgba(247, 247, 247, 0.863);
     --border-grey: rgb(158, 158, 158);
+    --gold: #F8B400;
 }
 
 body{
@@ -89,4 +91,20 @@ main h1{
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+
+.main_produto a{
+    text-decoration: none;
+    color: var(--grey-color);
+    font-weight: bold;
+    padding: 5px 13px;
+    background-color: var(--gold);
+    border-radius: 6px;
+    margin-bottom: 5px;
+    border: 1px solid var(--grey-color);
+    transition: 0.3s;
+}
+
+.main_produto a:hover{
+    background: #E2A700;
 }
