@@ -83,7 +83,9 @@ class MinhasVendasView(LoginRequiredMixin, View):
     View para o vendedor visualizar e gerenciar os pedidos que fizeram de seus produtos
     """
     def get(self, request):
-        vendas = Pedido.objects.filter(vendedor=request.user).select_related('produto', 'comprador')
+        vendas = Pedido.objects.filter(vendedor=request.user).exclude(
+            status__in=['finalizado', 'cancelado', 'cancelamento_solicitado']
+        ).select_related('produto', 'comprador')
         return render(request, 'pedidos/minhas_vendas.html', {'vendas': vendas})
 
     
@@ -181,4 +183,58 @@ class MeusFeedbacksView(LoginRequiredMixin, View):
         return render(request, 'pedidos/meus_feedbacks.html', { #Adicionar depois essa página no histórico de produtos vendidos
             'feedbacks': feedbacks,
             'media': round(media, 1) if media else None,
+        })
+
+class HistoricoView(LoginRequiredMixin, View):
+    """
+    Página inicial com a escolha do usuário se quer ver os produtos vendidos ou comprados
+    """
+    def get(self, request):
+        return render(request, 'pedidos/historico.html')
+
+class HistoricoComprasView(LoginRequiredMixin, View):
+    """
+    Histórico de compras do usuário
+    """
+    def get(self, request):
+        filtro = request.GET.get('filtro', 'todos')
+
+        pedidos = Pedido.objects.filter(
+            comprador=request.user,
+            status__in=['finalizado', 'cancelado', 'cancelamento_solicitado']
+        ).select_related('produto', 'produto__vendedor').order_by('-criado_em')
+
+        total_finalizados=pedidos.filter(status='finalizado').count()
+
+        if filtro == 'finalizado':
+            pedidos = pedidos.filter(status='finalizado')
+        elif filtro == 'cancelado':
+            pedidos = pedidos.filter(status__in=['cancelado', 'cancelamento_solicitado'])
+
+        return render(request, 'pedidos/historico_compras.html',{
+            'pedidos': pedidos,
+            'filtro': filtro,
+            'total_finalizados': total_finalizados,
+        })
+
+class HistoricoVendasView(LoginRequiredMixin, View):
+    def get(self, request):
+        filtro = request.GET.get('filtro', 'todos')
+
+        vendas= Pedido.objects.filter(
+            vendedor=request.user,
+            status__in=['finalizado', 'cancelado', 'cancelamento_solicitado']
+        ).select_related('produto', 'comprador').order_by('-criado_em')
+
+        total_finalizados=vendas.filter(status='finalizado').count()
+
+        if filtro == 'finalizado':
+            vendas = vendas.filter(status='finalizado')
+        elif filtro == 'cancelado':
+            vendas = vendas.filter(status__in=['cancelado', 'cancelamento_solicitado'])
+
+        return render(request, 'pedidos/historico_vendas.html',{
+            'vendas': vendas,
+            'filtro': filtro,
+            'total_finalizados': total_finalizados,
         })

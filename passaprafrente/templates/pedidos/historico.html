@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{%load static%}
+
+<!DOCTYPE html>
+
+<head>
+
+    <title>{% block title %} Histórico {% endblock %}</title>
+
+    {% block extra_css %}
+        <link rel="stylesheet" href="{% static 'pedidos/historico.css' %}">
+    {% endblock %}
+
+</head>
+{% block content %}
+
+<body>
+    <main>
+        <div class="container">
+            <div class="cards">
+
+                <a href="{% url 'historico_compras' %}" class="card">
+                    <div class="card_img">
+                        <img src="{% static 'accounts/Images/envio-para-todo-o-planeta.png' %}" alt="Compras">
+                    </div>
+                    <div class="card_desc">
+                        <h3>Histórico de compras</h3>
+                        <p>Ver todos os pedidos que você comprou</p>
+                    </div>
+                </a>
+
+                <a href="{% url 'historico_vendas' %}" class="card">
+                    <div class="card_img">
+                        <img src="{% static 'accounts/Images/envio-para-todo-o-planeta.png' %}" alt="Vendas">
+                    </div>
+                    <div class="card_desc">
+                        <h3>Histórico de vendas</h3>
+                        <p>Ver todos os pedidos que você vendeu</p>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </main>
+</body>
+
+{% endblock %}

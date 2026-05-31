@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+
+<head>
+
+    <title>{% block title %} Histórico de compras{% endblock %}</title>
+
+    {% block extra_css %}
+        <link rel="stylesheet" href="{% static 'pedidos/historico_compras.css' %}">
+    {% endblock %}
+
+</head>
+{% block content %}
+
+<body>
+
+    <main>
+        <div class="container">
+            <h1>Minhas compras ({{ total_finalizados }})</h1>
+
+            <div class="historico_abas">
+                <a href="?filtro=todos"
+                class="aba {% if filtro == 'todos' %}ativa{% endif %}">
+                    Todos
+                </a>
+                <a href="?filtro=finalizado"
+                class="aba {% if filtro == 'finalizado' %}ativa{% endif %}">
+                    Finalizados
+                </a>
+                <a href="?filtro=cancelado"
+                class="aba {% if filtro == 'cancelado' %}ativa{% endif %}">
+                    Cancelados
+                </a>
+            </div>
+
+            <div class="main_produtos">
+                {% if pedidos %}
+                    {% for pedido in pedidos %}
+                        <div class="main_produto">
+
+                            {% if pedido.produto.imagem %}
+                                <img src="{{ pedido.produto.imagem.url }}" alt="{{ pedido.produto.nome }}">
+                            {% else %}
+                                <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
+                            {% endif %}
+
+                            <div class="main_desc">
+                                <h3>{{ pedido.produto.nome }}</h3>
+                                <p>R${{ pedido.produto.preco }}</p>
+                                <p><b>Vendedor: </b> {{ pedido.produto.vendedor.nickname }}</p>
+                                <p><b>Comprado em: </b>{{ pedido.criado_em|date:"d/m/Y" }}</p>
+                                <p><b>Status: </b> {{ pedido.get_status_display }}</p>
+                            </div>
+                            <div class="produto_buttons">
+                                <button>Ver detalhes</button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                        <p>Você não possui um produto cadastrado nessa seção</p>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+</body>
+
+{% endblock %}
