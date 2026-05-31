@@ -9,7 +9,8 @@ class Pedido(models.Model):
     """
     STATUS_CHOICES = [
         ('pendente', 'Pendente'),
-        ('compra_confirmada', 'Confirmada pelo Comprador'),
+        ('compra_confirmada', 'Confirmada pelo vendedor'),
+        ('aguardando_confirmacao', 'Aguardando confirmação do comprador'),
         ('finalizado', 'Finalizado (Venda Confirmada)'),
         ('cancelamento_solicitado', 'Cancelamento Solicitado pelo Comprador'), 
         ('cancelado', 'Cancelado'),
@@ -17,6 +18,7 @@ class Pedido(models.Model):
 
 
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
+    
     comprador = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -41,6 +43,13 @@ class Pedido(models.Model):
 
     def __str__(self):
         return f"{self.comprador.nickname} -> {self.produto.nome}"
+    
+    def finalizar(self):
+        """Marca o pediddo como vendido quando ambos confirmaram"""
+        self.status = 'finalizado'
+        self.produto.vendido = True
+        self.produto.save()
+        self.save()
     
 
 

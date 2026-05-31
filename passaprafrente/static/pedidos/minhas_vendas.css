@@ -30,12 +30,6 @@ main h1{
     margin-bottom: 20px;
 }
 
-.main_produtos{
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
 .main_produto{
     display: flex;
     gap: 20px;
@@ -83,10 +77,33 @@ main h1{
     opacity: 0.9;
 }
 
-/* condicionais */
-
-.confirm{
+.status_button{
     display: flex;
-    flex-direction: column;
+    align-items: center;
     gap: 10px;
+}
+
+.status_button button{
+    background-color: var(--green1);
+    padding: 5px 15px;
+    cursor: pointer;
+    color: white;
+    border-radius: 6px;
+    border: none;
+    transition: 0.3s;
+}
+
+.status_button button:hover{
+    opacity: 0.8;
+}
+
+.status_button .cancel{
+    background-color: red;
+    padding: 5px 15px;
+    cursor: pointer;
+    color: white;
+    border-radius: 6px;
+    border: none;
+    transition: 0.3s;
+    min-height: 27px;
 }

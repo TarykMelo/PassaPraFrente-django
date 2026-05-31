@@ -57,6 +57,8 @@ class MeusPedidosView(LoginRequiredMixin, View):
     def get(self, request):
         pedidos = Pedido.objects.filter(
             comprador=request.user
+        ).exclude(
+            status='cancelado'
         ).select_related('produto', 'produto__vendedor')
         return render(request, 'pedidos/meus_pedidos.html', {'pedidos': pedidos})
 
@@ -118,6 +120,9 @@ class MinhasVendasView(LoginRequiredMixin, View):
         vendas = Pedido.objects.filter(vendedor=request.user).select_related('produto', 'comprador')
         return render(request, 'pedidos/minhas_vendas.html', {'vendas': vendas})
 
+    
+    
+class MudarStatusVendaView(LoginRequiredMixin, View):
     def post(self, request, pedido_id):
         pedido = get_object_or_404(Pedido, id=pedido_id, vendedor=request.user)
         nova_acao = request.POST.get('acao')
@@ -126,8 +131,27 @@ class MinhasVendasView(LoginRequiredMixin, View):
             pedido.status = 'compra_confirmada'
             messages.success(request, f"Pedido de {pedido.comprador.nickname} confirmado!")
         elif nova_acao == 'finalizar':
-            pedido.status = 'finalizado'
-            messages.success(request, f"Pedido de {pedido.comprador.nickname} marcado como finalizado/entregue!")
+            pedido.status = 'aguardando_confirmacao'
+            messages.success(request, f"Produto marcado como entregue! Aguardando confirmação do comprador.")
+        elif nova_acao == 'cancelar': 
+            pedido.status = 'cancelado'
+            messages.success(request, f"Pedido de {pedido.comprador.nickname} cancelado.")
         
         pedido.save()
         return redirect('minhas_vendas')
+
+    
+class ConfirmarRecebimentoView(LoginRequiredMixin, View):
+    """
+    Comprador confirma que recebeu o produto
+    """
+    def post(self, request, pedido_id):
+        pedido = get_object_or_404(
+            Pedido,
+            id=pedido_id,
+            comprador=request.user,
+            status='aguardando_confirmacao'
+        )
+        pedido.finalizar()
+        messages.success(request, "Recebimento confirmado! Obrigado pela compra.")
+        return redirect('meus_pedidos')

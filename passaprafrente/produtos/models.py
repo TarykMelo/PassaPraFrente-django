@@ -18,6 +18,7 @@ class Produto(models.Model):
     preco = models.DecimalField(max_digits=10, decimal_places=2)
     categoria = models.CharField(max_length=50, choices=CATEGORIAS)
     imagem = models.ImageField(upload_to='produtos/', blank=True, null=True)
+    vendido = models.BooleanField(default=False)
     vendedor = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,

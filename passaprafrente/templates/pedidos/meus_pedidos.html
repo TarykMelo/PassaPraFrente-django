@@ -17,59 +17,71 @@
         <div class="container">
             <h1>Meus pedidos</h1>
 
-            {% if pedidos %}
-                {% for pedido in pedidos %}
+            <div class="main_produtos">
+                {% if pedidos %}
+                    {% for pedido in pedidos %}
 
-                    <div class="main_produto">
-                        <div class="main_produto_img">
-                            {% if pedido.produto.imagem %}
-                                <img src="{{ pedido.produto.imagem.url }}" alt="{{ pedido.nome }} foto">
-                            {% else %}
-                                <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
-                            {% endif %}
-                        </div>
-                        <div class="main_produto_desc">
-                            <h2>{{ pedido.produto.nome }}</h2>
-                            <p><b>Descrição:</b> </br> </br> {{ pedido.produto.descricao }}</p>
-                            <p><b>Preço: </b>R$ {{ pedido.produto.preco }}</p>
-                            <p><b>Categoria: </b> {{ pedido.produto.categoria }}</p>
-                            <p><b>Vendedor: </b>{{ pedido.produto.vendedor.nickname }}</p>
-                            <p><b>Telefone: </b>{{  pedido.produto.vendedor.telefone  }}</p>
-                            <p><b>Pedido em: </b>{{ pedido.criado_em|date:"d/m/Y" }}</p>
+                            <div class="main_produto">
+                                <div class="main_produto_img">
+                                    {% if pedido.produto.imagem %}
+                                        <img src="{{ pedido.produto.imagem.url }}" alt="{{ pedido.nome }} foto">
+                                    {% else %}
+                                        <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
+                                    {% endif %}
+                                </div>
+                                <div class="main_produto_desc">
+                                    <h2>{{ pedido.produto.nome }}</h2>
+                                    <p><b>Descrição:</b> </br> </br> {{ pedido.produto.descricao }}</p>
+                                    <p><b>Preço: </b>R$ {{ pedido.produto.preco }}</p>
+                                    <p><b>Categoria: </b> {{ pedido.produto.categoria }}</p>
+                                    <p><b>Vendedor: </b>{{ pedido.produto.vendedor.nickname }}</p>
+                                    <p><b>Telefone: </b>{{  pedido.produto.vendedor.telefone  }}</p>
+                                    <p><b>Pedido em: </b>{{ pedido.criado_em|date:"d/m/Y" }}</p>
 
-                            <p><b>Status: </b>
-                                <span class="badge-status{{ pedido.status }}">
-                                    {{ pedido.get_status_display }}
-                                </span>
-                            </p>
+                                    <p><b>Status: </b>
+                                        <span class="badge-status{{ pedido.status }}">
+                                            {{ pedido.get_status_display }}
+                                        </span>
+                                    </p>
 
+                                    <div class="main_produto_desc_buttons">
 
-                            <div class="main_produto_desc_buttons">
+                                        {% if pedido.status == 'pendente' or pedido.status == 'compra_confirmada' %}
+                                            <form method="POST" action="{% url 'cancelar_pedido' pedido.id %}" style="display:inline;">
+                                                {% csrf_token %}
+                                                <button type="submit">Cancelar pedido</button>
+                                            </form>
+                                        {% endif %}
 
-                                  {% if pedido.status == 'pendente' or pedido.status == 'compra_confirmada'%}
-                                    <form method="POST" action="{% url 'cancelar_pedido' pedido.id %}" style="display:inline;">
-                                         {% csrf_token %}
-                                         <button type="submit" class="btn-cancelar">Cancelar pedido</button>
-                                     </form>
-                                 {% endif %}
+                                        {% if pedido.status == 'aguardando_confirmacao' %}
+                                            <div class="confirm">
+                                                <p style="color:orange">⏳ O vendedor enviou o produto, confirme o recebimento!</p>
+                                                <form method="POST" action="{% url 'confirmar_recebimento' pedido.id %}" style="display:inline;">
+                                                    {% csrf_token %}
+                                                    <button type="submit">✅ Confirmar recebimento</button>
+                                                </form>
+                                            </div>
+                                        {% endif %}
 
+                                        {% if pedido.status == 'finalizado' %}
+                                            {% if not pedido.feedback_pedido %}
+                                                <a href="{% url 'enviar_feedback' pedido.id %}">
+                                                    ⭐ Avaliar Vendedor
+                                                </a>
+                                            {% else %}
+                                                <span>✓ Você já avaliou esta compra!</span>
+                                            {% endif %}
+                                        {% endif %}
 
+                                    </div> 
+                                </div>
+                            </div>
 
-                                 {% if pedido.status == 'finalizado' %}
-                                     {% if not pedido.feedback_pedido %}
-                                         <a href="{% url 'enviar_feedback' pedido.id %}" class="btn-avaliar">
-                                             ⭐ Avaliar Vendedor
-                                         </a>
-                                     {% else %}
-                                         <span class="text-success"> ✓ Você já avaliou esta compra!</span> 
-                                     {% endif %}    
-                                 {% endif %} 
-
-
-                             </div> </div> </div> {% endfor %} 
-            {% else %}
-                <p class="text-center">Você ainda não fez nenhum pedido.</p>
-            {% endif %}
+                    {% endfor %} 
+                {% else %}
+                    <p>Você ainda não fez nenhum pedido. Se você fez algum pedido e ele não está aparecendo, quer dizer que ele foi recusado</p>
+                {% endif %}
+            </div>
 
         </div> </main>
 

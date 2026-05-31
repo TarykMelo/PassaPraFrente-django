@@ -30,7 +30,10 @@ class RegistrarVendaView(LoginRequiredMixin, View):
 
 class MeusProdutosView(LoginRequiredMixin, View):
     def get(self, request):
-        produtos = Produto.objects.filter(vendedor=request.user)
+        produtos = Produto.objects.filter(
+            vendedor=request.user,
+            vendido=False
+        )
         return render(request, 'produtos/meus_produtos.html', {'produtos': produtos})
 
 

@@ -1,5 +1,9 @@
 from django.urls import path
-from .views import FazerPedidoView, MeusPedidosView, CancelarPedidoView, EnviarFeedbackView, MinhasVendasView
+from .views import (
+    FazerPedidoView, MeusPedidosView, CancelarPedidoView, 
+    EnviarFeedbackView, MinhasVendasView, MudarStatusVendaView,
+    ConfirmarRecebimentoView,
+)
 
 urlpatterns = [
     path('fazer/<int:produto_id>/',   FazerPedidoView.as_view(),   name='fazer_pedido'),
@@ -7,4 +11,6 @@ urlpatterns = [
     path('cancelar/<int:pedido_id>/', CancelarPedidoView.as_view(), name='cancelar_pedido'),
     path('feedback/<int:pedido_id>/', EnviarFeedbackView.as_view(), name='enviar_feedback'),
     path('vendas/',                    MinhasVendasView.as_view(),   name='minhas_vendas'),
-    path('vendas/status/<int:pedido_id>/', MinhasVendasView.as_view(),   name='mudar_status_venda'),]
+    path('vendas/status/<int:pedido_id>/', MudarStatusVendaView.as_view(),   name='mudar_status_venda'),
+    path('vendas/status/<int:pedido_id>', ConfirmarRecebimentoView.as_view(), name='confirmar_recebimento')
+]
