@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<head>
+    <title>{% block title %}Carrinho{% endblock %}</title>
+    {% block extra_css %}
+        <link rel="stylesheet" href="{% static 'pedidos/carrinho.css' %}">
+    {% endblock %}
+</head>
+
+{% block content %}
+<main>
+    <div class="container">
+        <h1>Meu carrinho</h1>
+
+        {% if produtos %}
+            {% for produto in produtos %}
+                <div class="main_produto">
+                    <div class="main_produto_img">
+                        {% if produto.imagem %}
+                            <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
+                        {% else %}
+                            <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
+                        {% endif %}
+                    </div>
+                    <div class="main_produto_desc">
+                        <div class="main_produto_desc_info">
+                            <h2>{{ produto.nome }}</h2>
+                            <p><b>Preço:</b> R$ {{ produto.preco }}</p>
+                            <p><b>Vendedor:</b> {{ produto.vendedor.nickname }}</p>
+                        </div>
+                        <div class="main_produto_desc_buttons">
+                                <button onclick="window.location.href='{% url 'fazer_pedido' produto.id %}'" class="button-ver">Ver detalhes</button>
+                            <form method="POST" action="{% url 'remover_carrinho' produto.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="exclude">Remover do carrinho</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+            <div class="carrinho_total">
+                <h2>Total: R$ {{ total }}</h2>
+                <a href="{% url 'checkout' %}">
+                    <button>Finalizar pedidos</button>
+                </a>
+            </div>
+
+        {% else %}
+            <p class="vazio">Seu carrinho está vazio</p>
+            <a href="{% url 'user_menu' %}">← Voltar para os produtos</a>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

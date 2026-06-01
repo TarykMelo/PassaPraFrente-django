@@ -5,6 +5,7 @@ from django.contrib import messages
 from produtos.models import Produto
 from .models import Pedido, Feedback
 from .forms import FeedbackForm
+from .carrinho import Carrinho
 
 
 class FazerPedidoView(LoginRequiredMixin, View):
@@ -177,7 +178,7 @@ class MeusFeedbacksView(LoginRequiredMixin, View):
             vendedor=request.user
         ).select_related('avaliador', 'pedido__produto')
 
-        from django.db.models import AVG
+        from django.db.models import Avg
         media = feedbacks.aggregate(media=Avg('nota'))['media']
 
         return render(request, 'pedidos/meus_feedbacks.html', { #Adicionar depois essa página no histórico de produtos vendidos
@@ -259,3 +260,81 @@ class DetalheHistoricoView(LoginRequiredMixin, View):
         'feedback': feedback,
         'comprador': comprador,
         })
+    
+class CarrinhoView(LoginRequiredMixin, View):
+    """
+    Exibe o carrinho do usuário
+    """
+    def get(self, request):
+        carrinho = Carrinho(request)
+        produtos = carrinho.produtos(request.user)
+        total = carrinho.total(request.user)
+        return render(request, 'pedidos/carrinho.html',{
+            'produtos': produtos,
+            'total': total,
+        })
+
+class AdicionarCarrinhoView(LoginRequiredMixin, View):
+    """
+    Adiciona um produto ao carrinho
+    """
+    def post(self, request, produto_id):
+        produto = get_object_or_404(Produto, id=produto_id)
+        carrinho = Carrinho(request)
+
+        if produto.vendedor == request.user:
+            messages.error(request, "Você não pode adicionar seu próprio produto!")
+            return redirect('user_menu')
+
+        if produto.vendido:
+            messages.error(request, "Esse produto ja foi vendido!")
+            return redirect('user_menu')
+        
+        carrinho.adicionar(produto_id)
+        messages.success(request, f"{produto.nome} adicionado ao carrinho")
+        return redirect('user_menu')
+    
+class RemoverCarrinhoView(LoginRequiredMixin, View):
+    """
+    Remove um produto do carrinho
+    """
+    def post(self, request, produto_id):
+        carrinho = Carrinho(request)
+        carrinho.remover(produto_id)
+        messages.success(request, "Produto removido do carrinho.")
+        return redirect('ver_carrinho')
+    
+class CheckoutView(LoginRequiredMixin, View):
+    """
+    Confirma todos os pedidos do carrinho
+    """
+    def get(self, request):
+        carrinho = Carrinho(request)
+        produtos = carrinho.produtos(request.user)
+        total = carrinho.total(request.user)
+        return render(request, 'pedidos/carrinho_checkout.html',{
+            'produtos': produtos,
+            'total': total,
+        })
+    
+    def post(self, request):
+        carrinho = Carrinho(request)
+        produtos = carrinho.produtos(request.user)
+
+        for produto in produtos:
+            ja_pedido = Pedido.objects.filter(
+                produto=produto,
+                comprador=request.user
+            ).exists()
+
+            if not ja_pedido and not produto.vendido:
+                Pedido.objects.create(
+                    produto=produto,
+                    comprador=request.user,
+                    vendedor=produto.vendedor,
+                    status='pendente'
+                )
+        
+        carrinho.limpar()
+        messages.success(request, "Pedidos realizados com sucesso!")
+        return redirect('meus_pedidos')

@@ -10,6 +10,9 @@
 </head>
 <body>
     <div class="container">
+        <div class="back">
+            <a href="{% url 'user_menu' %}" class="back_button">← Voltar</a>
+        </div>
         <div class="card">
             <div class="image_area">
                 {% if produto.imagem %}
@@ -29,7 +32,10 @@
                             {% csrf_token %}
                             <button type="submit" style="width: 100%">Fazer pedido</button>
                         </form>
-                            <a href="{% url 'user_menu' %}"><button class="cancel" style="width: 100%">Cancelar pedido</button></a>
+                        <form method="POST" action="{% url 'adicionar_carrinho' produto.id %}">
+                            {% csrf_token %}
+                            <button type="submit" onclick="window.location.href='{% url 'ver_carrinho' %}'" style="width: 100%" class="button_carrinho">Adicionar ao carrinho</button>
+                        </form>
                     </div>
             </div>
         </div>

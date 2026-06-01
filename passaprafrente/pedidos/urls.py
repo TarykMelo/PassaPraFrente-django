@@ -3,7 +3,9 @@ from .views import (
     FazerPedidoView, MeusPedidosView, CancelarPedidoView, 
     EnviarFeedbackView, MinhasVendasView, MudarStatusVendaView,
     ConfirmarRecebimentoView, MeusFeedbacksView, HistoricoView,
-    HistoricoComprasView, HistoricoVendasView, DetalheHistoricoView
+    HistoricoComprasView, HistoricoVendasView, DetalheHistoricoView,
+    CarrinhoView, AdicionarCarrinhoView, RemoverCarrinhoView, 
+    CheckoutView,
 )
 
 urlpatterns = [
@@ -18,5 +20,9 @@ urlpatterns = [
     path('historico/', HistoricoView.as_view(), name='historico'),
     path('historico/compras/', HistoricoComprasView.as_view(), name='historico_compras'),
     path('historico/vendas/', HistoricoVendasView.as_view(), name='historico_vendas'),
-    path('historico/detalhe/<int:pedido_id>/', DetalheHistoricoView.as_view(), name='detalhe_historico')
+    path('historico/detalhe/<int:pedido_id>/', DetalheHistoricoView.as_view(), name='detalhe_historico'),
+    path('carrinho/', CarrinhoView.as_view(), name='ver_carrinho'),
+    path('carrinho/adicionar/<int:produto_id>/', AdicionarCarrinhoView.as_view(), name='adicionar_carrinho'),
+    path('carrinho/remover/<int:produto_id>/', RemoverCarrinhoView.as_view(), name='remover_carrinho'),
+    path('carrinho/checkout/', CheckoutView.as_view(), name='checkout'),
 ]

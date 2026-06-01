@@ -1,0 +1,145 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    --green1: #009b00;
+    --green2: #01bb01;
+    --red: #e53935;
+    --red2: #ff1a1a;
+    --blue: #1565c0;
+    --blue2: #1976d2;
+    --white: #ffffff;
+    --background: #f4f4f4;
+    --border-grey: #e0e0e0;
+    --text-grey: #666;
+    --background-button: #6c757d;
+}
+
+body {
+    background-color: var(--background);
+}
+
+.container {
+    max-width: 1140px;
+    margin: auto;
+}
+
+main {
+    padding: 30px;
+}
+
+main h1 {
+    margin-bottom: 25px;
+    font-size: 28px;
+}
+
+/* produto */
+
+.main_produto {
+    display: flex;
+    gap: 25px;
+    background: var(--white);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    border: 1px solid var(--border-grey);
+    transition: box-shadow 0.2s;
+}
+
+.main_produto:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+.main_produto_img img {
+    width: 220px;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid var(--border-grey);
+}
+
+.main_produto_desc {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.main_produto_desc_info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.main_produto_desc_info h2 {
+    font-size: 24px;
+    color: #111;
+}
+
+.main_produto_desc_info p {
+    font-size: 15px;
+    color: var(--text-grey);
+}
+
+/* botões */
+
+.main_produto_desc_buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.main_produto_desc_buttons button,
+.main_produto_desc_buttons .btn-ver,
+.carrinho_total button {
+    border: none;
+    border-radius: 8px;
+    padding: 8px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.button-ver {
+    display: inline-block;
+    background-color: var(--background-button);
+    color: var(--white);
+    text-decoration: none;
+    border-radius: 8px;
+    padding: 8px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.button-ver:hover {
+    opacity: 0.8;
+}
+
+.exclude {
+    background-color: var(--red);
+    color: var(--white);
+}
+
+.exclude:hover {
+    background-color: var(--red2);
+}
+
+.carrinho_total button{
+    margin-top: 10px;
+    background-color: var(--green1);
+    color: white;
+}
+
+.carrinho_total button:hover{
+    background-color: var(--green2);
+}
+
+.vazio {
+    color: var(--text-grey);
+    font-size: 16px;
+}
