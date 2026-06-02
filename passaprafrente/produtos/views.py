@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from produtos.models import Produto
+from django.contrib import messages
+from produtos.models import Produto, Denuncia 
 from .forms import ProdutoForm
 from produtos.utils import ProdutosDisponiveis
 
@@ -67,3 +68,28 @@ class TodasCategoriasView(LoginRequiredMixin, View):
             'produtos': produtos,
             'categoria_atual': None, 
         })
+    
+
+class DenunciarProdutoView(LoginRequiredMixin, View):
+    """
+    Processa a denúncia de um produto enviada via formulário POST
+    """
+    def post(self, request, produto_id): 
+        produto = get_object_or_404(Produto, id=produto_id)
+
+        if produto.vendedor == request.user: 
+            messages.error(request, "Você não pode denunciar o seu próprio produto!")
+            return redirect('user_menu')
+        
+        motivo = request.POST.get('motivo')
+        descricao = request.POST.get('descricao')
+
+        Denuncia.objects.create(
+            usuario=request.user,
+            produto=produto,
+            motivo=motivo, 
+            descricao=descricao
+        )
+
+        messages.success(request, "Denúncia registrada. Nossa equipe irá analisar!")
+        return redirect('user_menu')

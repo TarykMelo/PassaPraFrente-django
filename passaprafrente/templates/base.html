@@ -41,7 +41,16 @@
                 </div>
             </div>
         </header>
-
+        
+        {% if messages %}
+            <div class="container" style="max-width: 1200px; margin: 20px auto; padding: 0 15px;">
+                {% for message in messages %}
+                    <div class="alert-mensagem" style="padding: 15px; margin-bottom: 20px; border: 1px solid #c3e6cb; border-radius: 4px; color: #155724; background-color: #d4edda; font-family: sans-serif; font-size: 16px; font-weight: bold; text-align: center;">
+                        ✅ {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
         {% block content %}{% endblock %}
 
         <footer>
