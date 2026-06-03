@@ -2,13 +2,11 @@
 {% load static %}
 
 <head>
-
     <title>{% block title %} Enviar feedback {% endblock %}</title>
 
     {% block extra_css %}
         <link rel="stylesheet" href="{% static 'pedidos/enviar_feedback.css' %}">
     {% endblock %}
-
 </head>
 
 {% block content %}
@@ -19,10 +17,10 @@
     <div class="info-compra">
         <div class="info-compra-img">
             {% if pedido.produto.imagem %}
-              <img src="{{ pedido.produto.imagem.url }}" alt="{{ pedido.produto.nome}}">
+                <img src="{{ pedido.produto.imagem.url }}" alt="{{ pedido.produto.nome}}">
             {% else %}    
-                 <img src=" {static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
-            { % endif % }
+                <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
+            {% endif %}
         </div>
         <div class="info-compra-desc">
             <p><strong>Produto:</strong> {{ pedido.produto.nome }}</p>

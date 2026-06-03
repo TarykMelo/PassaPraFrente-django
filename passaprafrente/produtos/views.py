@@ -5,15 +5,16 @@ from django.contrib import messages
 from produtos.models import Produto, Denuncia 
 from .forms import ProdutoForm
 from produtos.utils import ProdutosDisponiveis
+from pedidos.models import Feedback
 
 class ListaProdutosView(LoginRequiredMixin, View):
     """
-    Todos os produtos são exibidos, excetoos do próprio usuário
+    Todos os produtos são exibidos normalmente, exceto os do próprio usuário
     """
-
     def get(self, request):
         produtos = Produto.objects.exclude(vendedor=request.user)
         return render(request, 'accounts/user_menu.html', {'produtos': produtos})
+
 
 class RegistrarVendaView(LoginRequiredMixin, View):
     def get(self, request): 
@@ -41,15 +42,12 @@ class MeusProdutosView(LoginRequiredMixin, View):
 
 class RemoverProdutoView(LoginRequiredMixin, View):
     def post(self, request, produto_id):
-        produto = get_object_or_404(Produto, id=produto_id, vendedor=request.user)
+        produto = get_object_or_404(Produto, id=produto_id, seller=request.user)
         produto.delete()
         return redirect('meus_produtos')
 
 
 class CategoriaView(LoginRequiredMixin, View):
-    """
-    Filtrar produtos por categoria
-    """
     def get(self, request, categoria):
         produtos = ProdutosDisponiveis.get(request.user, categoria=categoria)
         return render(request, 'produtos/categoria.html', {
@@ -59,9 +57,6 @@ class CategoriaView(LoginRequiredMixin, View):
 
 
 class TodasCategoriasView(LoginRequiredMixin, View):
-    """
-    Permite ver todos os produtos na página 'categoria'
-    """
     def get(self, request):
         produtos = ProdutosDisponiveis.get(request.user)
         return render(request, 'produtos/categoria.html', {
@@ -72,14 +67,23 @@ class TodasCategoriasView(LoginRequiredMixin, View):
 
 class DenunciarProdutoView(LoginRequiredMixin, View):
     """
-    Processa a denúncia de um produto enviada via formulário POST
+    Processa a denúncia de um produto direto da tela do pedido
     """
     def post(self, request, produto_id): 
         produto = get_object_or_404(Produto, id=produto_id)
-
+        
         if produto.vendedor == request.user: 
             messages.error(request, "Você não pode denunciar o seu próprio produto!")
             return redirect('user_menu')
+        
+        ja_denunciou = Denuncia.objects.filter(
+            usuario=request.user,
+            produto=produto
+        ).exists()
+
+        if ja_denunciou:
+            messages.warning(request, "Você já denunciou este produto anteriormente!")
+            return redirect(request.META.get('HTTP_REFERER', 'user_menu'))
         
         motivo = request.POST.get('motivo')
         descricao = request.POST.get('descricao')
@@ -91,5 +95,5 @@ class DenunciarProdutoView(LoginRequiredMixin, View):
             descricao=descricao
         )
 
-        messages.success(request, "Denúncia registrada. Nossa equipe irá analisar!")
-        return redirect('user_menu')
+        messages.success(request, "Denúncia registrada com sucesso! Nossa equipe irá analisar.")
+        return redirect(request.META.get('HTTP_REFERER', 'user_menu'))

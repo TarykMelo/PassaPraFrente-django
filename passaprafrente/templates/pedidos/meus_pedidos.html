@@ -54,12 +54,49 @@
                                         {% endif %}
 
                                         {% if pedido.status == 'aguardando_confirmacao' %}
-                                            <div class="confirm">
-                                                <p style="color:orange">⏳ O vendedor enviou o produto, confirme o recebimento!</p>
+                                            <div class="confirm" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                                                <p style="color:orange; width: 100%;">⏳ O vendedor enviou o produto, confirme o recebimento!</p>
+                                                
                                                 <form method="POST" action="{% url 'confirmar_recebimento' pedido.id %}" style="display:inline;">
                                                     {% csrf_token %}
                                                     <button type="submit">✅ Confirmar recebimento</button>
                                                 </form>
+
+                                                <!-- Botão de Denunciar posicionado ao lado -->
+                                                <button type="button" class="btn-denunciar-pedido" data-bs-toggle="collapse" data-bs-target="#formDenuncia-{{ pedido.id }}" style="background-color: #dc3545; color: white; border: none; padding: 7px 15px; cursor: pointer; border-radius: 4px; font-weight: bold;">
+                                                    ⚠️ Denunciar
+                                                </button>
+
+                                                <!-- Formulário Dropdown/Retrátil da Denúncia -->
+                                                <div class="collapse mt-2" id="formDenuncia-{{ pedido.id }}" style="width: 100%; margin-top: 10px;">
+                                                    <div style="background-color: #f8f9fa; border: 1px solid #dc3545; padding: 15px; border-radius: 5px; color: #333; text-align: left; box-shadow: 0px 2px 5px rgba(0,0,0,0.1);">
+                                                        <form action="{% url 'denunciar_produto' pedido.produto.id %}" method="POST">
+                                                            {% csrf_token %}
+                                                            
+                                                            <div style="margin-bottom: 10px;">
+                                                                <label style="display:block; font-weight:bold; margin-bottom: 5px; font-size: 13px;">Motivo da Denúncia:</label>
+                                                                <select name="motivo" required style="width: 100%; padding: 6px; border-radius: 4px; border: 1px solid #ccc; background-color: #fff;">
+                                                                    <option value="" selected disabled>Escolha um motivo...</option>
+                                                                    <option value="GOLPE">Não encontrei o vendedor / Suspeita de Golpe</option>
+                                                                    <option value="DEFEITO">Produto veio quebrado ou totalmente diferente</option>
+                                                                    <option value="ILEGAL">Produto falso ou proibido</option>
+                                                                    <option value="OUTRO">Outro Motivo</option>
+                                                                </select>
+                                                            </div>
+
+                                                            <div style="margin-bottom: 10px;">
+                                                                <label style="display:block; font-weight:bold; margin-bottom: 5px; font-size: 13px;">Detalhes do problema:</label>
+                                                                <textarea name="descricao" rows="3" placeholder="Explique o que houve com a entrega do seu produto..." required style="width: 100%; padding: 6px; border-radius: 4px; border: 1px solid #ccc; font-family: sans-serif; resize: vertical;"></textarea>
+                                                            </div>
+
+                                                            <div style="text-align: right;">
+                                                                <button type="submit" style="background-color: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                                                                    Enviar Denúncia
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
                                             </div>
                                         {% endif %}
 
@@ -83,6 +120,10 @@
                 {% endif %}
             </div>
 
-        </div> </main>
+        </div> 
+    </main>
+
+    <!-- Script essencial do Bootstrap para fazer o efeito Collapse abrir/fechar na tela -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 {% endblock %}
