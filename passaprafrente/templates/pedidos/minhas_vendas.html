@@ -29,11 +29,13 @@
             {% for venda in vendas %}
                 <div class="main_produto">
                     <div class="main_produto_img">
-                        {% if venda.produto.imagem %}
-                            <img src="{{ venda.produto.imagem.url }}" alt="{{ venda.produto.nome }} foto">
-                        {% else %}
-                            <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
-                        {% endif %}
+                        {% with venda.produto.imagens.first as img %}
+                            {% if img %}
+                                <img src="{{ img.imagem.url }}" alt="{{ venda.produto.nome }}">
+                            {% else %}
+                                <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
+                            {% endif %}
+                        {% endwith %}
                     </div>
                     <div class="main_produto_desc">
                         <h2>{{ venda.produto.nome }}</h2>

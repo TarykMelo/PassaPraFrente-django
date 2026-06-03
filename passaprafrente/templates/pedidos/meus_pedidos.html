@@ -23,11 +23,13 @@
 
                             <div class="main_produto">
                                 <div class="main_produto_img">
-                                    {% if pedido.produto.imagem %}
-                                        <img src="{{ pedido.produto.imagem.url }}" alt="{{ pedido.nome }} foto">
-                                    {% else %}
-                                        <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
-                                    {% endif %}
+                                    {% with pedido.produto.imagens.first as img %}
+                                        {% if img %}
+                                            <img src="{{ img.imagem.url }}" alt="{{ pedido.produto.nome }}">
+                                        {% else %}
+                                            <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
+                                        {% endif %}
+                                    {% endwith %}
                                 </div>
                                 <div class="main_produto_desc">
                                     <h2>{{ pedido.produto.nome }}</h2>

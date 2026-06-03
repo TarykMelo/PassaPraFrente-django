@@ -99,11 +99,13 @@
                     <a href="{% url 'fazer_pedido' produto.id %}">
                         <div class="main_produto">
 
-                            {% if produto.imagem %}
-                                <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
-                            {% else %}
-                                <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
-                            {% endif %}
+                            {% with produto.imagens.first as img %}
+                                {% if img %}
+                                    <img src="{{ img.imagem.url }}" alt="{{ produto.nome }}">
+                                {% else %}
+                                    <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
+                                {% endif %}
+                            {% endwith %}
 
                             <div class="main_desc">
                                 <h3>{{ produto.nome }}</h3>

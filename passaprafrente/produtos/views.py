@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from produtos.models import Produto, Denuncia 
+from produtos.models import Produto, Denuncia, ImagemProduto
 from .forms import ProdutoForm
 from produtos.utils import ProdutosDisponiveis
 from pedidos.models import Feedback
@@ -23,10 +23,16 @@ class RegistrarVendaView(LoginRequiredMixin, View):
     
     def post(self, request):
         form = ProdutoForm(request.POST, request.FILES)
+
         if form.is_valid():
             produto = form.save(commit=False)
             produto.vendedor = request.user
             produto.save()
+
+
+            for imagem in request.FILES.getlist('imagens'):
+                ImagemProduto.objects.create(produto=produto, imagem=imagem)
+
             return redirect('user_menu')
         return render(request, 'produtos/registrar_venda.html', {'form': form})
 
@@ -42,7 +48,7 @@ class MeusProdutosView(LoginRequiredMixin, View):
 
 class RemoverProdutoView(LoginRequiredMixin, View):
     def post(self, request, produto_id):
-        produto = get_object_or_404(Produto, id=produto_id, seller=request.user)
+        produto = get_object_or_404(Produto, id=produto_id, vendedor=request.user)
         produto.delete()
         return redirect('meus_produtos')
 

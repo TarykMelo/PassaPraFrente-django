@@ -15,9 +15,13 @@
         </div>
         <div class="card">
             <div class="image_area">
-                {% if produto.imagem %}
-                    <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
-                {% endif %}
+                {% with produto.imagens.first as img %}
+                    {% if img %}
+                        <img src="{{ img.imagem.url }}" alt="{{ produto.nome }}">
+                    {% else %}
+                        <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
+                    {% endif %}
+                {% endwith %}
             </div>
             <div class="info_area">
                 <h1>{{ produto.nome }}</h1>
@@ -38,6 +42,13 @@
                         </form>
                     </div>
             </div>
+        </div>
+        <div class="galeria">
+            {% for img in produto.imagens.all %}
+                <a href="{{ img.imagem.url }}" target="_blank">
+                    <img src="{{ img.imagem.url }}" class="miniatura">
+                </a>
+            {% endfor %}
         </div>
     </div>
 </body>

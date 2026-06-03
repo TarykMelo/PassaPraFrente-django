@@ -18,11 +18,13 @@
 
         <div class="card">
             <div class="card_imagem">
-                    {% if pedido.produto.imagem %}
-                        <img src="{{ pedido.produto.imagem.url }}" alt="{{ pedido.produto.nome }}">
-                    {% else %}
-                        <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
-                    {% endif %}
+                    {% with pedido.produto.imagens.first as img %}
+                        {% if img %}
+                            <img src="{{ img.imagem.url }}" alt="{{ pedido.produto.nome }}">
+                        {% else %}
+                            <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
+                        {% endif %}
+                    {% endwith %}
 
             </div>
 
@@ -47,6 +49,13 @@
                     {% endif %}
                 {% endif %}
             </div>
+        </div>
+        <div class="galeria">
+            {% for img in pedido.produto.imagens.all %}
+                <a href="{{ img.imagem.url }}" target="_blank">
+                    <img src="{{ img.imagem.url }}" class="miniatura">
+                </a>
+            {% endfor %}
         </div>
     </div>
 </main>
