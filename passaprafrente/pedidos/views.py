@@ -219,6 +219,9 @@ class HistoricoComprasView(LoginRequiredMixin, View):
         })
 
 class HistoricoVendasView(LoginRequiredMixin, View):
+    """
+    Classe que retorna o histórico de vendas do usuário
+    """
     def get(self, request):
         filtro = request.GET.get('filtro', 'todos')
 
@@ -241,6 +244,9 @@ class HistoricoVendasView(LoginRequiredMixin, View):
         })
 
 class DetalheHistoricoView(LoginRequiredMixin, View):
+    """
+    Informações do produto que está no histórico
+    """
     def get(self, request, pedido_id):
         pedido = get_object_or_404(
             Pedido,
