@@ -6,6 +6,7 @@ from produtos.models import Produto
 from .models import Pedido, Feedback
 from .forms import FeedbackForm
 from .carrinho import Carrinho
+from .emails import enviar_email_status_pedido
 
 
 class FazerPedidoView(LoginRequiredMixin, View):
@@ -99,13 +100,33 @@ class MudarStatusVendaView(LoginRequiredMixin, View):
         if nova_acao == 'confirmar':
             pedido.status = 'compra_confirmada'
             messages.success(request, f"Pedido de {pedido.comprador.nickname} confirmado!")
+            
+            enviar_email_status_pedido(
+                email_destinatario=pedido.comprador.email,
+                nome_comprador=pedido.comprador.first_name if pedido.comprador.first_name else pedido.comprador.nickname,
+                nome_produto=pedido.produto.nome,
+                numero_pedido=pedido.id,
+                status='confirmado'
+            )
+
+
         elif nova_acao == 'finalizar':
             pedido.status = 'aguardando_confirmacao'
             messages.success(request, f"Produto marcado como entregue! Aguardando confirmação do comprador.")
+        
         elif nova_acao == 'cancelar': 
             pedido.status = 'cancelado'
             messages.success(request, f"Pedido de {pedido.comprador.nickname} cancelado.")
         
+            enviar_email_status_pedido(
+                email_destinatario=pedido.comprador.email,
+                nome_comprador=pedido.comprador.first_name if pedido.comprador.first_name else pedido.comprador.nickname,
+                nome_produto=pedido.produto.nome,
+                numero_pedido=pedido.id,
+                status='cancelado'
+            )
+
+
         pedido.save()
         return redirect('minhas_vendas')
 
