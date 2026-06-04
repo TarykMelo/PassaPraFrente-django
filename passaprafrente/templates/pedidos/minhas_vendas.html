@@ -54,6 +54,10 @@
                                     <button type="submit">✓ Confirmar Pedido</button>
                                 </form>
 
+                                <a href="{% url 'chat' venda.id %}">
+                                    <button>💬 Abrir chat</button>
+                                </a>
+
                                 <form method="POST" action="{% url 'mudar_status_venda' venda.id %}" style="display:inline;">
                                     {% csrf_token %}
                                     <input type="hidden" name="acao" value="cancelar">
@@ -69,11 +73,21 @@
                                     <button type="submit">📦 Marcar como Entregue</button>
                                 </form>
 
+                                <a href="{% url 'chat' venda.id %}">
+                                    <button>💬 Abrir chat</button>
+                                </a>
+
                                 <form method="POST" action="{% url 'mudar_status_venda' venda.id %}" style="display:inline;">
                                     {% csrf_token %}
                                     <input type="hidden" name="acao" value="cancelar">
                                     <button type="submit" class="cancel">Cancelar Pedido</button>
                                 </form>
+                            {% endif %}
+
+                            {% if venda.status == 'aguardando_confirmacao' %}
+                                <a href="{% url 'chat' venda.id %}">
+                                    <button>💬 Abrir chat</button>
+                                </a>
                             {% endif %}
 
                             {% if venda.status == 'finalizado' %}

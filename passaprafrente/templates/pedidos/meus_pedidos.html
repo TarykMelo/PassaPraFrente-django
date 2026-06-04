@@ -53,21 +53,25 @@
                                                 {% csrf_token %}
                                                 <button type="submit">Cancelar pedido</button>
                                             </form>
+                                            <a href="{% url 'chat' pedido.id %}" class="chat_button">
+                                                Abrir chat
+                                            </a>
                                         {% endif %}
 
                                         {% if pedido.status == 'aguardando_confirmacao' %}
                                             <div class="confirm" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                                                 <p style="color:orange; width: 100%;">⏳ O vendedor enviou o produto, confirme o recebimento!</p>
                                                 
-                                                <form method="POST" action="{% url 'confirmar_recebimento' pedido.id %}" style="display:inline;">
-                                                    {% csrf_token %}
-                                                    <button type="submit">✅ Confirmar recebimento</button>
-                                                </form>
+                                                <div class="status_button">
+                                                    <form method="POST" action="{% url 'confirmar_recebimento' pedido.id %}" style="display:inline;">
+                                                        {% csrf_token %}
+                                                        <button type="submit">✅ Confirmar recebimento</button>
+                                                    </form>
 
-                                                <!-- Botão de Denunciar posicionado ao lado -->
-                                                <button type="button" class="btn-denunciar-pedido" data-bs-toggle="collapse" data-bs-target="#formDenuncia-{{ pedido.id }}" style="background-color: #dc3545; color: white; border: none; padding: 7px 15px; cursor: pointer; border-radius: 4px; font-weight: bold;">
-                                                    ⚠️ Denunciar
-                                                </button>
+                                                    <a href="{% url 'chat' pedido.id %}" class="chat_button">
+                                                        Abrir chat
+                                                    </a>
+                                                </div>
 
                                                 <!-- Formulário Dropdown/Retrátil da Denúncia -->
                                                 <div class="collapse mt-2" id="formDenuncia-{{ pedido.id }}" style="width: 100%; margin-top: 10px;">

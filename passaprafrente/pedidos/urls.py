@@ -5,7 +5,7 @@ from .views import (
     ConfirmarRecebimentoView, MeusFeedbacksView, HistoricoView,
     HistoricoComprasView, HistoricoVendasView, DetalheHistoricoView,
     CarrinhoView, AdicionarCarrinhoView, RemoverCarrinhoView, 
-    CheckoutView,
+    CheckoutView, ChatView, MensagensNovasView,
 )
 
 urlpatterns = [
@@ -25,4 +25,6 @@ urlpatterns = [
     path('carrinho/adicionar/<int:produto_id>/', AdicionarCarrinhoView.as_view(), name='adicionar_carrinho'),
     path('carrinho/remover/<int:produto_id>/', RemoverCarrinhoView.as_view(), name='remover_carrinho'),
     path('carrinho/checkout/', CheckoutView.as_view(), name='checkout'),
+    path('chat/<int:pedido_id>/',        ChatView.as_view(),         name='chat'),
+    path('chat/<int:pedido_id>/novas/',  MensagensNovasView.as_view(), name='mensagens_novas'),
 ]

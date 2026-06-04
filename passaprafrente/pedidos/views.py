@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib import messages 
+from django.contrib import messages
+from django.http import JsonResponse 
 from produtos.models import Produto
-from .models import Pedido, Feedback
+from .models import Pedido, Feedback, Mensagem
 from .forms import FeedbackForm
 from .carrinho import Carrinho
 from .emails import enviar_email_status_pedido
@@ -365,3 +366,80 @@ class CheckoutView(LoginRequiredMixin, View):
         carrinho.limpar()
         messages.success(request, "Pedidos realizados com sucesso!")
         return redirect('meus_pedidos')
+    
+class ChatView(LoginRequiredMixin, View):
+    """
+    Página principal do chat
+    """
+    def get(self, request, pedido_id):
+        pedido = get_object_or_404(Pedido, id=pedido_id)
+
+        comprador = pedido.comprador == request.user
+        vendedor = pedido.vendedor == request.user
+
+        if not comprador and not vendedor:
+            return redirect('user_menu')
+        
+        mensagens = Mensagem.objects.filter(pedido=pedido)
+        ultimo_id = mensagens.last().id if mensagens.exists() else 0
+
+        return render(request, 'pedidos/chat.html', {
+            'pedido': pedido,
+            'mensagens': mensagens,
+            'ultimo_id': ultimo_id,
+        })
+
+    def post(self, request, pedido_id):
+        pedido = get_object_or_404(Pedido, id=pedido_id)
+
+        comprador = pedido.comprador == request.user
+        vendedor = pedido.vendedor == request.user
+
+        if not comprador and not vendedor:
+            return redirect('user_menu')
+        
+        conteudo = request.POST.get('conteudo', '').strip()
+
+        if conteudo:
+            Mensagem.objects.create(
+                pedido=pedido,
+                remetente=request.user,
+                conteudo=conteudo
+            )
+
+        if request.headers.get('X-CSRFToken'):
+            return JsonResponse({'ok': True})
+        return redirect('chat', pedido_id=pedido_id)
+    
+class MensagensNovasView(LoginRequiredMixin, View):
+    """
+    Retorna mensagens novas em JSON para o polling
+    """
+    def get(self, request, pedido_id):
+        pedido = get_object_or_404(Pedido, id=pedido_id)
+
+        comprador = pedido.comprador == request.user
+        vendedor = pedido.vendedor == request.user
+
+        if not comprador and not vendedor:
+            return JsonResponse({'erro': 'Acesso negado'}, status=403)
+        
+        ultimo_id = request.GET.get('ultimo_id', 0)
+
+        mensagens = Mensagem.objects.filter(
+            pedido=pedido,
+            id__gt=ultimo_id
+        )
+
+        dados = [
+            {
+                'id': mensagem.id,
+                'remetente': mensagem.remetente.nickname,
+                'conteudo': mensagem.conteudo,
+                'hora': mensagem.enviado_em.strftime('%d/%m/%Y %H:%M'),
+                'user_id': mensagem.remetente.id,
+            }
+            for mensagem in mensagens
+        ]
+
+        return JsonResponse({'mensagens': dados})

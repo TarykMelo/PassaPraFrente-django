@@ -68,5 +68,22 @@ class Feedback(models.Model):
     def __str__(self):
         return f"Nota {self.nota} para {self.vendedor.nickname if self.vendedor else 'Vendedor'}"
 
+class Mensagem(models.Model):
+    pedido = models.ForeignKey(
+        Pedido,
+        on_delete=models.CASCADE,
+        related_name='mensagens'
+    )
+    remetente = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='mensagens_enviadas'
+    )
+    conteudo = models.TextField()
+    enviado_em = models.DateTimeField(auto_now_add=True)
 
-    
+    class Meta:
+        ordering = ['enviado_em']
+
+    def __str__(self):
+        return f"{self.remetente.nickname}: {self.conteudo[:30]}"

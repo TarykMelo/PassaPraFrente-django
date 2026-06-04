@@ -105,6 +105,30 @@ main h1{
     transition: 0.3s;
 }
 
+.status_button{
+    display: flex;
+    gap: 10px;
+}
+
 .main_produto a:hover{
     background: #E2A700;
+}
+
+/* chat */
+
+.chat_button{
+    display: inline-block;
+    background-color: var(--green1) !important;
+    color: white !important;
+    text-decoration: none !important;
+    font-weight: normal !important;
+    font-size: 15px;
+    padding: 6px 22px !important;
+    border-radius: 8px !important;
+    border: none !important;
+    margin-bottom: 5px !important;
+}
+
+.chat_button:hover{
+    background-color: var(--green2) !important;
 }
