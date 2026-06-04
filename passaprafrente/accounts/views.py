@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect
 from django.views import View
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import CadastroForm, NicknameForm, TelefoneForm, SenhaForm
 from produtos.models import Produto
 from produtos.utils import ProdutosDisponiveis
+from .two_factor import EnviarCodigo, VerificarCodigo
+from .models import CodigoVerificacao
 
 
 class CadastroView(View):
@@ -31,11 +34,44 @@ class LoginView(View):
         user  = authenticate(request, username=email, password=senha)
 
         if user is not None:
-            login(request, user)
-            return redirect('user_menu')
+            if user.dois_fatores:
+                request.session['usuario_pre_auth'] = user.id
+                return redirect('escolher_metodo_2fa')
+            else:
+                login(request, user)
+                return redirect('user_menu')
 
         return render(request, 'accounts/login.html', {
             'erro': 'Email ou senha incorretos'
+        })
+    
+class VerificarCodigoView(View):
+    """
+    Usuário digita o código recebido
+    """
+    def get(self, request):
+        if 'usuario_pre_auth' not in request.session:
+            return redirect('login')
+        return render(request, 'accounts/verificar_codigo.html')
+    
+    def post(self, request):
+        if 'usuario_pre_auth' not in request.session:
+            return redirect('login')
+        
+        from .models import Usuario
+        usuario = Usuario.objects.get(id=request.session['usuario_pre_auth'])
+        codigo_digitado = request.POST.get('codigo')
+
+        valido, mensagem = VerificarCodigo.verificar(usuario, codigo_digitado)
+
+        if valido:
+            login(request, usuario)
+            del request.session['usuario_pre_auth']
+            del request.session['metodo_2fa']
+            return redirect('user_menu')
+
+        return render(request, 'accounts/verificar_codigo.html', {
+            'erro': mensagem
         })
 
 
@@ -82,6 +118,13 @@ class ModificarDadosView(LoginRequiredMixin, View):
                 user = senha_form.save()
                 update_session_auth_hash(request, user)
                 return redirect('modificar_dados')
+            
+        elif 'toggle_2fa' in request.POST:
+            request.user.dois_fatores = not request.user.dois_fatores
+            request.user.save()
+            status = "ativado" if request.user.dois_fatores else "desativado"
+            messages.success(request, f"2FA {status} com sucesso!")
+            return redirect('modificar_dados')
 
         return render(request, 'accounts/modificar_dados.html', {
             'nickname_form': nickname_form,
@@ -103,3 +146,31 @@ class DeletarContaView(LoginRequiredMixin, View):
         return render(request, 'accounts/deletar_conta.html', {
             'erro': 'Senha incorreta'
         })
+    
+class EscolherMetodo2FAView(View):
+    """Usuário escolhe receber por email ou SMS"""
+    def get(self, request):
+        if 'usuario_pre_auth' not in request.session:
+            return redirect('login')
+        return render(request, 'accounts/escolher_metodo_2fa.html')
+
+    def post(self, request):
+        if 'usuario_pre_auth' not in request.session:
+            return redirect('login')
+
+        from .models import Usuario
+        usuario = Usuario.objects.get(id=request.session['usuario_pre_auth'])
+        metodo  = request.POST.get('metodo')
+
+        try:
+            if metodo == 'email':
+                EnviarCodigo.por_email(usuario)
+            elif metodo == 'sms':
+                EnviarCodigo.por_sms(usuario)
+        except Exception as e:
+            return render(request, 'accounts/escolher_metodo_2fa.html', {
+                'erro': f'Erro ao enviar código: {e}'
+            })
+
+        request.session['metodo_2fa'] = metodo
+        return redirect('verificar_codigo')

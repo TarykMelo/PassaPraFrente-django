@@ -39,6 +39,32 @@
 
         <div class="box modify_box">
             <div class="box_title">
+                <h2>Verificação em duas etapas</h2>
+                <p>Adicione uma camada extra de segurança à sua conta(Verifique se o seu n° de telefone está correto antes de ativar)</p>
+            </div>
+            <p>Status atual:
+                {% if request.user.dois_fatores %}
+                    <span style="color:green"><b>✅ Ativado</b></span>
+                {% else %}
+                    <span style="color:red"><b>❌ Desativado</b></span>
+                {% endif %}
+            </p>
+            <div class="box_button">
+                <form method="POST">
+                    {% csrf_token %}
+                    <button type="submit" name="toggle_2fa">
+                        {% if request.user.dois_fatores %}
+                            Desativar 2FA
+                        {% else %}
+                            Ativar 2FA
+                        {% endif %}
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="box modify_box">
+            <div class="box_title">
                 <h2>Modificar a senha</h2>
                 <p>Altere a senha do usuário</p>
             </div>

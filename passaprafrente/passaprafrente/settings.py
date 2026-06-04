@@ -137,6 +137,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587 
 EMAIL_USE_TLS = True 
 
+
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -145,6 +146,9 @@ load_dotenv()
 EMAIL_HOST_USER = os.getenv('EMAIL_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
 EMAIL_FROM_USER = EMAIL_HOST_USER
+TWILIO_ACCOUNT_SID  = os.getenv('TWILIO_ACCOUNT')
+TWILIO_AUTH_TOKEN   = os.getenv('TWILIO_TOKEN')
+TWILIO_PHONE_NUMBER = os.getenv('TWILIO_PHONE')
 
 import ssl
 
