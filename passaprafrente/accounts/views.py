@@ -8,6 +8,7 @@ from produtos.models import Produto
 from produtos.utils import ProdutosDisponiveis
 from .two_factor import EnviarCodigo, VerificarCodigo
 from .models import CodigoVerificacao
+from .recomendacoes import recomendar_produtos
 
 
 class CadastroView(View):
@@ -84,7 +85,18 @@ class LogoutView(View):
 class UserMenuView(LoginRequiredMixin, View):
     def get(self, request):
         produtos = ProdutosDisponiveis.get(request.user)
-        return render(request, 'accounts/user_menu.html', {'produtos': produtos})
+        recomendados = recomendar_produtos(request.user, produtos)
+
+        # debug temporário
+        print(f"Pedidos finalizados: {request.user.compras.filter(status='finalizado').count()}")
+        print(f"Produtos disponíveis: {produtos.count()}")
+        print(f"Recomendados: {recomendados}")
+
+
+        return render(request, 'accounts/user_menu.html', {
+            'produtos': produtos,
+            'recomendados': recomendados,    
+        })
 
 
 class ModificarDadosView(LoginRequiredMixin, View):

@@ -90,7 +90,39 @@
 
     <main>
         <div class="container">
+            
+            {% if recomendados %}
+            <section class="recomendados">
+                <div class="container">
+                    <div class="main_title">
+                        <h2>✨ Recomendados para você</h2>
+                    </div>
+                    <div class="main_produtos">
+                        {% for produto in recomendados %}
+                            <a href="{% url 'fazer_pedido' produto.id %}">
+                                <div class="main_produto">
+                                    {% with produto.imagens.first as img %}
+                                        {% if img %}
+                                            <img src="{{ img.imagem.url }}" alt="{{ produto.nome }}">
+                                        {% else %}
+                                            <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
+                                        {% endif %}
+                                    {% endwith %}
+                                    <div class="main_desc">
+                                        <h3>{{ produto.nome }}</h3>
+                                        <p>R$ {{ produto.preco }}</p>
+                                        <p>{{ produto.vendedor.nickname }}</p>
+                                    </div>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+            {% endif %}
+
             <div class="main_title"><h2>Todos os produtos</h2></div>
+
             <div class="main_produtos">
                 
                 {# Loop padrão original sem nenhuma denúncia precoce #}
