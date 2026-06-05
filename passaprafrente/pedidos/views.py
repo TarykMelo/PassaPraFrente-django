@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.http import JsonResponse 
 from produtos.models import Produto
+from accounts.models import Usuario
 from .models import Pedido, Feedback, Mensagem
 from .forms import FeedbackForm
 from .carrinho import Carrinho

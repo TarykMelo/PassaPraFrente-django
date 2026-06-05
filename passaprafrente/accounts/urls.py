@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     CadastroView, LoginView, LogoutView,
     UserMenuView, ModificarDadosView, DeletarContaView,
-    EscolherMetodo2FAView, VerificarCodigoView
+    EscolherMetodo2FAView, VerificarCodigoView, PerfilVendedorView
 )
 
 urlpatterns = [
@@ -14,4 +14,5 @@ urlpatterns = [
     path('conta/deletar/', DeletarContaView.as_view(),   name='deletar_conta'),
     path('2fa/metodo/',    EscolherMetodo2FAView.as_view(), name='escolher_metodo_2fa'),
     path('2fa/verificar/', VerificarCodigoView.as_view(),   name='verificar_codigo'),
+    path('conta/vendedor/<int:id>/', PerfilVendedorView.as_view(), name='perfil_vendedor')
 ]

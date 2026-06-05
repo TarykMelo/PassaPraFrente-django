@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Perfil do Vendedor{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'accounts/perfil_vendedor.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="back">
+    <a href="{{ voltar }}" class="back_button">← Voltar</a>
+</div>
+
+<div class="perfil-vendedor">
+
+    <div class="card-vendedor">
+
+        <div class="cabecalho-vendedor">
+
+            <div class="info-principal">
+                <h2>{{ vendedor.nickname }} ({{ vendedor.username }})</h2>
+
+                <div class="estatisticas">
+                    <span>⭐ {{ vendedor.media_avaliacoes }}</span>
+                    <span>({{ vendedor.total_avaliacoes }} avaliações)</span>
+                </div>
+
+                <div class="dados-vendedor">
+                    <p>✔ {{ total_finalizados }} vendas concluídas</p>
+                    <p>📅 Membro desde {{ vendedor.date_joined|date:"F \d\e Y" }}</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="secao-avaliacoes">
+
+        <h3>Avaliações</h3>
+
+        {% if feedbacks %}
+
+            {% for feedback in feedbacks %}
+                <div class="feedback-card">
+
+                    <div class="nota">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= feedback.nota %}
+                                ⭐
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    <p class="comentario">
+                        {{ feedback.comentario }}
+                    </p>
+
+                    <small>
+                        por {{ feedback.avaliador.nickname }}
+                    </small>
+
+                </div>
+            {% endfor %}
+
+        {% else %}
+            <p>Nenhuma avaliação recebida.</p>
+        {% endif %}
+
+    </div>
+
+    <div class="secao-denuncias">
+
+        <h3>Denúncias</h3>
+
+        <p>
+            🚨 Denúncias do usuário:
+            <strong>{{ denuncias_confirmadas }}</strong>
+        </p>
+        {% if denuncias %}
+            {% for denuncia in denuncias %}
+                <div class="feedback-card">
+                    <div class="denuncia-motivo">
+                        <strong>{{ denuncia.get_motivo_display }}</strong>
+                        {% if denuncia.resolvido %}
+                            <span style="color:green">✅ Resolvida</span>
+                        {% else %}
+                            <span style="color:red">⏳ Pendente</span>
+                        {% endif %}
+                    </div>
+
+                    {% if denuncia.descricao %}
+                        <p class="comentario">{{ denuncia.descricao }}</p>
+                    {% endif %}
+
+                    <small>
+                        por {{ denuncia.usuario.nickname }} —
+                        {{ denuncia.criado_em|date:"d/m/Y" }}
+                    </small>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Nenhuma denúncia registrada.</p>
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

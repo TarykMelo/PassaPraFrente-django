@@ -111,7 +111,7 @@
                                     <div class="main_desc">
                                         <h3>{{ produto.nome }}</h3>
                                         <p>R$ {{ produto.preco }}</p>
-                                        <p>{{ produto.vendedor.nickname }}</p>
+                                        <p>{{ produto.vendedor.nickname }} ⭐ <b>{{ produto.vendedor.media_avaliacoes|floatformat:1 }}</b></p>
                                     </div>
                                 </div>
                             </a>
@@ -142,7 +142,7 @@
                             <div class="main_desc">
                                 <h3>{{ produto.nome }}</h3>
                                 <p>R${{ produto.preco }}</p>
-                                <p><b>Vendedor: </b>{{ produto.vendedor.nickname }}</p>
+                                <p>{{ produto.vendedor.nickname }} ⭐ <b>{{ produto.vendedor.media_avaliacoes|floatformat:1 }}</b></p>
                             </div>
 
                         </div>

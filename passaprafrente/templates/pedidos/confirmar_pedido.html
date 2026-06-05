@@ -30,6 +30,10 @@
                     <p><b>{{ produto.categoria }}</b></p>
                     <p><b>Telefone: </b>{{ produto.vendedor.telefone }}</p>
                     <P><b>Vendedor: </b>{{ produto.vendedor.nickname }}</P>
+                    <p>⭐ <b>{{ produto.vendedor.media_avaliacoes|floatformat:1 }}</b>   ({{ produto.vendedor.total_avaliacoes }} Avaliações)</p>
+                    <a href="{% url 'perfil_vendedor' produto.vendedor.id %}?voltar={% url 'fazer_pedido' produto.id %}">
+                        Ver avaliações e denúncias do vendedor
+                    </a>
                     
                     <div class="info_area_buttons">
                         <form method="POST" style="flex: 1">

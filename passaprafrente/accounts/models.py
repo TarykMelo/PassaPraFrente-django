@@ -3,6 +3,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 from django.utils import timezone
+from django.db.models import Avg
+from pedidos.models import Feedback
 
 class Usuario(AbstractUser):
     email = models.EmailField(unique=True)
@@ -15,6 +17,22 @@ class Usuario(AbstractUser):
 
     def __str__(self):
         return self.nickname
+
+    @property
+    def media_avaliacoes(self):
+        media = Feedback.objects.filter(
+            vendedor=self
+        ).aggregate(
+            media=Avg('nota')
+        )['media']
+
+        return round(media, 1) if media else 0
+    
+    @property
+    def total_avaliacoes(self):
+        return Feedback.objects.filter(
+            vendedor=self
+        ).count()
     
     def total_produtos(self):
         return self.produtos.count()

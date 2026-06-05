@@ -1,13 +1,14 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import CadastroForm, NicknameForm, TelefoneForm, SenhaForm
-from produtos.models import Produto
+from produtos.models import Produto, Denuncia
 from produtos.utils import ProdutosDisponiveis
+from pedidos.models import Feedback, Pedido
 from .two_factor import EnviarCodigo, VerificarCodigo
-from .models import CodigoVerificacao
+from .models import CodigoVerificacao, Usuario
 from .recomendacoes import recomendar_produtos
 
 
@@ -86,12 +87,6 @@ class UserMenuView(LoginRequiredMixin, View):
     def get(self, request):
         produtos = ProdutosDisponiveis.get(request.user)
         recomendados = recomendar_produtos(request.user, produtos)
-
-        # debug temporário
-        print(f"Pedidos finalizados: {request.user.compras.filter(status='finalizado').count()}")
-        print(f"Produtos disponíveis: {produtos.count()}")
-        print(f"Recomendados: {recomendados}")
-
 
         return render(request, 'accounts/user_menu.html', {
             'produtos': produtos,
@@ -186,3 +181,36 @@ class EscolherMetodo2FAView(View):
 
         request.session['metodo_2fa'] = metodo
         return redirect('verificar_codigo')
+    
+class PerfilVendedorView(View):
+    def get(self, request, id):
+        vendedor = get_object_or_404(Usuario, id=id)
+
+        feedbacks = Feedback.objects.filter(
+            vendedor=vendedor
+        ).select_related(
+            'avaliador',
+            'pedido'
+        )
+
+        denuncias = Denuncia.objects.filter(
+            produto__vendedor=vendedor
+        )
+
+        total_finalizados = Pedido.objects.filter(
+            vendedor=vendedor,
+            status='finalizado'
+        ).count()
+
+        denuncias_confirmadas = denuncias.count()
+
+        voltar = request.GET.get('voltar', '/')
+
+        return render(request, 'accounts/perfil_vendedor.html',{
+            'vendedor': vendedor,
+            'feedbacks': feedbacks,
+            'denuncias': denuncias,
+            'total_finalizados': total_finalizados,
+            'denuncias_confirmadas': denuncias_confirmadas,
+            'voltar': voltar,
+        })
