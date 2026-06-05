@@ -33,6 +33,18 @@
             {% endfor %}
         </div>
 
+        <p id="erro_mensagem" style="color:red; display:none;"></p>
+
+        <p id="erro_mensagem" style="
+            color: red;
+            background: #ffe5e5;
+            padding: 8px 12px;
+            border-left: 3px solid red;
+            border-radius: 4px;
+            display: none;
+            margin-bottom: 10px;
+        "></p>
+
         <div class="chat_form">
             <input type="text" id="input_mensagem" placeholder="Digite sua mensagem..." autocomplete="off">
             <button id="btn_enviar">➤</button>
@@ -88,21 +100,32 @@
     }
 
     async function enviarMensagem() {
-        const conteudo = input.value.trim();
-        if (!conteudo) return;
+    const conteudo = input.value.trim();
+    if (!conteudo) return;
 
-        await fetch(urlEnviar, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'X-CSRFToken': csrfToken,
-            },
-            body: `conteudo=${encodeURIComponent(conteudo)}`
-        });
+    const resposta = await fetch(urlEnviar, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': csrfToken,
+        },
+        body: `conteudo=${encodeURIComponent(conteudo)}`
+    });
 
-        input.value = '';
-        buscarNovas();
+    const dados = await resposta.json();
+
+    if (!dados.ok) {
+        const erro = document.getElementById('erro_mensagem');
+        erro.textContent = dados.erro;
+        erro.style.display = 'block';
+        return;  // não limpa o input para o usuário poder editar a mensagem
     }
+
+    // esconde o erro se existia
+    document.getElementById('erro_mensagem').style.display = 'none';
+    input.value = '';
+    buscarNovas();
+}
 
     btnEnviar.addEventListener('click', enviarMensagem);
 

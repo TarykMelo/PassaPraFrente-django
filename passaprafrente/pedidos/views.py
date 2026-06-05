@@ -10,6 +10,7 @@ from .models import Pedido, Feedback, Mensagem
 from .forms import FeedbackForm
 from .carrinho import Carrinho
 from .emails import enviar_email_status_pedido
+from .moderacao import ModeracaoMensagem
 
 
 class FazerPedidoView(LoginRequiredMixin, View):
@@ -403,6 +404,15 @@ class ChatView(LoginRequiredMixin, View):
         conteudo = request.POST.get('conteudo', '').strip()
 
         if conteudo:
+
+            permitido, motivo = ModeracaoMensagem.verificar(conteudo)
+
+            if not permitido:
+                return JsonResponse({
+                    'ok': False,
+                    'erro': f'Mensagem bloqueada: {motivo}'
+                })
+
             Mensagem.objects.create(
                 pedido=pedido,
                 remetente=request.user,
