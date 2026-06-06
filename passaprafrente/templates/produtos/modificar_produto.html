@@ -1,0 +1,69 @@
+{% load static %}
+
+{% block title %}Modificar produto{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'produtos/registrar_venda.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="image_area">
+            {% with produto.imagens.first as img %}
+                {% if img %}
+                    <img src="{{ img.imagem.url }}" alt="{{ produto.nome }}">
+                {% else %}
+                    <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
+                {% endif %}
+            {% endwith %}
+        </div>
+        <div class="info_area">
+            <h1>Modificar produto</h1>
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {% if form.errors %}
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <p style="color:red">{{ error }}</p>
+                        {% endfor %}
+                    {% endfor %}
+                {% endif %}
+
+                <label>Título do produto
+                    <input type="text" name="nome" value="{{ produto.nome }}" required>
+                </label>
+                <label>Preço
+                    <input type="number" name="preco" step="0.01" min="0.01"
+                           value="{{ produto.preco }}" required>
+                </label>
+                <label>Categoria
+                    <select name="categoria">
+                        {% for valor, nome in form.fields.categoria.choices %}
+                            <option value="{{ valor }}"
+                                {% if valor == produto.categoria %}selected{% endif %}>
+                                {{ nome }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label>Descrição
+                    <textarea name="descricao" required>{{ produto.descricao }}</textarea>
+                </label>
+                <label class="upload">
+                    Trocar imagens (opcional)
+                    <input type="file" name="imagens" multiple accept="image/*">
+                </label>
+
+                <div class="info_area_buttons">
+                    <button type="submit" style="width:100%">Salvar alterações</button>
+                    <a href="{% url 'meus_produtos' %}" style="flex:1">
+                        <button type="button" class="cancel_button" style="width:100%">Cancelar</button>
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

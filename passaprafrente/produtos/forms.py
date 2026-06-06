@@ -1,3 +1,5 @@
+from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib import messages
 from django import forms
 from produtos.models import Produto
 from pedidos.models import Feedback
@@ -34,5 +36,5 @@ class FeedbackForm(forms.ModelForm):
         model = Feedback 
         fields = ['nota', 'comentario']
         widgets = {
-            'nota': forms.Select(attrs={'class': 'form-control', 'rows':3, 'placeholder': 'Conte como foi sua experiência...'}),
+            'nota': forms.Select(attrs={'class': 'form-control', 'rows':3, 'placeholder': 'Conte como foi sua experiência...'})
         }

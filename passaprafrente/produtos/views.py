@@ -103,3 +103,32 @@ class DenunciarProdutoView(LoginRequiredMixin, View):
 
         messages.success(request, "Denúncia registrada com sucesso! Nossa equipe irá analisar.")
         return redirect(request.META.get('HTTP_REFERER', 'user_menu'))
+
+class ModificarProdutoView(LoginRequiredMixin, View):
+    def get(self, request, produto_id):
+        produto = get_object_or_404(Produto, id=produto_id, vendedor=request.user)
+        form = ProdutoForm(instance=produto)
+        return render(request, 'produtos/modificar_produto.html',{
+            'form': form,
+            'produto': produto,
+        })
+    
+    def post(self, request, produto_id):
+        produto = get_object_or_404(Produto, id=produto_id, vendedor=request.user)
+        form = ProdutoForm(request.POST, request.FILES, instance=produto)
+        if form.is_valid():
+            form.save()
+
+            imagens = request.FILES.getlist('imagens')
+            if imagens:
+                produto.imagens.all().delete()
+                for imagem in imagens:
+                    ImagemProduto.objects.create(produto=produto, imagem=imagem)
+
+            messages.success(request, "Produto atualizado com sucesso!")
+            return redirect('meus_produtos')
+        
+        return render(request, 'produtos/modificar_produto.html', {
+            'form': form,
+            'produto': produto,
+        })

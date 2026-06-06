@@ -37,7 +37,9 @@
                             <p><b>Categoria:</b> {{ produto.categoria }}</p>
                             <p><b>Telefone: </b>{{produto.vendedor.telefone}}</p>
                             <div class="main_produto_desc_buttons">
-                                <button>Modificar dados</button>
+                                <a href="{% url 'modificar_produto' produto.id %}">
+                                    <button>Modificar dados</button>
+                                </a>
                                 <form method="POST" action="{% url 'remover_produto' produto.id %}">
                                     {% csrf_token %}
                                     <button type="submit" class="exclude">Excluir produto</button>
