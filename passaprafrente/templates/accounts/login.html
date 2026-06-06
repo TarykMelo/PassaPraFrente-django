@@ -24,6 +24,10 @@
                         Senha:<br/>
                         <input type="password" name="password" placeholder="Digite uma senha" required/>
                     </label>
+
+                    <div style="margin-top: 15px; text-align: center;">
+                        <a href="{% url 'password_reset' %}" style="color: #007bff; text-decoration: none; font-family: sans-serif;">Esqueceu a senha?</a>
+                    </div>
                     <div class="cadastro">
                         Não possui uma conta? <a href="{% url 'cadastro' %}">Cadastre-se</a>
                     </div>

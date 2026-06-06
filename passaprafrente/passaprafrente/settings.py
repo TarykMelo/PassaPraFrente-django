@@ -12,9 +12,12 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 import os 
+import ssl
 from dotenv import load_dotenv 
 
 load_dotenv()
+
+ssl._create_default_https_context = ssl._create_unverified_context
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -31,7 +34,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-import os
 
 # Application definition
 
@@ -131,32 +133,17 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
-# Configuração real de email (SMTP GMAIL)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587 
 EMAIL_USE_TLS = True 
 
-
-import os
-from dotenv import load_dotenv
-load_dotenv()
-
-#ler o que está no .env automaticamente
 EMAIL_HOST_USER = os.getenv('EMAIL_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
-EMAIL_FROM_USER = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 TWILIO_ACCOUNT_SID  = os.getenv('TWILIO_ACCOUNT')
 TWILIO_AUTH_TOKEN   = os.getenv('TWILIO_TOKEN')
 TWILIO_PHONE_NUMBER = os.getenv('TWILIO_PHONE')
 
 GROQ_API_KEY = os.getenv('GROQ_KEY')
-
-import ssl
-
-ctx = ssl.create_default_context()
-ctx.check_hostname = False
-ctx.verify_mode = ssl.CERT_NONE
-
-EMAIL_SSL_CONTEXT = ctx

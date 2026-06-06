@@ -2,8 +2,7 @@ from django.urls import path
 from .views import (
     CadastroView, LoginView, LogoutView,
     UserMenuView, ModificarDadosView, DeletarContaView,
-    EscolherMetodo2FAView, VerificarCodigoView, PerfilVendedorView
-)
+    EscolherMetodo2FAView, VerificarCodigoView, PerfilVendedorView )
 
 urlpatterns = [
     path('login/',         LoginView.as_view(),          name='login_aba'),
