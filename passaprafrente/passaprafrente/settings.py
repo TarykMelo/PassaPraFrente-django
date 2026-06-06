@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'accounts',
     'produtos',
     'pedidos',
+    'notificacoes',
 ]
 
 AUTH_USER_MODEL = 'accounts.Usuario'
@@ -73,6 +74,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'notificacoes.context_processors.notificacoes_nao_lidas',
             ],
         },
     },
@@ -132,6 +134,7 @@ STATIC_URL = 'static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# Dotenv acesso LLM, código no email e etc...
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'

@@ -21,7 +21,6 @@
                     <div class="header_menus">
                         <nav>
                             <ul>
-                                <li><a href="{% url 'logout' %}">Sair</a></li>
                                 <li><a href="{% url 'modificar_dados'%}">Minha conta</a></li>
                                 <li><a href="{% url 'meus_produtos' %}">Produtos</a></li>
                                 <li><a href="{% url 'meus_pedidos' %}">Pedidos</a></li>
@@ -35,8 +34,19 @@
                                         {% endif %}
                                     </a>
                                 </li>
+                                <li>
+                                    <a href="{% url 'notificacoes' %}">
+                                        Notificações
+                                        {% if notificacoes_count > 0 %}
+                                            <span class="badge">({{ notificacoes_count }})</span>
+                                        {% endif %}
+                                    </a>
+                                </li>
                             </ul>
                         </nav>
+                    </div>
+                    <div class="header_logout">
+                        <a href="{% url 'logout' %}">Sair</a>
                     </div>
                 </div>
             </div>

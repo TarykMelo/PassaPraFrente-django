@@ -11,6 +11,7 @@ from .forms import FeedbackForm
 from .carrinho import Carrinho
 from .emails import enviar_email_status_pedido
 from .moderacao import ModeracaoMensagem
+from notificacoes.utils import CriarNotificacao
 
 
 class FazerPedidoView(LoginRequiredMixin, View):
@@ -48,12 +49,15 @@ class FazerPedidoView(LoginRequiredMixin, View):
         if ja_pedido:
             return redirect('user_menu')
 
-        Pedido.objects.create(
+        pedido = Pedido.objects.create(
             produto=produto, 
             comprador=request.user,
             vendedor=produto.vendedor,
             status='pendente'
             )
+        
+        CriarNotificacao.pedido_recebido(pedido)
+
         return redirect('user_menu')
 
 
@@ -81,6 +85,8 @@ class CancelarPedidoView(LoginRequiredMixin, View):
         pedido.status = 'cancelado'
         pedido.save()
         messages.success(request, "Pedido cancelado com sucesso.")
+        CriarNotificacao.pedido_cancelado(pedido, request.user)
+
         return redirect('meus_pedidos')
 
 
@@ -104,6 +110,7 @@ class MudarStatusVendaView(LoginRequiredMixin, View):
         if nova_acao == 'confirmar':
             pedido.status = 'compra_confirmada'
             messages.success(request, f"Pedido de {pedido.comprador.nickname} confirmado!")
+            CriarNotificacao.pedido_confirmado(pedido)
             
             enviar_email_status_pedido(
                 email_destinatario=pedido.comprador.email,
@@ -148,6 +155,8 @@ class ConfirmarRecebimentoView(LoginRequiredMixin, View):
         )
         pedido.finalizar()
         messages.success(request, "Recebimento confirmado! Obrigado pela compra.")
+        CriarNotificacao.venda_concluida(pedido)
+
         return redirect('meus_pedidos')
 
 class EnviarFeedbackView(LoginRequiredMixin, View):
@@ -189,7 +198,9 @@ class EnviarFeedbackView(LoginRequiredMixin, View):
             feedback.vendedor = pedido.vendedor 
             feedback.save()
             
+            CriarNotificacao.nova_avaliacao(feedback) 
             messages.success(request, "Obrigado! Seu feedback foi enviado com sucesso.")
+            
             return redirect('meus_pedidos')
             
         return render(request, 'pedidos/enviar_feedback.html', {'form': form, 'pedido': pedido})
@@ -413,11 +424,12 @@ class ChatView(LoginRequiredMixin, View):
                     'erro': f'Mensagem bloqueada: {motivo}'
                 })
 
-            Mensagem.objects.create(
+            mensagem = Mensagem.objects.create(
                 pedido=pedido,
                 remetente=request.user,
                 conteudo=conteudo
             )
+            CriarNotificacao.nova_mensagem(mensagem)
 
         if request.headers.get('X-CSRFToken'):
             return JsonResponse({'ok': True})

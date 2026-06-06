@@ -29,6 +29,7 @@ urlpatterns = [
     path('pedidos/', include('pedidos.urls')),
     path('', LoginView.as_view(), name='login'),
     path('', include('accounts.urls')),
+    path('notificacoes', include('notificacoes.urls'))
 ]
 
 if settings.DEBUG:

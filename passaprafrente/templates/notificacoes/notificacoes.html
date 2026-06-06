@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Notificações{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'notificacoes/notificacoes.css' %}">
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h1>Notificações</h1>
+            {% if notificacoes %}
+                <form method="POST" action="{% url 'limpar_notificacoes' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="button_cancelar">Limpar tudo</button>
+                </form>
+            {% endif %}
+        </div>
+
+        {% if notificacoes %}
+            {% for notificacao in notificacoes %}
+                <a href="{{ notificacao.url }}" style="text-decoration:none; color:inherit;">
+                    <div class="notificacao {% if not notificacao.lida %}nao-lida{% endif %}">
+                        <p>{{ notificacao.mensagem }}</p>
+                        <small>{{ notificacao.criado_em|date:"d/m/Y H:i" }}</small>
+                    </div>
+                </a>
+            {% endfor %}
+        {% else %}
+            <p>Nenhuma notificação ainda.</p>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

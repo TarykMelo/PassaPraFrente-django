@@ -6,6 +6,7 @@ from produtos.models import Produto, Denuncia, ImagemProduto
 from .forms import ProdutoForm
 from produtos.utils import ProdutosDisponiveis
 from pedidos.models import Feedback
+from notificacoes.utils import CriarNotificacao
 
 class ListaProdutosView(LoginRequiredMixin, View):
     """
@@ -118,6 +119,7 @@ class ModificarProdutoView(LoginRequiredMixin, View):
         form = ProdutoForm(request.POST, request.FILES, instance=produto)
         if form.is_valid():
             form.save()
+            CriarNotificacao.produto_editado(produto)
 
             imagens = request.FILES.getlist('imagens')
             if imagens:
