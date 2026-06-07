@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.http import JsonResponse 
-from produtos.models import Produto
+from produtos.models import Produto, Denuncia
 from accounts.models import Usuario
 from .models import Pedido, Feedback, Mensagem
 from .forms import FeedbackForm
@@ -277,6 +277,19 @@ class HistoricoVendasView(LoginRequiredMixin, View):
             'vendas': vendas,
             'filtro': filtro,
             'total_finalizados': total_finalizados,
+        })
+
+class HistoricoDenunciasView(LoginRequiredMixin, View):
+    """
+    Vendedor vê as denúncias que recebeu nos seus produtos
+    """
+    def get(self, request):
+        denuncias = Denuncia.objects.filter(
+            produto__vendedor=request.user
+        ).select_related('produto', 'usuario').order_by('-criado_em')
+
+        return render(request, 'produtos/historico_denuncias.html', {
+            'denuncias': denuncias,
         })
 
 class DetalheHistoricoView(LoginRequiredMixin, View):
