@@ -18,13 +18,10 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
-from accounts.views import LoginView, EsqueciSenhaView, VerificarCodigoView, NovaSenhaView
+from accounts.views import LoginView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('esqueci-a-senha/', EsqueciSenhaView.as_view(), name='password_reset'),
-    path('esqueci-a-senha/verificar-codigo/', VerificarCodigoView.as_view(), name='verificar_codigo'),
-    path('esqueci-a-senha/nova-senha/', NovaSenhaView.as_view(), name='nova_senha'),
     path('produtos/', include('produtos.urls')),
     path('pedidos/', include('pedidos.urls')),
     path('', LoginView.as_view(), name='login'),

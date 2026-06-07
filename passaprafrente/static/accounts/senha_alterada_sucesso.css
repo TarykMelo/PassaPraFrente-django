@@ -1,0 +1,61 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    font-family: Arial, sans-serif;
+    --green1: #009b00;
+    --white: #ffffff;
+    --grey-button: #e2e2e2bb;
+    --black: #000000;
+    --background1: #f7f7f7dc;
+}
+
+.container-sucesso {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1f6f43, #2d8f5a);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.container-sucesso img{
+    width:250px;
+    height: 170px;
+    margin-bottom: 25px;
+}
+
+.card-sucesso {
+    width: 500px;
+    background: #d9d9d9;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.icone-sucesso {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    background: var(--green1);
+    color: white;
+    border-radius: 50%;
+    font-size: 42px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-sucesso h1 {
+    margin-bottom: 20px;
+}
+
+.btn-login {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 14px 25px;
+    background: #1f7344;
+    color: white;
+    text-decoration: none;
+    border-radius: 25px;
+    font-weight: bold;
+}

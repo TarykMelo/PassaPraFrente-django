@@ -1,0 +1,65 @@
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'accounts/nova_senha.css' %}">
+    <title>Autenticação de dois fatores</title>
+</head>
+
+<div class="container-nova-senha">
+
+    <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Logo" class="logo">
+
+    <div class="card-nova-senha">
+
+        <h1>NOVA SENHA</h1>
+
+        <p class="texto">
+            Digite sua nova senha para concluir a recuperação da conta.
+        </p>
+
+        {% if erros %}
+            <div class="lista-erros">
+                {% for erro in erros %}
+                    <div class="erro-item">
+                        {{ erro }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label>Nova senha:</label>
+
+            <input
+                type="password"
+                name="nova_senha"
+                placeholder="Digite sua nova senha"
+                class="{% if erros %}input-erro{% endif %}"
+                required
+            >
+
+            <div class="requisitos-senha">
+                <p>A senha deve conter:</p>
+                <ul>
+                    <li>Pelo menos 8 caracteres</li>
+                    <li>Uma letra maiúscula</li>
+                    <li>Um número</li>
+                    <li>Um símbolo</li>
+                    <li>Sem espaços</li>
+                    <li>Sem caracteres acentuados</li>
+                </ul>
+            </div>
+
+            <button type="submit">
+                Salvar Senha
+            </button>
+
+        </form>
+
+    </div>
+
+</div>

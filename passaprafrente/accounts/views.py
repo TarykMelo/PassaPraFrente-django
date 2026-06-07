@@ -1,6 +1,7 @@
 import random 
 from pathlib import Path
 import os
+import re
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib import messages
@@ -228,118 +229,161 @@ class PerfilVendedorView(View):
         })
 
 class EsqueciSenhaView(View):
+
     def get(self, request):
-        csrf_token = get_token(request)
-        return HttpResponse(f'''
-            <div style="max-width: 400px; margin: 50px auto; font-family: sans-serif; text-align: center;">
-                <h2>Recuperar Senha</h2>
-                <form method="POST" style="display: flex; flex-direction: column; gap: 15px;">
-                    <input type="hidden" name="csrfmiddlewaretoken" value="{csrf_token}">
-                    <input type="email" name="email" placeholder="Digite seu email cadastrado" style="padding: 10px;" required>
-                    <button type="submit" style="padding: 10px; background: #007bff; color: white; border: none; cursor: pointer;">Enviar Link de Recuperação</button>
-                </form>
-            </div>
-        ''')
+        print("reset_codigo:", request.session.get('reset_codigo'))
+        print("reset_user_id:", request.session.get('reset_user_id'))
+
+        return render(request, 'accounts/esqueci_senha.html')
 
     def post(self, request):
         email = request.POST.get('email')
+
         try:
             usuario = Usuario.objects.get(email=email)
-            
+
             codigo_verificacao = str(random.randint(100000, 999999))
-            
+
             request.session['reset_codigo'] = codigo_verificacao
             request.session['reset_user_id'] = usuario.pk
 
             import smtplib
             import ssl
-            from email.mime.text import MIMEText 
+            from email.mime.text import MIMEText
             from django.conf import settings
 
-            msg = MIMEText(f"Olá!\n\nVocê solicitou a redefinição de senha no PassaPraFrente.\n\nSeu código de verificação é: {codigo_verificacao}\n\nInsira este código na página do sistema para criar sua nova senha.\n\nSe não foi você quem pediu, pode ignorar este e-mail com segurança.")
+            msg = MIMEText(
+                f"Olá!\n\n"
+                f"Você solicitou a redefinição de senha no PassaPraFrente.\n\n"
+                f"Seu código de verificação é: {codigo_verificacao}\n\n"
+                f"Insira este código na página do sistema para criar sua nova senha."
+            )
+
             msg['Subject'] = "Seu Código de Verificação - PassaPraFrente"
             msg['From'] = settings.EMAIL_HOST_USER
-            msg['To'] = email   
+            msg['To'] = email
 
-            contexto_ssl = ssl.create_default_context() 
-            contexto_ssl.check_hostname = False        
+            contexto_ssl = ssl.create_default_context()
+            contexto_ssl.check_hostname = False
             contexto_ssl.verify_mode = ssl.CERT_NONE
 
             with smtplib.SMTP(settings.EMAIL_HOST, settings.EMAIL_PORT) as server:
-                server.starttls(context=contexto_ssl) 
-                server.login(settings.EMAIL_HOST_USER, settings.EMAIL_HOST_PASSWORD)
-                server.sendmail(settings.EMAIL_HOST_USER, [email], msg.as_string())
+                server.starttls(context=contexto_ssl)
+                server.login(
+                    settings.EMAIL_HOST_USER,
+                    settings.EMAIL_HOST_PASSWORD
+                )
+                server.sendmail(
+                    settings.EMAIL_HOST_USER,
+                    [email],
+                    msg.as_string()
+                )
 
-                return redirect('/esqueci-a-senha/verificar-codigo/')
+            return redirect('esqueci_senha_codigo')
 
-        except Usuario.DoesNotExist: 
-            return HttpResponse('<div style="max-width: 500px; margin: 50px auto; font-family: sans-serif; text-align: center; color: red;"><h2>O e-mail digitado não está cadastrado.</h2><a href="">Tentar novamente</a></div>')
-        except Exception as e: 
-            return HttpResponse(f'<div style="max-width: 500px; margin: 50px auto; font-family: sans-serif; text-align: center; color: red;"><h2>Erro ao disparar o e-mail técnico: {e}</h2><p>Verifique as credenciais no seu arquivo .env</p></div>')
+        except Usuario.DoesNotExist:
+            return render(
+                request,
+                'accounts/esqueci_senha.html',
+                {'erro': 'O e-mail informado não está cadastrado.'}
+            )
+
+        except Exception as e:
+            return render(
+                request,
+                'accounts/esqueci_senha.html',
+                {'erro': f'Erro ao enviar o e-mail: {e}'}
+            )
             
            
-class VerificarCodigoView(View):
+class EsqueciSenhaCodigoView(View):
+
     def get(self, request):
-        csrf_token = get_token(request)
-        return HttpResponse(f'''
-            <div style="max-width: 400px; margin: 50px auto; font-family: sans-serif; text-align: center;">
-                <h2>Digite o Código</h2>
-                <p style="color: #666;">Insira o código de 6 dígitos enviado para o seu e-mail.</p>
-                <form method="POST" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
-                    <input type="hidden" name="csrfmiddlewaretoken" value="{csrf_token}">
-                    <input type="text" name="codigo_digitado" placeholder="Ex: 123456" maxlength="6" style="padding: 10px; text-align: center; font-size: 18px;" required>
-                    <button type="submit" style="padding: 10px; background: #28a745; color: white; border: none; cursor: pointer; font-weight: bold;">Verificar Código</button>
-                </form>
-            </div>
-        ''')
+
+        if 'reset_codigo' not in request.session:
+            return redirect('esqueci_senha')
+
+        return render(request, 'accounts/esqueci_senha_codigo.html')
 
     def post(self, request):
-        codigo_digitado = request.POST.get('codigo_digitado')
-        codigo_salvo = request.session.get('reset_codigo')
-        
-        if codigo_salvo and codigo_digitado == codigo_salvo:
-            return redirect('/esqueci-a-senha/nova-senha/')
-        else:
-             return HttpResponse('<div style="max-width: 500px; margin: 50px auto; font-family: sans-serif; text-align: center; color: red;"><h2>❌ Código inválido ou expirado!</h2><a href="/esqueci-a-senha/verificar-codigo/">Tentar novamente</a></div>')
 
+        codigo_salvo = request.session.get('reset_codigo')
+
+        if not codigo_salvo:
+            return redirect('esqueci_senha')
+
+        codigo_digitado = request.POST.get('codigo_digitado')
+
+        if codigo_digitado == codigo_salvo:
+            return redirect('nova_senha')
+
+        return render(
+            request,
+            'accounts/esqueci_senha_codigo.html',
+            {'erro': 'Código inválido. Tente novamente.'}
+        )
 
 class NovaSenhaView(View):
+
     def get(self, request):
+
         if 'reset_user_id' not in request.session:
-            return redirect('/esqueci-a-senha/')
-            
-        csrf_token = get_token(request)
-        return HttpResponse(f'''
-            <div style="max-width: 400px; margin: 50px auto; font-family: sans-serif; text-align: center;">
-                <h2>Definir Nova Senha</h2>
-                <form method="POST" style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
-                    <input type="hidden" name="csrfmiddlewaretoken" value="{csrf_token}">
-                    <input type="password" name="nova_senha" placeholder="Digite sua nova senha" style="padding: 10px;" required>
-                    <button type="submit" style="padding: 10px; background: #007bff; color: white; border: none; cursor: pointer; font-weight: bold;">Salvar Nova Senha</button>
-                </form>
-            </div>
-        ''')
+            return redirect('esqueci_senha')
+
+        return render(request, 'accounts/nova_senha.html')
 
     def post(self, request):
+
         user_id = request.session.get('reset_user_id')
+
         if not user_id:
-            return redirect('/esqueci-a-senha/')
-            
+            return redirect('esqueci_senha')
+
+        nova_senha = request.POST.get('nova_senha')
+
+        erros = []
+
+        if len(nova_senha) < 8:
+            erros.append("A senha precisa ter pelo menos 8 caracteres")
+
+        if not re.search(r"[A-Z]", nova_senha):
+            erros.append("A senha precisa ter pelo menos uma letra maiúscula")
+
+        if not re.search(r"[0-9]", nova_senha):
+            erros.append("A senha precisa ter pelo menos um número")
+
+        if not re.search(r"[!@#$%^&*()_+\-=\[\]{};':\"\\|,.<>\/?]", nova_senha):
+            erros.append("A senha precisa ter pelo menos um símbolo")
+
+        if re.search(r"\s", nova_senha):
+            erros.append("A senha não pode conter espaços")
+
+        if re.search(r"[À-ÿ]", nova_senha):
+            erros.append("A senha não pode conter caracteres acentuados")
+
+        if erros:
+            return render(
+                request,
+                'accounts/nova_senha.html',
+                {'erros': erros}
+            )
+
         try:
             usuario = Usuario.objects.get(pk=user_id)
-            nova_senha = request.POST.get('nova_senha')
-            
+
             usuario.set_password(nova_senha)
             usuario.save()
-            
-            request.session.flush()  # Limpa a sessão por segurança
-            
-            return HttpResponse('''
-                <div style="max-width: 500px; margin: 50px auto; font-family: sans-serif; text-align: center; border: 2px solid #28a745; padding: 20px; border-radius: 8px;">
-                    <h2 style="color: #28a745;">✅ Senha alterada com sucesso!</h2>
-                    <p style="margin-bottom: 20px;">O banco de dados foi atualizado com a nova senha.</p>
-                    <p><a href="/" style="background: #007bff; color: white; padding: 12px 20px; text-decoration: none; font-weight: bold; border-radius: 4px; display: inline-block;">IR PARA O LOGIN</a></p>
-                </div>
-            ''')
+
+            request.session.flush()
+
+            return render(
+                request,
+                'accounts/senha_alterada_sucesso.html'
+            )
+
         except Exception as e:
-            return HttpResponse(f"Erro ao salvar senha: {e}")
+            return render(
+                request,
+                'accounts/nova_senha.html',
+                {'erros': [f'Erro ao salvar senha: {e}']}
+            )
