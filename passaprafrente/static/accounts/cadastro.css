@@ -65,11 +65,6 @@ input{
     height: 10px;
 }
 
-input:focus {
-    border-color: #1f7a3f;
-}
-
-
 button{
     padding: 15px 40px;
     background-color: #1f6f43;
@@ -111,12 +106,14 @@ button:hover{
     border-radius: 4px;
 }
 
-/* deixa o input com borda vermelha quando tem erro */
-input:invalid {
-    border: 1px solid #cc0000;
+/* input válido */
+
+input.input-erro {
+    border: 2px solid #cc0000 !important;
+    background-color: #fff5f5;
 }
 
-/* input válido */
-input:valid{
-    border: 1px solid #2e7d32;
+input.input-erro:focus {
+    border-color: #cc0000 !important;
+    outline: none;
 }

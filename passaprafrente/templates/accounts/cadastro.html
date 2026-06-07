@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
+<head> 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'accounts/cadastro.css' %}">
@@ -20,35 +20,35 @@
                     <div class="cadastro">
                         <label>
                             Email:<br/>
-                            <input type="email" name="email" placeholder="Digite o email" required/>
+                            <input type="email" name="email" placeholder="Digite o email" class="{% if form.email.errors %}input-erro{% endif %}" required/>
                             {% for error in form.email.errors %}
                                 <span class="erro">{{ error }}</span>
                             {% endfor %}
                         </label>
                         <label>
                             Senha:<br/>
-                            <input type="password" name="password1" placeholder="Senha" required/>
+                            <input type="password" name="password1" placeholder="Senha" class="{% if form.password1.errors %}input-erro{% endif %}" required/>
                             {% for error in form.password1.errors %}
                                 <span class="erro">{{ error }}</span>
                             {% endfor %}
                         </label>
                         <label>
                             Confirme a senha:<br/>
-                            <input type="password" name="password2" placeholder="Confirme a senha" required/>
+                            <input type="password" name="password2" placeholder="Confirme a senha" class="{% if form.password2.errors %}input-erro{% endif %}" required/>
                             {% for error in form.password2.errors %}
                                 <span class="erro">{{ error }}</span>
                             {% endfor %}
                         </label>
                         <label>
                             Nickname:<br/>
-                            <input type="text" name="nickname" placeholder="Nickname" required/>
+                            <input type="text" name="nickname" placeholder="Nickname" class="{% if form.nickname.errors %}input-erro{% endif %}" required/>
                             {% for error in form.nickname.errors %}
                                 <span class="erro">{{ error }}</span>
                             {% endfor %}
                         </label>
                         <label>
                             Telefone:<br/>
-                            <input type="tel" name="telefone" placeholder="Número de telefone" required/>
+                            <input type="tel" name="telefone" placeholder="Número de telefone" class="{% if form.telefone.errors %}input-erro{% endif %}" required/>
                             {% for error in form.telefone.errors %}
                                 <span class="erro">{{ error }}</span>
                             {% endfor %}
