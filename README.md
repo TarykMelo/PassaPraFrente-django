@@ -322,23 +322,23 @@ A Terceira VA teve como objetivo aprimorar a comunicação entre os usuários, f
 
 ### 🏠 Menu Principal
 
-![Menu Principal](screenshots/menu_principal.jpeg)
+![Menu Principal](passaprafrente/screenshots/menu_principal.jpeg)
 
 ### 📦 Anunciar Produto
 
-![Anunciar Produto](screenshots/anunciar_produto.jpeg)
+![Anunciar Produto](passaprafrente/screenshots/anunciar_produto.jpeg)
 
 ### 💬 Chat
 
-![Chat](screenshots/chat.jpeg)
+![Chat](passaprafrente/screenshots/chat.jpeg)
 
 ### 🔔 Mural de Notificações
 
-![Notificações](screenshots/notificacoes.jpeg)
+![Notificações](passaprafrente/screenshots/notificacoes.jpeg)
 
 ### 🛡️ Autenticação em Dois Fatores
 
-![2FA](screenshots/2fa.jpeg)
+![2FA](passaprafrente/screenshots/2fa.jpeg)
 
 ## ⚙️ Instalação
 
