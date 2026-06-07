@@ -3,35 +3,62 @@
 
 {% block title %}Histórico de denúncias{% endblock %}
 
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'produtos/historico_denuncias.css' %}">
+{% endblock %}
+
 {% block content %}
 <main>
     <div class="container">
-        <a href="{% url 'historico' %}">← Voltar</a>
-        <h1>Denúncias recebidas</h1>
+        <a class="back_button" href="{% url 'historico' %}">← Voltar</a>
+        <h1>Denúncias recebidas({{ total }})</h1>
 
-        {% if denuncias %}
-            {% for denuncia in denuncias %}
-                <div class="box">
-                    <p><b>Produto:</b> {{ denuncia.produto.nome }}</p>
-                    <p><b>Motivo:</b> {{ denuncia.get_motivo_display }}</p>
-                    {% if denuncia.descricao %}
-                        <p><b>Detalhes:</b> {{ denuncia.descricao }}</p>
-                    {% endif %}
-                    <p><b>Feita por:</b> {{ denuncia.usuario.nickname }}</p>
-                    <p><b>Data:</b> {{ denuncia.criado_em|date:"d/m/Y" }}</p>
-                    <p><b>Status:</b>
-                        {% if denuncia.resolvido %}
-                            <span style="color:green">✅ Resolvida</span>
-                        {% else %}
-                            <span style="color:red">⏳ Pendente</span>
-                        {% endif %}
-                    </p>
-                </div>
-                <hr>
-            {% endfor %}
-        {% else %}
-            <p>Nenhuma denúncia recebida.</p>
-        {% endif %}
+        <!-- abas de filtro -->
+        <div class="abas">
+            <a href="?filtro=todos"    class="aba {% if filtro == 'todos' %}ativa{% endif %}">Todas</a>
+            <a href="?filtro=pendente" class="aba {% if filtro == 'pendente' %}ativa{% endif %}">Pendentes</a>
+            <a href="?filtro=resolvida" class="aba {% if filtro == 'resolvida' %}ativa{% endif %}">Resolvidas</a>
+        </div>
+
+        <div class="denuncias_grid">
+            {% if denuncias %}
+                {% for denuncia in denuncias %}
+                    <div class="denuncia_card">
+
+                        <div class="denuncia_img">
+                            {% with denuncia.produto.imagens.first as img %}
+                                {% if img %}
+                                    <img src="{{ img.imagem.url }}" alt="{{ denuncia.produto.nome }}">
+                                {% else %}
+                                    <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+
+                        <div class="denuncia_info">
+                            <h2>{{ denuncia.produto.nome }}</h2>
+                            <p><b>Motivo:</b> {{ denuncia.get_motivo_display }}</p>
+                            {% if denuncia.descricao %}
+                                <p><b>Detalhes:</b> {{ denuncia.descricao }}</p>
+                            {% endif %}
+                            <p><b>Feita por:</b> {{ denuncia.usuario.nickname }}</p>
+                            <p><b>Data:</b> {{ denuncia.criado_em|date:"d/m/Y" }}</p>
+                            <p>
+                                <b>Status:</b>
+                                {% if denuncia.resolvido %}
+                                    <span class="badge resolvida">✅ Resolvida</span>
+                                {% else %}
+                                    <span class="badge pendente">⏳ Pendente</span>
+                                {% endif %}
+                            </p>
+                        </div>
+
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="vazio">Nenhuma denúncia recebida.</p>
+            {% endif %}
+        </div>
     </div>
 </main>
 {% endblock %}

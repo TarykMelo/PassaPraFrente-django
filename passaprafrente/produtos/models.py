@@ -60,4 +60,4 @@ class Denuncia(models.Model):
     resolvido = models.BooleanField(default=False) 
 
     def __str__(self):
-        return f"Denúncia do produto {self.produto.nome} - Motivo: {self.get_motivo_display()}"    
+        return f"Denúncia do produto {self.produto.nome} - Motivo: {self.get_motivo_display()}"

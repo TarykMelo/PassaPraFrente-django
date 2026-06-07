@@ -216,10 +216,12 @@ class MeusFeedbacksView(LoginRequiredMixin, View):
 
         from django.db.models import Avg
         media = feedbacks.aggregate(media=Avg('nota'))['media']
+        total = feedbacks.count()
 
         return render(request, 'pedidos/meus_feedbacks.html', { #Adicionar depois essa página no histórico de produtos vendidos
             'feedbacks': feedbacks,
             'media': round(media, 1) if media else None,
+            'total': total,
         })
 
 class HistoricoView(LoginRequiredMixin, View):
@@ -284,12 +286,20 @@ class HistoricoDenunciasView(LoginRequiredMixin, View):
     Vendedor vê as denúncias que recebeu nos seus produtos
     """
     def get(self, request):
+        filtro    = request.GET.get('filtro', 'todos')
         denuncias = Denuncia.objects.filter(
             produto__vendedor=request.user
         ).select_related('produto', 'usuario').order_by('-criado_em')
 
+        if filtro == 'pendente':
+            denuncias = denuncias.filter(resolvido=False)
+        elif filtro == 'resolvida':
+            denuncias = denuncias.filter(resolvido=True)
+
         return render(request, 'produtos/historico_denuncias.html', {
             'denuncias': denuncias,
+            'filtro': filtro,
+            'total': denuncias.count(),
         })
 
 class DetalheHistoricoView(LoginRequiredMixin, View):
