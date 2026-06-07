@@ -33,6 +33,10 @@ body{
     align-items: center;
     flex-direction: column;
     width: 500px;
+<<<<<<< HEAD
+=======
+    padding: 15px 0px;
+>>>>>>> readme
     background: #eaeaea;
     padding: 15px 0px;
     border-radius: 15px;

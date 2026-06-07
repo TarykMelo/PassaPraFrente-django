@@ -1,0 +1,36 @@
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'accounts/senha_alterada_sucesso.css' %}">
+    <title>Autenticação de dois fatores</title>
+</head>
+
+<div class="container-sucesso">
+
+    <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Logo" class="logo">
+
+    <div class="card-sucesso">
+
+        <div class="icone-sucesso">
+            ✓
+        </div>
+
+        <h1>SENHA ALTERADA</h1>
+
+        <p>
+            Sua senha foi atualizada com sucesso.
+        </p>
+
+        <p>
+            Agora você já pode acessar sua conta normalmente.
+        </p>
+
+        <a href="{% url 'login' %}" class="btn-login">
+            Ir para o Login
+        </a>
+
+    </div>
+
+</div>

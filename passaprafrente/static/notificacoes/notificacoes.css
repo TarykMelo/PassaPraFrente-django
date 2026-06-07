@@ -1,0 +1,47 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    font-family: Arial, sans-serif;
+    --green1: #009b00;
+    --green2: #01bb01;
+    --white: #ffffff;
+    --grey-button: #e2e2e2bb;
+    --black: #000000;
+    --background1: #f7f7f7dc;
+}
+
+main{
+    padding: 10px 20px;
+}
+
+.notificacao {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background: white;
+    border: 1px solid #eee;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.nao-lida {
+    border-left: 4px solid #009b00;
+    background: #f0fff0;
+}
+
+.notificacao small {
+    color: #999;
+    font-size: 12px;
+}
+
+.button_cancelar{
+    padding: 5px 10px;
+    background-color: var(--green1);
+    border-radius: 7px;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.button_cancelar:hover{
+    background-color: var(--green2);
+}

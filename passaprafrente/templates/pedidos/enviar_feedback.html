@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<head>
+    <title>{% block title %} Enviar feedback {% endblock %}</title>
+
+    {% block extra_css %}
+        <link rel="stylesheet" href="{% static 'pedidos/enviar_feedback.css' %}">
+    {% endblock %}
+</head>
+
+{% block content %}
+
+<div class="avaliacao-card">
+    <h2>⭐ Avaliar vendedor</h2>
+
+    <div class="info-compra">
+        <div class="info-compra-img">
+            {% if pedido.produto.imagem %}
+                <img src="{{ pedido.produto.imagem.url }}" alt="{{ pedido.produto.nome}}">
+            {% else %}    
+                <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
+            {% endif %}
+        </div>
+        <div class="info-compra-desc">
+            <p><strong>Produto:</strong> {{ pedido.produto.nome }}</p>
+            <p><strong>Vendedor:</strong> {{ pedido.vendedor.nickname }}</p>
+        </div>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <label>Sua nota</label>
+        <div class="avaliacao-estrelas">
+            <input type="radio" id="estrela5" name="nota" value="5">
+            <label for="estrela5">★</label>
+
+            <input type="radio" id="estrela4" name="nota" value="4">
+            <label for="estrela4">★</label>
+
+            <input type="radio" id="estrela3" name="nota" value="3">
+            <label for="estrela3">★</label>
+
+            <input type="radio" id="estrela2" name="nota" value="2">
+            <label for="estrela2">★</label>
+
+            <input type="radio" id="estrela1" name="nota" value="1">
+            <label for="estrela1">★</label>
+        </div>
+
+        <label>Como foi sua experiência?</label>
+        <textarea
+            name="comentario"
+            placeholder="Conte como foi sua experiência com o vendedor..."
+        ></textarea>
+
+        <div class="botoes">
+            <a href="{% url 'meus_pedidos' %}" class="button-cancelar">
+                Cancelar
+            </a>
+
+            <button type="submit" class="button-enviar">
+                Enviar Avaliação
+            </button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

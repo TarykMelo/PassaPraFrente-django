@@ -11,6 +11,13 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os 
+import ssl
+from dotenv import load_dotenv 
+
+load_dotenv()
+
+ssl._create_default_https_context = ssl._create_unverified_context
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,7 +34,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-import os
 
 # Application definition
 
@@ -41,6 +47,7 @@ INSTALLED_APPS = [
     'accounts',
     'produtos',
     'pedidos',
+    'notificacoes',
 ]
 
 AUTH_USER_MODEL = 'accounts.Usuario'
@@ -67,6 +74,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'notificacoes.context_processors.notificacoes_nao_lidas',
             ],
         },
     },
@@ -125,3 +133,20 @@ STATIC_URL = 'static/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Dotenv acesso LLM, código no email e etc...
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587 
+EMAIL_USE_TLS = True 
+
+EMAIL_HOST_USER = os.getenv('EMAIL_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_PASSWORD')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+TWILIO_ACCOUNT_SID  = os.getenv('TWILIO_ACCOUNT')
+TWILIO_AUTH_TOKEN   = os.getenv('TWILIO_TOKEN')
+TWILIO_PHONE_NUMBER = os.getenv('TWILIO_PHONE')
+
+GROQ_API_KEY = os.getenv('GROQ_KEY')

@@ -1,25 +1,22 @@
 {% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<head>
 
-    <title>{% block title %} Menu inicial {% endblock %}</title>
+{% block title %} Menu inicial {% endblock %}
 
-    {% block extra_css %}
-        <link rel="stylesheet" href="{% static 'accounts/menu.css' %}">
-    {% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'accounts/menu.css' %}">
+{% endblock %}
 
-</head>
-    {% block content %}   
+{% block content %}   
 
     <section class="menu">
         <div class="container">
             <div class="menu_main">
                 <div class="menu_title"><h1>Compra e Venda entre estudantes da UFRPE</h1></div>
-                <p>Encontre produtos ou venda seus produtos usados em um lugar mais fácil</p>
+                <p>Encontre produtos ou venda seus produtos usados in um lugar mais fácil</p>
                 <div class="menu_buttons">
-                    <button onclick="window.location.href='{% url 'registrar_venda' %}'">Anunciar produto</button>
-                    <button onclick="window.location.href='{% url 'todas_categorias' %}'">Ver categorias</button>
+                    <a href="{% url 'registrar_venda' %}" class="btn-menu">Anunciar produto</a>
+                    <a href="{% url 'todas_categorias' %}" class="btn-menu">Ver categorias</a>
                 </div>
             </div>
         </div>
@@ -93,23 +90,59 @@
 
     <main>
         <div class="container">
+            
+            {% if recomendados %}
+            <section class="recomendados">
+                <div class="container">
+                    <div class="main_title">
+                        <h2>✨ Recomendados para você</h2>
+                    </div>
+                    <div class="main_produtos">
+                        {% for produto in recomendados %}
+                            <a href="{% url 'fazer_pedido' produto.id %}">
+                                <div class="main_produto">
+                                    {% with produto.imagens.first as img %}
+                                        {% if img %}
+                                            <img src="{{ img.imagem.url }}" alt="{{ produto.nome }}">
+                                        {% else %}
+                                            <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
+                                        {% endif %}
+                                    {% endwith %}
+                                    <div class="main_desc">
+                                        <h3>{{ produto.nome }}</h3>
+                                        <p>R$ {{ produto.preco }}</p>
+                                        <p>{{ produto.vendedor.nickname }} ⭐ <b>{{ produto.vendedor.media_avaliacoes|floatformat:1 }}</b></p>
+                                    </div>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </section>
+            {% endif %}
+
             <div class="main_title"><h2>Todos os produtos</h2></div>
+
             <div class="main_produtos">
+                
+                {# Loop padrão original sem nenhuma denúncia precoce #}
                 {% for produto in produtos %}
 
                     <a href="{% url 'fazer_pedido' produto.id %}">
                         <div class="main_produto">
 
-                            {% if produto.imagem %}
-                                <img src="{{ produto.imagem.url }}" alt={{ produto.nome }}>
-                            {% else %}
-                                <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
-                            {% endif %}
+                            {% with produto.imagens.first as img %}
+                                {% if img %}
+                                    <img src="{{ img.imagem.url }}" alt="{{ produto.nome }}">
+                                {% else %}
+                                    <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
+                                {% endif %}
+                            {% endwith %}
 
                             <div class="main_desc">
                                 <h3>{{ produto.nome }}</h3>
                                 <p>R${{ produto.preco }}</p>
-                                <p><b>Vendedor: </b>{{ produto.vendedor.nickname }}</p>
+                                <p>{{ produto.vendedor.nickname }} ⭐ <b>{{ produto.vendedor.media_avaliacoes|floatformat:1 }}</b></p>
                             </div>
 
                         </div>
@@ -118,8 +151,11 @@
                 {% empty %}
                     <p>Nenhum produto está disponível no momento</p>
                 {% endfor %}
+
             </div>
         </div>
     </main>
 
-    {% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+{% endblock %}

@@ -1,0 +1,98 @@
+.confirmar-compra {
+    width: 90%;
+    max-width: 1200px;
+    margin: 30px auto;
+}
+
+.btn-voltar {
+    display: inline-block;
+    padding: 10px 18px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.confirmar-compra h1 {
+    margin-bottom: 25px;
+}
+
+.resumo-pedido {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    padding: 20px;
+}
+
+.produto-resumo {
+    display: flex;
+    gap: 20px;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.produto-resumo:last-child {
+    border-bottom: none;
+}
+
+.produto-resumo img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.info-produto h3 {
+    margin-bottom: 10px;
+}
+
+.box-total {
+    margin-top: 25px;
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    border: 1px solid #ddd;
+}
+
+.box-total h2 {
+    margin-bottom: 20px;
+    color: #008000;
+}
+
+.btn-confirmar {
+    background: #00aa00;
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-confirmar:hover {
+    background: #008800;
+}
+
+.btn-cancelar {
+    margin-left: 10px;
+    padding: 14px 28px;
+    background: #dc3545;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+}
+
+.btn-cancelar:hover{
+    opacity: 0.8;
+}
+
+.box-total form {
+    display: inline-block;
+}
+
+.btn-cancelar {
+    display: inline-block;
+    margin-left: 10px;
+}

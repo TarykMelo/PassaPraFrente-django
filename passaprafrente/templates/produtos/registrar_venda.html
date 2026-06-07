@@ -49,8 +49,12 @@
                     </label>
                     <label for="file" class="upload">
                         Adicionar imagem
-                        <input type="file" name="imagem" id="file">
+                        <input
+                            type="file" id="file" name="imagens" multiple="multiple" accept="image/*"/>
                     </label>
+                    <small>
+                        Você pode selecionar várias imagens segurando Ctrl.
+                    </small>
                     <div class="info_area_buttons">
                         <button type="submit" class="post_button">Anunciar produto</button>
                         <button type="button" onclick="window.location.href='{% url 'user_menu' %}'" class="cancel_button">Cancelar anúncio</button>

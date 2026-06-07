@@ -2,7 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
+<head> 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'accounts/cadastro.css' %}">
@@ -13,42 +13,67 @@
         <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Logo PassaPraFrente"/>
         <form action="" method="POST">
             {% csrf_token %}
+<<<<<<< HEAD
             <div class="boxes">
                 
+=======
+<div class="boxes">
+
+>>>>>>> readme
                 <div class="box"> 
                     <h1>CADASTRO</h1>
                     <div class="cadastro">
                         <label>
                             Email:<br/>
+<<<<<<< HEAD
                             <input type="email" name="email" placeholder="Digite o email" required/>
+=======
+                            <input type="email" name="email" placeholder="Digite o email" class="{% if form.email.errors %}input-erro{% endif %}" required/>
+>>>>>>> readme
                             {% for error in form.email.errors %}
                                 <span class="erro">{{ error }}</span>
                             {% endfor %}
                         </label>
                         <label>
                             Senha:<br/>
+<<<<<<< HEAD
                             <input type="password" name="password1" placeholder="Senha" required/>
+=======
+                            <input type="password" name="password1" placeholder="Senha" class="{% if form.password1.errors %}input-erro{% endif %}" required/>
+>>>>>>> readme
                             {% for error in form.password1.errors %}
                                 <span class="erro">{{ error }}</span>
                             {% endfor %}
                         </label>
                         <label>
                             Confirme a senha:<br/>
+<<<<<<< HEAD
                             <input type="password" name="password2" placeholder="Confirme a senha" required/>
+=======
+                            <input type="password" name="password2" placeholder="Confirme a senha" class="{% if form.password2.errors %}input-erro{% endif %}" required/>
+>>>>>>> readme
                             {% for error in form.password2.errors %}
                                 <span class="erro">{{ error }}</span>
                             {% endfor %}
                         </label>
                         <label>
                             Nickname:<br/>
+<<<<<<< HEAD
                             <input type="text" name="nickname" placeholder="Nickname" required/>
+=======
+                            <input type="text" name="nickname" placeholder="Nickname" class="{% if form.nickname.errors %}input-erro{% endif %}" required/>
+>>>>>>> readme
                             {% for error in form.nickname.errors %}
                                 <span class="erro">{{ error }}</span>
                             {% endfor %}
                         </label>
                         <label>
                             Telefone:<br/>
+<<<<<<< HEAD
                             <input type="tel" name="telefone" placeholder="Número de telefone" required/>
+=======
+                            <input type="tel" name="telefone" placeholder="Número de telefone" class="{% if form.telefone.errors %}input-erro{% endif %}" required/>
+>>>>>>> readme
                             {% for error in form.telefone.errors %}
                                 <span class="erro">{{ error }}</span>
                             {% endfor %}

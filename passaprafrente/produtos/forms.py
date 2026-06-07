@@ -1,11 +1,14 @@
+from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib import messages
 from django import forms
 from produtos.models import Produto
+from pedidos.models import Feedback
 
 class ProdutoForm(forms.ModelForm):
 
     class Meta:
         model = Produto
-        fields = ['nome', 'descricao', 'preco', 'categoria', 'imagem']
+        fields = ['nome', 'descricao', 'preco', 'categoria']
         labels = {
             'nome': 'Nome do produto',
             'descricao': 'Descrição',
@@ -25,3 +28,13 @@ class ProdutoForm(forms.ModelForm):
         if not nome:
             raise forms.ValidationError("O nome não pode ser vazio")
         return nome
+    
+
+class FeedbackForm(forms.ModelForm): 
+
+    class Meta: 
+        model = Feedback 
+        fields = ['nota', 'comentario']
+        widgets = {
+            'nota': forms.Select(attrs={'class': 'form-control', 'rows':3, 'placeholder': 'Conte como foi sua experiência...'})
+        }

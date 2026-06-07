@@ -6,7 +6,7 @@
     --white: #ffffff;
     --grey-button: #e2e2e2bb;
     --black: #000000;
-    --background1: rgba(247, 247, 247, 0.863);
+    --background1: #f7f7f7dc;
 }
 
 body{
@@ -72,6 +72,20 @@ header{
 
 .header_menus li a:hover{
     color: var(--green1);
+}
+
+.header_logout a{
+    text-decoration: none;
+    color: black;
+    list-style: none;
+}
+
+.header_logout a:hover{
+    color: var(--green1);
+}
+
+.badge{
+    color: red;
 }
 
 /* footer */

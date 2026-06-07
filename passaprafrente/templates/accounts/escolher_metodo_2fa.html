@@ -1,0 +1,54 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'accounts/2fa.css' %}">
+    <title>Autenticação de dois fatores</title>
+</head>
+
+
+<div class="auth-container">
+
+    <div class="logo-area">
+        <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Logo">
+    </div>
+
+    <div class="card-auth">
+        <h1>VERIFICAÇÃO</h1>
+
+        <p class="descricao">
+            Escolha como deseja receber o código de autenticação.
+        </p>
+
+        {% if erro %}
+            <p class="erro">{{ erro }}</p>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label class="opcao">
+                <input type="radio" name="metodo" value="email" required>
+                <span>📧 Receber por Email</span>
+            </label>
+
+            <label class="opcao">
+                <input type="radio" name="metodo" value="sms">
+                <span>📱 Receber por SMS</span>
+            </label>
+
+            <button type="submit" class="btn-verde">
+                Enviar código
+            </button>
+        </form>
+
+        <a href="{% url 'login' %}" class="link-voltar">
+            ← Voltar ao login
+        </a>
+
+    </div>
+
+</div>

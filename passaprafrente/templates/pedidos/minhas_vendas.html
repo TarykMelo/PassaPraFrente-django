@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<head>
+
+    <title>{% block title %} Meus pedidos {% endblock %}</title>
+
+    {% block extra_css %}
+        <link rel="stylesheet" href="{% static 'pedidos/minhas_vendas.css' %}">
+    {% endblock %}
+
+</head>
+
+
+{% block content %}
+<main>
+    <div class="container">
+        <h1>Minhas Vendas (Solicitações recebidas)</h1>
+
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        {% if vendas %}
+            {% for venda in vendas %}
+                <div class="main_produto">
+                    <div class="main_produto_img">
+                        {% with venda.produto.imagens.first as img %}
+                            {% if img %}
+                                <img src="{{ img.imagem.url }}" alt="{{ venda.produto.nome }}">
+                            {% else %}
+                                <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                    <div class="main_produto_desc">
+                        <h2>{{ venda.produto.nome }}</h2>
+                        <p><b>Comprador:</b> {{ venda.comprador.nickname }}</p>
+                        <p><b>Telefone do Comprador:</b> {{ venda.comprador.telefone }}</p>
+                        <p><b>Data do Pedido:</b> {{ venda.criado_em|date:"d/m/Y" }}</p>
+                        <p><b>Status atual: </b>
+                            <span>{{ venda.get_status_display }}</span>
+                        </p>
+                        <div class="status_button">
+
+                            {% if venda.status == 'pendente' %}
+                                <form method="POST" action="{% url 'mudar_status_venda' venda.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="acao" value="confirmar">
+                                    <button type="submit">✓ Confirmar Pedido</button>
+                                </form>
+
+                                <a href="{% url 'chat' venda.id %}">
+                                    <button>💬 Abrir chat</button>
+                                </a>
+
+                                <form method="POST" action="{% url 'mudar_status_venda' venda.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="acao" value="cancelar">
+                                    <button type="submit" class="cancel">Cancelar Pedido</button>
+                                </form>
+                                
+                            {% endif %}
+
+                            {% if venda.status == 'compra_confirmada' %}
+                                <form method="POST" action="{% url 'mudar_status_venda' venda.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="acao" value="finalizar">
+                                    <button type="submit">📦 Marcar como Entregue</button>
+                                </form>
+
+                                <a href="{% url 'chat' venda.id %}">
+                                    <button>💬 Abrir chat</button>
+                                </a>
+
+                                <form method="POST" action="{% url 'mudar_status_venda' venda.id %}" style="display:inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="acao" value="cancelar">
+                                    <button type="submit" class="cancel">Cancelar Pedido</button>
+                                </form>
+                            {% endif %}
+
+                            {% if venda.status == 'aguardando_confirmacao' %}
+                                <a href="{% url 'chat' venda.id %}">
+                                    <button>💬 Abrir chat</button>
+                                </a>
+                            {% endif %}
+
+                            {% if venda.status == 'finalizado' %}
+                                <span><b>✓ Venda concluída com sucesso!</b></span>
+                            {% endif %}
+
+                            {% if venda.status == 'cancelado' %}
+                                <span>❌ Este pedido foi cancelado.</span>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Você ainda não recebeu nenhuma solicitação de compra para os seus produtos.</p>
+        {% endif %}
+
+    </div>
+</main>
+{% endblock %}

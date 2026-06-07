@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+
+<head>
+
+    <title>{% block title %} Histórico de vendas{% endblock %}</title>
+
+    {% block extra_css %}
+        <link rel="stylesheet" href="{% static 'pedidos/historico_vendas.css' %}">
+    {% endblock %}
+
+</head>
+{% block content %}
+
+<body>
+
+    <main>
+        <div class="container">
+            <a class="back_button" href="{% url 'historico' %}">← Voltar</a>
+            <h1>Minhas vendas ({{ total_finalizados }})</h1>
+
+            <div class="historico_abas">
+                <a href="?filtro=todos"
+                class="aba {% if filtro == 'todos' %}ativa{% endif %}">
+                    Todos
+                </a>
+                <a href="?filtro=finalizado"
+                class="aba {% if filtro == 'finalizado' %}ativa{% endif %}">
+                    Finalizados
+                </a>
+                <a href="?filtro=cancelado"
+                class="aba {% if filtro == 'cancelado' %}ativa{% endif %}">
+                    Cancelados
+                </a>
+            </div>
+
+            <div class="main_produtos">
+                {% if vendas %}
+                    {% for venda in vendas %}
+                        <div class="main_produto">
+
+                            {% with venda.produto.imagens.first as img %}
+                                {% if img %}
+                                    <img src="{{ img.imagem.url }}" alt="{{ venda.produto.nome }}">
+                                {% else %}
+                                    <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
+                                {% endif %}
+                            {% endwith %}
+
+                            <div class="main_desc">
+                                <h3>{{ venda.produto.nome }}</h3>
+                                <p>R${{ venda.produto.preco }}</p>
+                                <p><b>Comprador: </b> {{ venda.comprador.nickname }}</p>
+                                <p><b>Vendido em: </b>{{ venda.criado_em|date:"d/m/Y" }}</p>
+                                <p><b>Status: </b> {{ venda.get_status_display }}</p>
+                            </div>
+                            <div class="produto_buttons">
+                                <button onclick="window.location.href='{% url 'detalhe_historico' venda.id %}'">Ver detalhes</button>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>Você não possui um produto cadastrado nessa seção</p>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+</body>
+
+{% endblock %}

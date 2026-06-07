@@ -22,11 +22,13 @@
 
                     <div class="main_produto">
                         <div class="main_produto_img">
-                            {% if produto.imagem %}
-                                <img src="{{ produto.imagem.url }}" alt={{ produto.nome }}>
-                            {% else %}
-                                <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
-                            {% endif %}
+                            {% with produto.imagens.first as img %}
+                                {% if img %}
+                                    <img src="{{ img.imagem.url }}" alt="{{ produto.nome }}">
+                                {% else %}
+                                    <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
+                                {% endif %}
+                            {% endwith %}
                         </div>
                         <div class="main_produto_desc">
                             <h2>{{ produto.nome }}</h2>
@@ -35,7 +37,9 @@
                             <p><b>Categoria:</b> {{ produto.categoria }}</p>
                             <p><b>Telefone: </b>{{produto.vendedor.telefone}}</p>
                             <div class="main_produto_desc_buttons">
-                                <button>Modificar dados</button>
+                                <a href="{% url 'modificar_produto' produto.id %}">
+                                    <button>Modificar dados</button>
+                                </a>
                                 <form method="POST" action="{% url 'remover_produto' produto.id %}">
                                     {% csrf_token %}
                                     <button type="submit" class="exclude">Excluir produto</button>

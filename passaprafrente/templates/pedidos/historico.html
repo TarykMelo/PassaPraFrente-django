@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+<!DOCTYPE html>
+
+<head>
+
+    <title>{% block title %} Histórico {% endblock %}</title>
+
+    {% block extra_css %}
+        <link rel="stylesheet" href="{% static 'pedidos/historico.css' %}">
+    {% endblock %}
+
+</head>
+{% block content %}
+
+<body>
+    <main>
+        <div class="container">
+            <div class="cards">
+
+                <a href="{% url 'historico_compras' %}" class="card">
+                    <div class="card_img">
+                        <img src="{% static 'pedidos/Images/seguro.png' %}" alt="Compras">
+                    </div>
+                    <div class="card_desc">
+                        <h3>Histórico de compras</h3>
+                        <p>Ver todos os pedidos que você comprou</p>
+                    </div>
+                </a>
+
+                <a href="{% url 'historico_vendas' %}" class="card">
+                    <div class="card_img">
+                        <img src="{% static 'pedidos/Images/negocios-internacionais.png' %}" alt="Vendas">
+                    </div>
+                    <div class="card_desc">
+                        <h3>Histórico de vendas</h3>
+                        <p>Ver todos os produtos que você vendeu</p>
+                    </div>
+                </a>
+
+                <a href="{% url 'meus_feedbacks' %}" class="card">
+                    <div class="card_img">
+                        <img src="{% static 'pedidos/Images/feedback-do-cliente.png' %}" alt="Feedbacks">
+                    </div>
+                    <div class="card_desc">
+                        <h3>Histórico de avaliações</h3>
+                        <p>Ver todas as avaliações que você recebeu</p>
+                    </div>
+                </a>
+
+                <a href="{% url 'historico_denuncias' %}" class="card">
+                    <div class="card_img">
+                        <img src="{% static 'pedidos/Images/denunciante.png' %}" alt="Denúncias">
+                    </div>
+                    <div class="card_desc">
+                        <h3>Histórico de denúncias</h3>
+                        <p>Ver todas as denúncias dos seus produtos</p>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </main>
+</body>
+
+{% endblock %}

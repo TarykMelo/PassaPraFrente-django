@@ -59,18 +59,19 @@ body{
     font-size: 20px;
 }
 
-.menu_buttons button{
+.menu_buttons a{
     padding: 10px 20px;
-    background-color: var(--white);
-    color: var(--green1);
+    background-color: var(--green1);
+    color: var(--white);
     border-radius: 8px;
     border: none;
+    text-decoration: none;
     cursor: pointer;
     margin-right: 10px;
     transition: 0.3;
 }
 
-.menu_buttons button:hover{
+.menu_buttons a:hover{
     opacity: 0.85;
 }
 

@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Histórico de avaliações{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'pedidos/meus_pedidos.css' %}">
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="container">
+        <a href="{% url 'historico' %}" class="back_button">← Voltar</a>
+        <h1>Avaliações recebidas({{ total }})</h1>
+
+        {% if media %}
+            <p>Sua média: <b>{{ media }} ⭐</b></p>
+        {% endif %}
+
+        <div class="main_produtos">
+            {% if feedbacks %}
+                {% for feedback in feedbacks %}
+                    <div class="main_produto">
+                        <div class="main_produto_img">
+                            {% with feedback.pedido.produto.imagens.first as img %}
+                                {% if img %}
+                                    <img src="{{ img.imagem.url }}" alt="{{ feedback.pedido.produto.nome }}">
+                                {% else %}
+                                    <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Sem imagem">
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                        <div class="main_produto_desc">
+                            <h2>{{ feedback.pedido.produto.nome }}</h2>
+
+                            <p>
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= feedback.nota %}
+                                        ⭐
+                                    {% endif %}
+                                {% endfor %}
+                                <b>({{ feedback.nota }}/5)</b>
+                            </p>
+
+                            {% if feedback.comentario %}
+                                <p>{{ feedback.comentario }}</p>
+                            {% else %}
+                                <p><i>Sem comentário</i></p>
+                            {% endif %}
+
+                            <p><b>Por:</b> {{ feedback.avaliador.nickname }}</p>
+                            <p><b>Data:</b> {{ feedback.criado_em|date:"d/m/Y" }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Você ainda não recebeu nenhuma avaliação.</p>
+            {% endif %}
+        </div>
+    </div>
+</main>
+{% endblock %}

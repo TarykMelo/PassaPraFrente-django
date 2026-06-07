@@ -1,0 +1,51 @@
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'accounts/esqueci_senha.css' %}">
+    <title>Autenticação de dois fatores</title>
+</head>
+
+<div class="container-recuperacao">
+
+    <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Logo" class="logo">
+
+    <div class="card-recuperacao">
+
+        <h1>RECUPERAR SENHA</h1>
+
+        <p class="texto">
+            Informe o e-mail cadastrado para receber o código de verificação.
+        </p>
+
+        {% if erro %}
+            <div class="mensagem-erro">
+                {{ erro }}
+            </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <label>E-mail:</label>
+
+            <input
+                type="email"
+                name="email"
+                placeholder="Digite seu e-mail"
+                required
+            >
+
+            <button type="submit">
+                Enviar Código
+            </button>
+        </form>
+
+        <a href="{% url 'login' %}" class="voltar">
+            Voltar ao login
+        </a>
+
+    </div>
+
+</div>

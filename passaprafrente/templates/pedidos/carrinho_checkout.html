@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'pedidos/carrinho_checkout.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="confirmar-compra">
+
+    <a href="{% url 'ver_carrinho' %}" class="btn-voltar">
+        ← Voltar ao carrinho
+    </a>
+
+    <h1>Confirmar compra</h1>
+
+    <div class="resumo-pedido">
+
+        <h2>Resumo do pedido</h2>
+
+        {% for produto in produtos %}
+        <div class="produto-resumo">
+
+            {% if produto.imagem %}
+                <img src="{{ produto.imagem.url }}" alt="{{ produto.nome }}">
+            {% endif %}
+
+            <div class="info-produto">
+                <h3>{{ produto.nome }}</h3>
+                <p><strong>Preço:</strong> R$ {{ produto.preco }}</p>
+                <p><strong>Vendedor:</strong> {{ produto.vendedor.nickname }}</p>
+                <p><strong>Telefone:</strong> {{ produto.vendedor.telefone }}</p>
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+    <div class="box-total">
+        <h2>Total: R$ {{ total }}</h2>
+
+        <div class="acoes-checkout">
+            <form method="POST">
+                {% csrf_token %}
+
+                <button type="submit" class="btn-confirmar">
+                    Confirmar todos os pedidos
+                </button>
+            </form>
+
+            <a href="{% url 'ver_carrinho' %}" class="btn-cancelar">
+                Cancelar
+            </a>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

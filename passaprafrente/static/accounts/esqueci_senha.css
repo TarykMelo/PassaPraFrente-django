@@ -1,0 +1,100 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    font-family: Arial, sans-serif;
+    --green1: #009b00;
+    --white: #ffffff;
+    --grey-button: #e2e2e2bb;
+    --black: #000000;
+    --background1: #f7f7f7dc;
+}
+
+.container-recuperacao {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1f6f43, #2d8f5a);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo {
+    width:250px;
+    height: 170px;
+    margin-bottom: 25px;
+}
+
+.card-recuperacao {
+    background: #d9d9d9;
+    width: 500px;
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
+
+.card-recuperacao h1 {
+    margin-bottom: 20px;
+    font-size: 42px;
+    font-weight: bold;
+}
+
+.texto {
+    margin-bottom: 25px;
+    font-size: 16px;
+    color: #333;
+}
+
+.card-recuperacao form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card-recuperacao label {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 8px;
+    font-size: 18px;
+}
+
+.card-recuperacao input {
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    border: 2px solid #666;
+    margin-bottom: 20px;
+    font-size: 15px;
+}
+
+.card-recuperacao button {
+    width: 180px;
+    padding: 14px;
+    border: none;
+    border-radius: 25px;
+    background: #1f7344;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.card-recuperacao button:hover {
+    opacity: 0.9;
+}
+
+.voltar {
+    display: inline-block;
+    margin-top: 20px;
+    text-decoration: none;
+    color: #0066ff;
+}
+
+.mensagem-erro {
+    background: #ffd6d6;
+    color: #b30000;
+    border: 1px solid #ff9999;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}

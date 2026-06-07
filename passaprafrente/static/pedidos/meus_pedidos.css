@@ -6,9 +6,11 @@
     --green2: #01bb01;
     --white: #ffffff;
     --grey-button: #e2e2e2bb;
+    --grey-color: #222;
     --black: #000000;
     --background1: rgba(247, 247, 247, 0.863);
     --border-grey: rgb(158, 158, 158);
+    --gold: #F8B400;
 }
 
 body{
@@ -30,6 +32,12 @@ main h1{
     margin-bottom: 20px;
 }
 
+.main_produtos{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 .main_produto{
     display: flex;
     gap: 20px;
@@ -47,7 +55,7 @@ main h1{
     display: flex;
     flex: 1;
     flex-direction: column;
-    gap: 10px;
+    gap: 5px;
 }
 
 .main_produto_desc h2{
@@ -75,4 +83,72 @@ main h1{
 .main_produto_desc_buttons button:hover{
     background-color: var(--green2);
     opacity: 0.9;
+}
+
+/* condicionais */
+
+.confirm{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.main_produto a{
+    text-decoration: none;
+    color: var(--grey-color);
+    font-weight: bold;
+    padding: 5px 13px;
+    background-color: var(--gold);
+    border-radius: 6px;
+    margin-bottom: 5px;
+    border: 1px solid var(--grey-color);
+    transition: 0.3s;
+}
+
+.status_button{
+    display: flex;
+    gap: 10px;
+}
+
+.main_produto a:hover{
+    background: #E2A700;
+}
+
+/* chat */
+
+.chat_button{
+    display: inline-block;
+    background-color: var(--green1) !important;
+    color: white !important;
+    text-decoration: none !important;
+    font-weight: normal !important;
+    font-size: 15px;
+    padding: 6px 22px !important;
+    border-radius: 8px !important;
+    border: none !important;
+    margin-bottom: 5px !important;
+}
+
+.chat_button:hover{
+    background-color: var(--green2) !important;
+}
+
+/* Histórico(feeedback e denuncia) */
+
+.back_button{
+    display: inline-flex;
+    gap: 8px;
+    padding: 10px 18px;
+    background: white;
+    color: #333;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: .2s;
+}
+
+.back_button:hover{
+    background: #f5f5f5;
+    transform: translateX(-3px);
 }

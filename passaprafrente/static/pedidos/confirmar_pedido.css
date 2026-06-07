@@ -7,6 +7,7 @@
     --green2: #01bb01;
     --red: #ff0000;
     --background1: #f5f5f5;
+    --blue-button: #007bff;
 }
 
 body{
@@ -16,12 +17,36 @@ body{
 .container{
     width: 100%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     padding: 40px;
 }
 
 /* main */
+
+.back{
+    align-self: flex-start;
+    margin-bottom: 15px;
+}
+
+.back_button{
+    display: inline-flex;
+    gap: 8px;
+    padding: 10px 18px;
+    background: white;
+    color: #333;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: .2s;
+}
+
+.back_button:hover{
+    background: #f5f5f5;
+    transform: translateX(-3px);
+}
 
 .card{
     width: 100%;
@@ -87,9 +112,15 @@ button{
     transition: 0.3s;
 }
 
-button.cancel{
+button:hover{
+    background-color: var(--green2);
+    opacity: 0.9;
+}
+
+.button_carrinho{
     padding: 16px;
-    background-color: var(--red);
+    border: none;
+    background: var(--blue-button);
     color: white;
     font-size: 17px;
     border-radius: 12px;
@@ -97,13 +128,40 @@ button.cancel{
     transition: 0.3s;
 }
 
-button.cancel:hover{
-    background-color: #cc0000;
-    color: white;
-    opacity: 0.9;
+.button_carrinho:hover{
+    background: #0056b3;
 }
 
-button:hover{
-    background-color: var(--green2);
-    opacity: 0.9;
+/* Galeria imagens */
+
+.galeria{
+    width: 100%;
+    max-width: 1100px;
+
+    margin-top: 20px;
+
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 12px;
+
+    overflow-x: auto;
+}
+
+.miniatura{
+    width: 100px;
+    height: 100px;
+
+    flex-shrink: 0;
+
+    object-fit: cover;
+
+    border-radius: 10px;
+    border: 1px solid #ddd;
+
+    transition: .2s;
+}
+
+.miniatura:hover{
+    transform: scale(1.05);
+    border-color: #22c55e;
 }

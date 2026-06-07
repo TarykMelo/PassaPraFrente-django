@@ -34,11 +34,19 @@ body{
     align-items: center;
     flex-direction: column;
     width: 450px;
+<<<<<<< HEAD
+=======
+    padding: 15px 0px;
+>>>>>>> readme
     background: #eaeaea;
     border-radius: 15px;
     box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
     margin: 0px;
+<<<<<<< HEAD
     padding: 15px 0px;
+=======
+    
+>>>>>>> readme
 }
 
 .cadastro{
@@ -106,6 +114,7 @@ button:hover{
     margin-top: 5px;
     padding: 6px 10px;
     background-color: #ffe5e5;
+<<<<<<< HEAD
     border-left: 3px solid #cc0000;
     border-radius: 4px;
 }
@@ -118,4 +127,19 @@ input:invalid {
 /* input válido */
 input:valid{
     border: 1px solid #2e7d32;
+=======
+    border-radius: 4px;
+}
+
+/* input válido */
+
+input.input-erro {
+    border: 2px solid #cc0000 !important;
+    background-color: #fff5f5;
+}
+
+input.input-erro:focus {
+    border-color: #cc0000 !important;
+    outline: none;
+>>>>>>> readme
 }
