@@ -11,6 +11,7 @@ class Usuario(AbstractUser):
     nickname = models.CharField(max_length=50, unique=True)
     telefone = models.CharField(max_length=11)
     dois_fatores = models.BooleanField(default=False)
+    email_verificado = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'nickname', 'telefone']

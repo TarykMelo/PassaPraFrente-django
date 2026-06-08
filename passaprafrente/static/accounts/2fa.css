@@ -111,3 +111,27 @@ body{
     margin-bottom:15px;
     font-weight:bold;
 }
+
+.btn-reenviar {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: 2px solid #1f6f43;
+    border-radius: 12px;
+    background: transparent;
+    color: #1f6f43;
+    font-size: 15px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.btn-reenviar:hover {
+    background: #1f6f43;
+    color: white;
+}
+
+.sucesso {
+    color: #1f6f43;
+    margin-bottom: 15px;
+    font-weight: bold;
+}

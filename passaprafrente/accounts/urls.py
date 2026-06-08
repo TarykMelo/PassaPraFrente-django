@@ -3,12 +3,15 @@ from .views import (
     CadastroView, LoginView, LogoutView,
     UserMenuView, ModificarDadosView, DeletarContaView,
     EscolherMetodo2FAView, VerificarCodigoView, PerfilVendedorView,
-    EsqueciSenhaView, EsqueciSenhaCodigoView, NovaSenhaView
+    EsqueciSenhaView, EsqueciSenhaCodigoView, NovaSenhaView,
+    VerificarEmailView, ReenviarCodigoEmailView,
     )
 
 urlpatterns = [
     path('login/', LoginView.as_view(), name='login_aba'),
     path('cadastro/', CadastroView.as_view(), name='cadastro'),
+    path('verificar-email/', VerificarEmailView.as_view(),      name='verificar_email'),
+    path('reenviar-codigo-email/', ReenviarCodigoEmailView.as_view(),  name='reenviar_codigo_email'),
     path('sair/', LogoutView.as_view(), name='logout'),
     path('menu/', UserMenuView.as_view(), name='user_menu'),
     path('conta/', ModificarDadosView.as_view(), name='modificar_dados'),

@@ -31,9 +31,56 @@ class CadastroView(View):
         form = CadastroForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)
-            return redirect('user_menu')
+            EnviarCodigo.por_email(user)
+            request.session['usuario_verificar_email'] = user.id
+            return redirect('verificar_email')
         return render(request, 'accounts/cadastro.html', {'form': form})
+
+class VerificarEmailView(View):
+    """
+    Verifica o email do usuário após o cadastro
+    """
+    def get(self, request):
+        if 'usuario_verificar_email' not in request.session:
+            return redirect('cadastro')
+        return render(request, 'accounts/verificar_email.html')
+
+    def post(self, request):
+        if 'usuario_verificar_email' not in request.session:
+            return redirect('cadastro')
+
+        from .models import Usuario
+        usuario         = Usuario.objects.get(id=request.session['usuario_verificar_email'])
+        codigo_digitado = request.POST.get('codigo')
+
+        valido, mensagem = VerificarCodigo.verificar(usuario, codigo_digitado)
+
+        if valido:
+            usuario.email_verificado = True
+            usuario.save()
+            login(request, usuario)
+            del request.session['usuario_verificar_email']
+            return redirect('user_menu')
+
+        return render(request, 'accounts/verificar_email.html', {
+            'erro': mensagem
+        })
+
+
+class ReenviarCodigoEmailView(View):
+    """
+    Reenvia o código de verificação de email
+    """
+    def post(self, request):
+        if 'usuario_verificar_email' not in request.session:
+            return redirect('cadastro')
+
+        from .models import Usuario
+        usuario = Usuario.objects.get(id=request.session['usuario_verificar_email'])
+        EnviarCodigo.por_email(usuario)
+        return render(request, 'accounts/verificar_email.html', {
+            'sucesso': 'Código reenviado com sucesso!'
+        })
 
 
 class LoginView(View):
@@ -46,9 +93,16 @@ class LoginView(View):
         user  = authenticate(request, username=email, password=senha)
 
         if user is not None:
+
+            if not user.email_verificado:
+                EnviarCodigo.por_email(user)
+                request.session['usuario_verificar_email'] = user.id
+                return redirect('verificar_email')
+            
             if user.dois_fatores:
                 request.session['usuario_pre_auth'] = user.id
                 return redirect('escolher_metodo_2fa')
+            
             else:
                 login(request, user)
                 return redirect('user_menu')

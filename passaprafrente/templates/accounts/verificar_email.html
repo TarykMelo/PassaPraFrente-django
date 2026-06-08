@@ -1,0 +1,59 @@
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'accounts/2fa.css' %}">
+    <title>Verificar email</title>
+</head>
+
+<div class="auth-container">
+
+    <div class="logo-area">
+        <img src="{% static 'accounts/Images/PassaPraFrente_logo.png' %}" alt="Logo">
+    </div>
+
+    <div class="card-auth">
+
+        <h1>VERIFICAR EMAIL</h1>
+
+        <p class="descricao">
+            Enviamos um código de 6 dígitos para o seu email institucional.<br>
+            Digite abaixo para confirmar sua conta.<br>
+            O código expira em 10 minutos.
+        </p>
+
+        {% if erro %}
+            <p class="erro">{{ erro }}</p>
+        {% endif %}
+
+        {% if sucesso %}
+            <p class="sucesso">{{ sucesso }}</p>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <input
+                type="text"
+                name="codigo"
+                maxlength="6"
+                placeholder="000000"
+                autocomplete="off"
+                required
+                class="input-codigo"
+            >
+            <button type="submit" class="btn-verde">
+                Confirmar email
+            </button>
+        </form>
+
+        <form method="POST" action="{% url 'reenviar_codigo_email' %}">
+            {% csrf_token %}
+            <button type="submit" class="btn-reenviar">
+                Reenviar código
+            </button>
+        </form>
+
+    </div>
+
+</div>

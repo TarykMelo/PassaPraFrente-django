@@ -118,10 +118,9 @@
         const erro = document.getElementById('erro_mensagem');
         erro.textContent = dados.erro;
         erro.style.display = 'block';
-        return;  // não limpa o input para o usuário poder editar a mensagem
+        return; 
     }
 
-    // esconde o erro se existia
     document.getElementById('erro_mensagem').style.display = 'none';
     input.value = '';
     buscarNovas();
