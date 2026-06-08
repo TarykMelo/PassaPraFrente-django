@@ -159,13 +159,56 @@ class UserMenuView(LoginRequiredMixin, View):
         })
 
 
+def calcular_badge(user):
+    vendas = user.total_avaliacoes
+    media = user.media_avaliacoes
+
+    niveis = [
+        ('diamante', '💎', 'Diamante', 50, 4.6, None, None),
+        ('platina',  '🔷', 'Platina',  25, 4.4, 'Diamante', (50, 4.6)),
+        ('ouro',     '🥇', 'Ouro',     10, 4.0, 'Platina',  (25, 4.4)),
+        ('prata',    '🥈', 'Prata',     5, 0.0, 'Ouro',     (10, 4.0)),
+        ('bronze',   '🥉', 'Bronze',    0, 0.0, 'Prata',    (5, 0.0)),
+    ]
+
+    for nivel, icone, nome, min_vendas, min_media, proximo_nome, proximo_req in niveis:
+        if vendas >= min_vendas and media >= min_media:
+            requisitos = None
+            if proximo_req:
+                partes = []
+                vendas_faltam = proximo_req[0] - vendas
+                if vendas_faltam > 0:
+                    partes.append(f'faltam {vendas_faltam} {"venda" if vendas_faltam == 1 else "vendas"}')
+                if proximo_req[1] > 0 and media < proximo_req[1]:
+                    partes.append(f'nota ≥ {proximo_req[1]} (atual: {media})')
+                requisitos = ' e '.join(partes) if partes else None
+
+            return {
+                'badge_nivel': nivel,
+                'badge_icone': icone,
+                'badge_nome': nome,
+                'badge_proximo': proximo_nome,
+                'badge_requisitos': requisitos,
+            }
+
+    return {
+        'badge_nivel': 'bronze',
+        'badge_icone': '🥉',
+        'badge_nome': 'Bronze',
+        'badge_proximo': 'Prata',
+        'badge_requisitos': 'faça sua primeira venda',
+    }
+
+
 class ModificarDadosView(LoginRequiredMixin, View):
     def get(self, request):
-        return render(request, 'accounts/modificar_dados.html', {
+        ctx = {
             'nickname_form': NicknameForm(instance=request.user),
             'telefone_form': TelefoneForm(instance=request.user),
             'senha_form':    SenhaForm(request.user),
-        })
+        }
+        ctx.update(calcular_badge(request.user))
+        return render(request, 'accounts/modificar_dados.html', ctx)
 
     def post(self, request):
         nickname_form = NicknameForm(instance=request.user)
@@ -198,11 +241,13 @@ class ModificarDadosView(LoginRequiredMixin, View):
             messages.success(request, f"2FA {status} com sucesso!")
             return redirect('modificar_dados')
 
-        return render(request, 'accounts/modificar_dados.html', {
+        ctx = {
             'nickname_form': nickname_form,
             'telefone_form': telefone_form,
             'senha_form':    senha_form,
-        })
+        }
+        ctx.update(calcular_badge(request.user))
+        return render(request, 'accounts/modificar_dados.html', ctx)
 
 
 class DeletarContaView(LoginRequiredMixin, View):
@@ -273,14 +318,16 @@ class PerfilVendedorView(View):
 
         voltar = request.GET.get('voltar', '/')
 
-        return render(request, 'accounts/perfil_vendedor.html',{
+        ctx = {
             'vendedor': vendedor,
             'feedbacks': feedbacks,
             'denuncias': denuncias,
             'total_finalizados': total_finalizados,
             'denuncias_confirmadas': denuncias_confirmadas,
             'voltar': voltar,
-        })
+        }
+        ctx.update(calcular_badge(vendedor))
+        return render(request, 'accounts/perfil_vendedor.html', ctx)
 
 class EsqueciSenhaView(View):
 

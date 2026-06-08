@@ -12,8 +12,23 @@
 {% block content %}
 <main>
     <div class="container">
-        <h1>Dados da conta</h1>
-        <p>Veja os dados principais da sua conta ou altere-os</p>
+        <div class="dados_header">
+            <div class="dados_header_text">
+                <h1>Dados da conta</h1>
+                <p>Veja os dados principais da sua conta ou altere-os</p>
+            </div>
+            <div class="badge_container">
+                <div class="badge badge_{{ badge_nivel }}">
+                    <div class="badge_icon">{{ badge_icone }}</div>
+                    <div class="badge_name">{{ badge_nome }}</div>
+                </div>
+                {% if badge_proximo %}
+                    <p class="badge_legend">Para <strong>{{ badge_proximo }}</strong>: {{ badge_requisitos }}</p>
+                {% else %}
+                    <p class="badge_legend badge_max">🏆 Nível máximo atingido! Parabéns!</p>
+                {% endif %}
+            </div>
+        </div>
 
         <div class="box personal_box">
             <div class="box_border"></div>

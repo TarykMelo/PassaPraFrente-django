@@ -32,6 +32,18 @@
                     <p>📅 Membro desde {{ vendedor.date_joined|date:"F \d\e Y" }}</p>
                 </div>
             </div>
+
+            <div class="badge_container">
+                <div class="badge badge_{{ badge_nivel }}">
+                    <div class="badge_icon">{{ badge_icone }}</div>
+                    <div class="badge_name">{{ badge_nome }}</div>
+                </div>
+                {% if badge_proximo %}
+                {% else %}
+                    <p class="badge_legend badge_max">🏆 Nível máximo!</p>
+                {% endif %}
+            </div>
+
         </div>
 
     </div>
