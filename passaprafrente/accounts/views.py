@@ -7,20 +7,23 @@ from django.views import View
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .forms import CadastroForm, NicknameForm, TelefoneForm, SenhaForm
+from .forms import CadastroForm, NicknameForm, TelefoneForm, SenhaForm, validar_senha
 from produtos.models import Produto, Denuncia
 from produtos.utils import ProdutosDisponiveis
 from pedidos.models import Feedback, Pedido
 from .two_factor import EnviarCodigo, VerificarCodigo
 from .models import CodigoVerificacao, Usuario
 from .recomendacoes import recomendar_produtos
-from django.http import HttpResponse
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
-from django.middleware.csrf import get_token 
+from django.middleware.csrf import get_token
+from .badge import Badge
+import smtplib
+import ssl
+from email.mime.text import MIMEText
 
 class CadastroView(View):
     def get(self, request):
@@ -49,8 +52,7 @@ class VerificarEmailView(View):
         if 'usuario_verificar_email' not in request.session:
             return redirect('cadastro')
 
-        from .models import Usuario
-        usuario         = Usuario.objects.get(id=request.session['usuario_verificar_email'])
+        usuario = Usuario.objects.get(id=request.session['usuario_verificar_email'])
         codigo_digitado = request.POST.get('codigo')
 
         valido, mensagem = VerificarCodigo.verificar(usuario, codigo_digitado)
@@ -75,7 +77,6 @@ class ReenviarCodigoEmailView(View):
         if 'usuario_verificar_email' not in request.session:
             return redirect('cadastro')
 
-        from .models import Usuario
         usuario = Usuario.objects.get(id=request.session['usuario_verificar_email'])
         EnviarCodigo.por_email(usuario)
         return render(request, 'accounts/verificar_email.html', {
@@ -125,7 +126,6 @@ class VerificarCodigoView(View):
         if 'usuario_pre_auth' not in request.session:
             return redirect('login')
         
-        from .models import Usuario
         usuario = Usuario.objects.get(id=request.session['usuario_pre_auth'])
         codigo_digitado = request.POST.get('codigo')
 
@@ -158,48 +158,6 @@ class UserMenuView(LoginRequiredMixin, View):
             'recomendados': recomendados,    
         })
 
-
-def calcular_badge(user):
-    vendas = user.total_avaliacoes
-    media = user.media_avaliacoes
-
-    niveis = [
-        ('diamante', '💎', 'Diamante', 50, 4.6, None, None),
-        ('platina',  '🔷', 'Platina',  25, 4.4, 'Diamante', (50, 4.6)),
-        ('ouro',     '🥇', 'Ouro',     10, 4.0, 'Platina',  (25, 4.4)),
-        ('prata',    '🥈', 'Prata',     5, 0.0, 'Ouro',     (10, 4.0)),
-        ('bronze',   '🥉', 'Bronze',    0, 0.0, 'Prata',    (5, 0.0)),
-    ]
-
-    for nivel, icone, nome, min_vendas, min_media, proximo_nome, proximo_req in niveis:
-        if vendas >= min_vendas and media >= min_media:
-            requisitos = None
-            if proximo_req:
-                partes = []
-                vendas_faltam = proximo_req[0] - vendas
-                if vendas_faltam > 0:
-                    partes.append(f'faltam {vendas_faltam} {"venda" if vendas_faltam == 1 else "vendas"}')
-                if proximo_req[1] > 0 and media < proximo_req[1]:
-                    partes.append(f'nota ≥ {proximo_req[1]} (atual: {media})')
-                requisitos = ' e '.join(partes) if partes else None
-
-            return {
-                'badge_nivel': nivel,
-                'badge_icone': icone,
-                'badge_nome': nome,
-                'badge_proximo': proximo_nome,
-                'badge_requisitos': requisitos,
-            }
-
-    return {
-        'badge_nivel': 'bronze',
-        'badge_icone': '🥉',
-        'badge_nome': 'Bronze',
-        'badge_proximo': 'Prata',
-        'badge_requisitos': 'faça sua primeira venda',
-    }
-
-
 class ModificarDadosView(LoginRequiredMixin, View):
     def get(self, request):
         ctx = {
@@ -207,7 +165,7 @@ class ModificarDadosView(LoginRequiredMixin, View):
             'telefone_form': TelefoneForm(instance=request.user),
             'senha_form':    SenhaForm(request.user),
         }
-        ctx.update(calcular_badge(request.user))
+        ctx.update(Badge(request.user).calcular())
         return render(request, 'accounts/modificar_dados.html', ctx)
 
     def post(self, request):
@@ -246,7 +204,7 @@ class ModificarDadosView(LoginRequiredMixin, View):
             'telefone_form': telefone_form,
             'senha_form':    senha_form,
         }
-        ctx.update(calcular_badge(request.user))
+        ctx.update(Badge(request.user).calcular())
         return render(request, 'accounts/modificar_dados.html', ctx)
 
 
@@ -276,7 +234,6 @@ class EscolherMetodo2FAView(View):
         if 'usuario_pre_auth' not in request.session:
             return redirect('login')
 
-        from .models import Usuario
         usuario = Usuario.objects.get(id=request.session['usuario_pre_auth'])
         metodo  = request.POST.get('metodo')
 
@@ -326,14 +283,12 @@ class PerfilVendedorView(View):
             'denuncias_confirmadas': denuncias_confirmadas,
             'voltar': voltar,
         }
-        ctx.update(calcular_badge(vendedor))
+        ctx.update(Badge(vendedor).calcular())
         return render(request, 'accounts/perfil_vendedor.html', ctx)
 
 class EsqueciSenhaView(View):
 
     def get(self, request):
-        print("reset_codigo:", request.session.get('reset_codigo'))
-        print("reset_user_id:", request.session.get('reset_user_id'))
 
         return render(request, 'accounts/esqueci_senha.html')
 
@@ -342,44 +297,9 @@ class EsqueciSenhaView(View):
 
         try:
             usuario = Usuario.objects.get(email=email)
-
-            codigo_verificacao = str(random.randint(100000, 999999))
-
-            request.session['reset_codigo'] = codigo_verificacao
+            codigo = EnviarCodigo.por_email(usuario)
+            request.session['reset_codigo'] = codigo
             request.session['reset_user_id'] = usuario.pk
-
-            import smtplib
-            import ssl
-            from email.mime.text import MIMEText
-            from django.conf import settings
-
-            msg = MIMEText(
-                f"Olá!\n\n"
-                f"Você solicitou a redefinição de senha no PassaPraFrente.\n\n"
-                f"Seu código de verificação é: {codigo_verificacao}\n\n"
-                f"Insira este código na página do sistema para criar sua nova senha."
-            )
-
-            msg['Subject'] = "Seu Código de Verificação - PassaPraFrente"
-            msg['From'] = settings.EMAIL_HOST_USER
-            msg['To'] = email
-
-            contexto_ssl = ssl.create_default_context()
-            contexto_ssl.check_hostname = False
-            contexto_ssl.verify_mode = ssl.CERT_NONE
-
-            with smtplib.SMTP(settings.EMAIL_HOST, settings.EMAIL_PORT) as server:
-                server.starttls(context=contexto_ssl)
-                server.login(
-                    settings.EMAIL_HOST_USER,
-                    settings.EMAIL_HOST_PASSWORD
-                )
-                server.sendmail(
-                    settings.EMAIL_HOST_USER,
-                    [email],
-                    msg.as_string()
-                )
-
             return redirect('esqueci_senha_codigo')
 
         except Usuario.DoesNotExist:
@@ -400,29 +320,33 @@ class EsqueciSenhaView(View):
 class EsqueciSenhaCodigoView(View):
 
     def get(self, request):
-
-        if 'reset_codigo' not in request.session:
+        if 'reset_user_id' not in request.session:
             return redirect('esqueci_senha')
-
         return render(request, 'accounts/esqueci_senha_codigo.html')
 
     def post(self, request):
+        user_id = request.session.get('reset_user_id')
 
-        codigo_salvo = request.session.get('reset_codigo')
-
-        if not codigo_salvo:
+        if not user_id:
             return redirect('esqueci_senha')
 
         codigo_digitado = request.POST.get('codigo_digitado')
 
-        if codigo_digitado == codigo_salvo:
-            return redirect('nova_senha')
+        try:
+            usuario = Usuario.objects.get(pk=user_id)
+            valido, mensagem = VerificarCodigo.verificar(usuario, codigo_digitado)
 
-        return render(
-            request,
-            'accounts/esqueci_senha_codigo.html',
-            {'erro': 'Código inválido. Tente novamente.'}
-        )
+            if valido:
+                return redirect('nova_senha')
+
+            return render(
+                request,
+                'accounts/esqueci_senha_codigo.html',
+                {'erro': mensagem}
+            )
+
+        except Usuario.DoesNotExist:
+            return redirect('esqueci_senha')
 
 class NovaSenhaView(View):
 
@@ -442,25 +366,7 @@ class NovaSenhaView(View):
 
         nova_senha = request.POST.get('nova_senha')
 
-        erros = []
-
-        if len(nova_senha) < 8:
-            erros.append("A senha precisa ter pelo menos 8 caracteres")
-
-        if not re.search(r"[A-Z]", nova_senha):
-            erros.append("A senha precisa ter pelo menos uma letra maiúscula")
-
-        if not re.search(r"[0-9]", nova_senha):
-            erros.append("A senha precisa ter pelo menos um número")
-
-        if not re.search(r"[!@#$%^&*()_+\-=\[\]{};':\"\\|,.<>\/?]", nova_senha):
-            erros.append("A senha precisa ter pelo menos um símbolo")
-
-        if re.search(r"\s", nova_senha):
-            erros.append("A senha não pode conter espaços")
-
-        if re.search(r"[À-ÿ]", nova_senha):
-            erros.append("A senha não pode conter caracteres acentuados")
+        erros = validar_senha(nova_senha)
 
         if erros:
             return render(

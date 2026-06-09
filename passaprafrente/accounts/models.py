@@ -35,12 +35,6 @@ class Usuario(AbstractUser):
             vendedor=self
         ).count()
     
-    def total_produtos(self):
-        return self.produtos.count()
-    
-    def tem_produtos(self):
-        return self.produtos.exists()
-
 class CodigoVerificacao(models.Model):
     usuario = models.ForeignKey(
         settings.AUTH_USER_MODEL,

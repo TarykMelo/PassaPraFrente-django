@@ -25,24 +25,11 @@ class CadastroForm(UserCreationForm):
     
     def clean_password1(self):
         senha = self.cleaned_data.get('password1')
-        erros = []
-
-        if len(senha) < 8:
-            erros.append("A senha precisa ter pelo menos 8 caracteres")
-        if not re.search(r"[A-Z]", senha):
-            erros.append("A senha precisa ter pelo menos uma letra maiúscula")
-        if not re.search(r"[0-9]", senha):
-            erros.append("A senha precisa ter pelo menos um número")
-        if not re.search(r"[!@#$%^&*()_+\-=\[\]{};':\"\\|,.<>\/?]", senha):
-            erros.append("A senha precisa ter pelo menos um símbolo")
-        if re.search(r"\s", senha):
-            erros.append("A senha não pode ter espaços")
-        if re.search(r"[À-ÿ]", senha):
-            erros.append("A senha não pode ter caracteres acentuados")
+        erros = validar_senha(senha)
 
         if erros:
             raise forms.ValidationError(erros)
-
+        
         return senha
 
     def clean_password2(self):
@@ -108,20 +95,26 @@ class SenhaForm(PasswordChangeForm):
 
     def clean_new_password1(self):
         senha = self.cleaned_data.get('new_password1')
-        import re
-        erros = []
-
-        if len(senha) < 8:
-            erros.append("A senha precisa ter pelo menos 8 caracteres")
-        if not re.search(r"[A-Z]", senha):
-            erros.append("A senha precisa ter pelo menos uma letra maiúscula")
-        if not re.search(r"[0-9]", senha):
-            erros.append("A senha precisa ter pelo menos um número")
-        if not re.search(r"[!@#$%^&*()_+\-=\[\]{};':\"\\|,.<>\/?]", senha):
-            erros.append("A senha precisa ter pelo menos um símbolo")
-        if re.search(r"\s", senha):
-            erros.append("A senha não pode ter espaços")
-
+        erros = validar_senha(senha)
         if erros:
             raise forms.ValidationError(erros)
         return senha
+
+
+def validar_senha(senha):
+    erros = []
+
+    if len(senha) < 8:
+        erros.append("A senha precisa ter pelo menos 8 caracteres")
+    if not re.search(r"[A-Z]", senha):
+        erros.append("A senha precisa ter pelo menos uma letra maiúscula")
+    if not re.search(r"[0-9]", senha):
+        erros.append("A senha precisa ter pelo menos um número")
+    if not re.search(r"[!@#$%^&*()_+\-=\[\]{};':\"\\|,.<>\/?]", senha):
+        erros.append("A senha precisa ter pelo menos um símbolo")
+    if re.search(r"\s", senha):
+        erros.append("A senha não pode conter espaços")
+    if re.search(r"[À-ÿ]", senha):
+        erros.append("A senha não pode conter caracteres acentuados")
+
+    return erros
