@@ -433,8 +433,10 @@ https://www.overleaf.com/read/pnrgqwpnbkyp#a051dd
 Taryk Melo link do drive e video:
 https://drive.google.com/drive/u/2/folders/1hqp1vxdU2zF_4JHbeKrq4hTMdvCL3JUF
 https://www.youtube.com/watch?v=yb8_T1VZcIk
+c 
 
-Ana caroline link do drive e video:
-
+Ana Nunes link do drive e video:
+https://drive.google.com/drive/folders/1qVw7Huxlxo0yK9P5yl2YrKQOeEXSoixr?usp=drive_link
+https://youtu.be/aLtYYTrjDzc 
 
 Projeto acadêmico desenvolvido para aprendizado de desenvolvimento web com Django.
