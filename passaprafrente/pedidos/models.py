@@ -5,7 +5,7 @@ from produtos.models import Produto
 class Pedido(models.Model):
     """
     Classe pedidos que possui as informações do comprador,vendedor, status do fluxo 
-    e com restrição de só ser possível pedir o mesmo produto uma vez
+    e com restrição de só ser possível pedir o mesmo produto uma vez 
     """
     STATUS_CHOICES = [
         ('pendente', 'Pendente'),

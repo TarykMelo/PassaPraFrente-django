@@ -3,6 +3,7 @@
     padding: 0px;
     font-family: Arial, sans-serif;
     --green1: #009b00;
+    --green-body: #005a00;
     --white: #ffffff;
     --grey-button: #e2e2e2bb;
     --black: #000000;
@@ -11,7 +12,7 @@
 
 body{
     box-sizing: border-box;
-    background-color: #ececec;
+    background-color: var(--green-body);
 }
 
 .page_wrapper{

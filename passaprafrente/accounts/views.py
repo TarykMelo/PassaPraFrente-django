@@ -199,13 +199,13 @@ class ModificarDadosView(LoginRequiredMixin, View):
             messages.success(request, f"2FA {status} com sucesso!")
             return redirect('modificar_dados')
 
-        ctx = {
+        context = {
             'nickname_form': nickname_form,
             'telefone_form': telefone_form,
             'senha_form':    senha_form,
         }
-        ctx.update(Badge(request.user).calcular())
-        return render(request, 'accounts/modificar_dados.html', ctx)
+        context.update(Badge(request.user).calcular())
+        return render(request, 'accounts/modificar_dados.html', context)
 
 
 class DeletarContaView(LoginRequiredMixin, View):
@@ -235,7 +235,7 @@ class EscolherMetodo2FAView(View):
             return redirect('login')
 
         usuario = Usuario.objects.get(id=request.session['usuario_pre_auth'])
-        metodo  = request.POST.get('metodo')
+        metodo = request.POST.get('metodo')
 
         try:
             if metodo == 'email':
@@ -275,7 +275,7 @@ class PerfilVendedorView(View):
 
         voltar = request.GET.get('voltar', '/')
 
-        ctx = {
+        context = {
             'vendedor': vendedor,
             'feedbacks': feedbacks,
             'denuncias': denuncias,
@@ -283,8 +283,8 @@ class PerfilVendedorView(View):
             'denuncias_confirmadas': denuncias_confirmadas,
             'voltar': voltar,
         }
-        ctx.update(Badge(vendedor).calcular())
-        return render(request, 'accounts/perfil_vendedor.html', ctx)
+        context.update(Badge(vendedor).calcular())
+        return render(request, 'accounts/perfil_vendedor.html', context)
 
 class EsqueciSenhaView(View):
 
